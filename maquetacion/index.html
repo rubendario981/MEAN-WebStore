@@ -1,39 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../node_modules/bootstrap/dist/css/normalize.css" rel="stylesheet" media="screen"> 
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen"> 
+    <link href="../node_modules/bootstrap/dist/css/normalize.css" rel="stylesheet" media="screen">
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="../node_modules/bootstrap/dist/css/misestilos.css" rel="stylesheet" media="screen">
     <title>Miscelanea colombia de todito</title>
 
     <script src="https://use.fontawesome.com/2290af73c0.js"></script>
 
-    <script src="js/jquery.min.js"></script> 
-    <script src="js/popper.min.js"></script> 
-    <script src="js/bootstrap.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-    <div class="container-fluid p-3 mb-2 bg-light text-dark">
-        <div class="row">
-            <div class="col-6">
+    <div id="cabecera" class="container-fluid p-3 mb-2 bg-light text-dark d-flex justify-content-center">
+        <div class="row justify-content-sm-around">
+            <div class="col-6 col-sm-4 col-md-3">
                 <div id="logo">
-                    <img src="https://image.freepik.com/vector-gratis/diseno-logotipo-supermercado-lema-tienda_23-2148458443.jpg" alt="" class="img-thumbnail">
+                    <img src="https://image.freepik.com/vector-gratis/diseno-logotipo-supermercado-lema-tienda_23-2148458443.jpg"
+                        alt="Logo tienda" class="img-thumbnail">
                 </div>
             </div>
-            <div class="col-12 order-12">
-                <h3>Miscelanea colombia de todito</h3>
-                <p>Ropa, tecnologia, libros, accesorios y mas!!!</p>
+            <div id="cabecera-titulo" class="col-12 col-sm-12 order-4 col-md-5 order-md-2">
+                <h3 class="text-center">Miscelanea colombia de todito</h3> <br>
+                <p class="text-center mt-n3">Ropa, tecnologia, libros, accesorios y mas!!!</p>
             </div>
-            <div class="col-3 align-self-center">
-                <i class="fa fa-user-circle" aria-hidden="true"></i>
+            <div class="col-3 col-sm-2 col-md-2 order-md-3 align-self-center text-center">
+                <i class="fa fa-user-circle"></i>
                 <p>Inicio sesion</p>
             </div>
-            <div class="col-3 align-self-center">
-                <i class="fa fa-cart-plus mx-auto" aria-hidden="true"></i>
+            <div class="col-3 col-sm-2 col-md-2 order-md-4 align-self-center text-center">
+                <i class="fa fa-cart-plus "></i>
                 <p>Carrito de compras</p>
             </div>
         </div>
     </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-5">
+                <div class="accordion" id="accordionExample">
+                    <div class="card">
+                        <h3 class="card-title bg-primary text-center text-white p-3">Categorias</h3>
+                    </div>
+                    <div class="card mt-n3">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Tecnologia
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                            data-parent="#accordionExample">
+                            
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                    data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                                    aria-controls="collapseTwo">
+                                    Papeleria
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                            data-parent="#accordionExample">
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                    data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+                                    aria-controls="collapseThree">
+                                    Ropa
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                            data-parent="#accordionExample">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-7">
+                <div class="card" style="width: 18rem;">
+                    <img src="./imgs/LogoTest.png" class="card-img-top" alt="imagen prueba">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre producto</h5>
+                        <p class="card-text">Descripcion producto</p>
+                        <a href="#" class="btn btn-primary">Ver mas ...</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            pie de pagina
+        </div>
+    </div>
 </body>
+
 </html>

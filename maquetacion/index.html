@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../node_modules/bootstrap/dist/css/normalize.css" rel="stylesheet" media="screen">
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="../node_modules/bootstrap/dist/css/misestilos.css" rel="stylesheet" media="screen">
     <title>Miscelanea colombia de todito</title>
@@ -49,43 +48,96 @@
                 <div class="card">
                     <h3 class="card-title bg-primary text-center text-white p-3 mb-n1">Categorias</h3>
                 </div>
-                <div class="dropright">
-                    <button class="btn btn-light w-100 dropdown-toggle text-left" type="button" id="dropdownMenu"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Tecnologia
-                    </button>                    
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <button class="accordion" type="button" data-toggle="collapse" data-target="#catTvs" aria-expanded="false" aria-controls="catTvs">Tvs</button>
-                            <button class="dropdown-item" type="button" data-toggle="collapse" data-target="#catCels" aria-expanded="false" aria-controls="catCels">Celulares</button>
-                            <button class="dropdown-item" type="button" data-toggle="collapse" data-target="#catPcs" aria-expanded="false" aria-controls="catPcs">Computadores</button>
-                        </div>
-                        <div class="collapse show" id="catTvs">
-                            <ul class="list-group">
-                                <li class="list-group-item">Lg</li>
-                                <li class="list-group-item">Samsung</li>
-                                <li class="list-group-item">Panasonic</li>
-                                <li class="list-group-item">Kalley</li>
-                            </ul>
-                        </div>
 
-                        <div class="collapse" id="catCels">
-                            <ul class="list-group">
-                                <li class="list-group-item">Motorola</li>
-                                <li class="list-group-item">Huawei</li>
-                                <li class="list-group-item">Xiaomi</li>
-                                <li class="list-group-item">Apple</li>
-                            </ul>
-                        </div>
+                <li class="dropdown-submenu list-group">
+                    <a tabindex="-1" href="#" class="list-group-item">Tecnologia</a>
+                    <ul class="dropdown-menu">                      
+                      <li class="dropdown-submenu">
+                        <a href="#">Celulares</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Huawei</a></li>
+                            <li><a href="#">Samsung</a></li>
+                            <li><a href="#">Motorola</a></li>
+                        </ul>                        
+                      </li>
+                      <li class="dropdown-submenu">
+                        <a href="#">Televisores</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Lg</a></li>
+                            <li><a href="#">Panasonic</a></li>
+                            <li><a href="#">Kalley</a></li>
+                        </ul>                        
+                      </li>
+                      <li class="dropdown-submenu">
+                        <a href="#">Computadores</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Acer</a></li>
+                            <li><a href="#">Lenovo</a></li>
+                            <li><a href="#">Hp</a></li>
+                        </ul>                        
+                      </li>                      
+                    </ul>
+                </li>
 
-                        <div class="collapse" id="catPcs">
-                            <ul class="list-group">
-                                <li class="list-group-item">Acer</li>
-                                <li class="list-group-item">Dell</li>
-                                <li class="list-group-item">Hp</li>
-                                <li class="list-group-item">Mac</li>
-                            </ul>
-                        </div>
-                </div>
+                <li class="dropdown-submenu list-group">
+                    <a tabindex="-1" href="#" class="list-group-item">Papeleria</a>
+                    <ul class="dropdown-menu">                      
+                      <li class="dropdown-submenu">
+                        <a href="#">Utilies escolares</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Cuadernos</a></li>
+                            <li><a href="#">Colores</a></li>
+                            <li><a href="#">Lapiceros</a></li>
+                        </ul>                        
+                      </li>
+                      <li class="dropdown-submenu">
+                        <a href="#">Libros</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Ciencia ficcion</a></li>
+                            <li><a href="#">Romance</a></li>
+                            <li><a href="#">Historia</a></li>
+                        </ul>                        
+                      </li>
+                      <li class="dropdown-submenu">
+                        <a href="#">Manualidades</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Lienzos</a></li>
+                            <li><a href="#">Pinturas</a></li>
+                            <li><a href="#">Vinilos</a></li>
+                        </ul>                        
+                      </li>                      
+                    </ul>
+                </li>
+
+                <li class="dropdown-submenu list-group">
+                    <a tabindex="-1" href="#" class="list-group-item">Ropa</a>
+                    <ul class="dropdown-menu">                      
+                      <li class="dropdown-submenu">
+                        <a href="#">Calzado</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Zapatillas</a></li>
+                            <li><a href="#">Botas</a></li>
+                            <li><a href="#">Tacones</a></li>
+                        </ul>                        
+                      </li>
+                      <li class="dropdown-submenu">
+                        <a href="#">Vestidos</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Playera</a></li>
+                            <li><a href="#">CamiBuzos</a></li>
+                            <li><a href="#">Blusas</a></li>
+                        </ul>                        
+                      </li>
+                      <li class="dropdown-submenu">
+                        <a href="#">Accesorios</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Maletines</a></li>
+                            <li><a href="#">Bolsos</a></li>
+                            <li><a href="#">Manos libres</a></li>
+                        </ul>                        
+                      </li>                      
+                    </ul>
+                </li>
             </div>
 
             <div class="col-7">
@@ -100,6 +152,34 @@
             </div>
         </div>
     </div>
+    <div id="footer">
+        <!-- Default dropright button -->
+<div class="btn-group dropright">
+  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropright
+  </button>
+  <div class="dropdown-menu">
+    <!-- Dropdown menu links -->
+    <li>hola</li>
+    <li>mundo </li>
+    <li>cruel</li>
+  </div>
+</div>
+
+<!-- Split dropright button -->
+<div class="btn-group dropright">
+  <button type="button" class="btn btn-secondary">
+    Split dropright
+  </button>
+  <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="sr-only">Toggle Dropright</span>
+  </button>
+  <div class="dropdown-menu">
+    <!-- Dropdown menu links -->
+  </div>
+</div>
+    </div>
+    <script src="../node_modules/bootstrap/dist/js/miscripts.js"></script>
 </body>
 
 </html>

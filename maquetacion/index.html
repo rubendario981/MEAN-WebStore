@@ -11,7 +11,9 @@
 
     <script src="https://use.fontawesome.com/2290af73c0.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
 
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -44,56 +46,45 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-5">
-                <div class="accordion" id="accordionExample">
-                    <div class="card">
-                        <h3 class="card-title bg-primary text-center text-white p-3">Categorias</h3>
-                    </div>
-                    <div class="card mt-n3">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Tecnologia
-                                </button>
-                            </h2>
+                <div class="card">
+                    <h3 class="card-title bg-primary text-center text-white p-3 mb-n1">Categorias</h3>
+                </div>
+                <div class="dropright">
+                    <button class="btn btn-light w-100 dropdown-toggle text-left" type="button" id="dropdownMenu"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tecnologia
+                    </button>                    
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <button class="accordion" type="button" data-toggle="collapse" data-target="#catTvs" aria-expanded="false" aria-controls="catTvs">Tvs</button>
+                            <button class="dropdown-item" type="button" data-toggle="collapse" data-target="#catCels" aria-expanded="false" aria-controls="catCels">Celulares</button>
+                            <button class="dropdown-item" type="button" data-toggle="collapse" data-target="#catPcs" aria-expanded="false" aria-controls="catPcs">Computadores</button>
+                        </div>
+                        <div class="collapse show" id="catTvs">
+                            <ul class="list-group">
+                                <li class="list-group-item">Lg</li>
+                                <li class="list-group-item">Samsung</li>
+                                <li class="list-group-item">Panasonic</li>
+                                <li class="list-group-item">Kalley</li>
+                            </ul>
                         </div>
 
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-                            data-parent="#accordionExample">
-                            
+                        <div class="collapse" id="catCels">
+                            <ul class="list-group">
+                                <li class="list-group-item">Motorola</li>
+                                <li class="list-group-item">Huawei</li>
+                                <li class="list-group-item">Xiaomi</li>
+                                <li class="list-group-item">Apple</li>
+                            </ul>
+                        </div>
 
+                        <div class="collapse" id="catPcs">
+                            <ul class="list-group">
+                                <li class="list-group-item">Acer</li>
+                                <li class="list-group-item">Dell</li>
+                                <li class="list-group-item">Hp</li>
+                                <li class="list-group-item">Mac</li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingTwo">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left collapsed" type="button"
-                                    data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
-                                    aria-controls="collapseTwo">
-                                    Papeleria
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                            data-parent="#accordionExample">
-
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingThree">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left collapsed" type="button"
-                                    data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
-                                    aria-controls="collapseThree">
-                                    Ropa
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                            data-parent="#accordionExample">
-
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -107,9 +98,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            pie de pagina
         </div>
     </div>
 </body>

@@ -94,7 +94,7 @@
                                     </select>
                                     <label class="mt-2 mb-n2">Nuevo nombre categoria</label>
                                     <input class="form-control" type="text"
-                                        placeholder="Ingresa nueva nombre categoria">
+                                        placeholder="Ingresa nuevo nombre categoria">
                                 </div>
                                 <div id="btn-form" class="row d-flex justify-content-around pb-4">
                                     <button type="button" class="btn btn-info">Cambiar</button>
@@ -135,21 +135,27 @@
                         <div class="card-header text-center font-weight-bolder text-white bg-warning">
                             Administrar Sub-Categorias
                         </div>
-                        <form id="nueva-cat" class="border border-light">
+                        <form id="nueva-sub-cat" class="border border-light">
                             <div class="card-body">
                                 <div class="card-title">
                                     <h4 class="font-weight-bolder">Agregar sub-categoria </h4>
                                 </div>
-                                <label class="mb-n2">Seleccione categoria principal</label>
-                                <select class="custom-select" id="inputGroupSelect01">
-                                    <option selected>Seleccione...</option>
-                                    <option value="1">Cat 1</option>
-                                    <option value="2">Cat 2</option>
-                                    <option value="3">Cat 3</option>
-                                </select>
-                                <div class="form-group mt-2">
-                                    <label class="mb-n2">Nombre Sub-categoria</label>
-                                    <input class="form-control" type="text" placeholder="Ingresa nueva categoria">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="mb-n2">Categoria principal</label>
+                                        <select class="custom-select" id="inputGroupSelect01">
+                                            <option selected>Seleccione...</option>
+                                            <option value="1">Cat 1</option>
+                                            <option value="2">Cat 2</option>
+                                            <option value="3">Cat 3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mt-2 mt-md-0">
+                                            <label class="mb-n2">Nombre Subcategoria</label>
+                                            <input class="form-control" type="text" placeholder="Ingresa nueva subcategoria">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div id="btn-form" class="row d-flex justify-content-around pb-4">
                                     <button type="button" class="btn btn-success">Agregar</button>
@@ -158,26 +164,32 @@
                             </div>
                         </form>
 
-                        <form id="edita-cat" class="border border-light bg-white">
+                        <form id="edita-sub-cat" class="border border-light bg-white">
                             <div class="card-body">
                                 <div class="card-title">
                                     <h4 class="font-weight-bolder">Editar sub-categoria </h4>
                                 </div>
                                 <div class="form-group">
-                                    <label class="mb-n2">Categorias principales</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Sub-categoria para editar</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="mb-n2">Categorias principales</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mt-2 mb-n2 mt-md-0">Subcategoria a editar</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <label class="mt-2 mb-n2">Nuevo nombre categoria</label>
                                     <input class="form-control" type="text"
                                         placeholder="Ingresa nueva nombre categoria">
@@ -188,51 +200,36 @@
                                 </div>
                             </div>
                         </form>
-
-                        <form id="elimina-cat" class="border border-light bg-white">
-                            <div class="card-body">
-                                <div class="card-title">
-                                    <h4 class="font-weight-bolder">Eliminar categoria </h4>
-                                </div>
-                                <div class="form-group">
-                                    <label class="mb-n2">Categorias principales</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>                                    
-                                </div>
-                                <div id="btn-form" class="row d-flex justify-content-around pb-4">
-                                    <button type="button" class="btn btn-danger">Eliminar</button>
-                                    <button type="button" class="btn btn-secondary">Cancelar</button>
-                                </div>
-                            </div>
-                        </form>
-
-                        <form id="elimina-subcat" class="border border-light bg-white">
+                        
+                        <form id="elimina-sub-cat" class="border border-light bg-white">
                             <div class="card-body">
                                 <div class="card-title">
                                     <h4 class="font-weight-bolder">Eliminar sub-categoria </h4>
                                 </div>
                                 <div class="form-group">
-                                    <label class="mb-n2">Categorias principales</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Seleccione sub-categoria a eliminar</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="mb-n2">Categorias principales</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mt-2 mb-n2 mt-md-0">Subcategoria a eliminar</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div id="btn-form" class="row d-flex justify-content-around pb-4">
-                                    <button type="button" class="btn btn-warning">Eliminar</button>
+                                    <button type="button" class="btn btn-danger">Eliminar</button>
                                     <button type="button" class="btn btn-secondary">Cancelar</button>
                                 </div>
                             </div>
@@ -242,7 +239,7 @@
             </div>
         </div>
 
-        <div class="crear-producto">
+        <div class="admin-producto">
             <div class="row justify-content-center mt-3 mb-3">
                 <div class="col-auto">
                     <div class="card border border-primary">
@@ -254,31 +251,54 @@
                                 <div class="card-title">
                                     <h4 class="font-weight-bolder">Crear producto</h4>
                                 </div>
-                                <label class="mb-n2">Seleccione categoria del producto</label>
-                                <select class="custom-select" id="inputGroupSelect01">
-                                    <option selected>Seleccione...</option>
-                                    <option value="1">Cat 1</option>
-                                    <option value="2">Cat 2</option>
-                                    <option value="3">Cat 3</option>
-                                </select>
-                                <label class="mt-2 mb-n2">Seleccione la sub-categoria del producto</label>
-                                <select class="custom-select" id="inputGroupSelect01">
-                                    <option selected>Seleccione...</option>
-                                    <option value="1">Cat 1</option>
-                                    <option value="2">Cat 2</option>
-                                    <option value="3">Cat 3</option>
-                                </select>
-                                <div class="form-group mt-2">
-                                    <label class="mb-n2">Nombre del producto</label>
-                                    <input class="form-control" type="text" placeholder="Ingresa nombre producto">
-                                </div>
-                                <div class="form-group mt-2">
-                                    <label class="mb-n2">Ingrese el precio del producto</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">$</span>
+                                <div class="row justify-content-start">
+                                    <div class="col-md-6">
+                                        <label class="mb-n2">Seleccione la categoria del producto...</label>
+                                        <select class="custom-select" id="inputGroupSelect01">
+                                            <option selected>Seleccione...</option>
+                                            <option value="1">Cat 1</option>
+                                            <option value="2">Cat 2</option>
+                                            <option value="3">Cat 3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="mt-2 mb-n2 mt-md-0">Seleccione subcategoria del
+                                            producto</label>
+                                        <select class="custom-select" id="inputGroupSelect01">
+                                            <option selected>Seleccione...</option>
+                                            <option value="1">Cat 1</option>
+                                            <option value="2">Cat 2</option>
+                                            <option value="3">Cat 3</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mt-2">
+                                            <label class="mb-n2">Nombre del producto</label>
+                                            <input class="form-control" type="text"
+                                                placeholder="Ingresa nombre producto">
                                         </div>
-                                        <input class="form-control" type="text" placeholder="Ingresa el precio">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="mt-md-2 mb-n2">Seleccione imagen producto</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                    aria-describedby="inputGroupFileAddon01">
+                                                <label class="custom-file-label"
+                                                    for="inputGroupFile01">Elegir...</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mt-2 mt-md-n2">
+                                            <label class="mt-md-n4 mb-n2">Ingrese el precio del producto</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input class="form-control" type="text" placeholder="Ingresa el precio">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="text-descrip" class="form-group">
@@ -304,38 +324,63 @@
                                     <h4 class="font-weight-bolder">Editar producto</h4>
                                 </div>
                                 <div class="form-group">
-                                    <label class="mb-n2">Categoria principal</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Sub-categoria producto</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Seleccione producto</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Nombre producto</label>
-                                    <input class="form-control" type="text" />
-                                    <div class="form-group mt-2">
-                                        <label class="mb-n2">Precio del producto</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">$</span>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="mb-n2">Categoria principal</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mt-2 mt-md-n2 mb-n2">Sub-categoria producto</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mt-2 mb-n2">Seleccione producto</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mt-2">
+                                                <label class="mb-n2">Nuevo nombre del producto</label>
+                                                <input class="form-control" type="text">
                                             </div>
-                                            <input class="form-control" type="text">
+                                        </div>
+                                        <div class="col-md-6">   
+                                            <div class="form-group mt-2 mt-md-n2">
+                                                <label class="mb-n2">Precio del producto</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input class="form-control" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-md-n2">
+                                            <label class="mb-n2">Nueva imagen producto</label>
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                                        aria-describedby="inputGroupFileAddon01">
+                                                    <label class="custom-file-label" for="inputGroupFile01">Seleccione...</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    
                                     <div id="text-descrip" class="form-group">
                                         <label class="mb-n2">Descripcion producto</label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1"
@@ -360,31 +405,41 @@
                                     <h4 class="font-weight-bolder">Eliminar producto </h4>
                                 </div>
                                 <div class="form-group">
-                                    <label class="mb-n2">Categorias principales</label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Sub-categoria </label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                    <label class="mt-2 mb-n2">Seleccione producto a eliminar </label>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Seleccione...</option>
-                                        <option value="1">Cat 1</option>
-                                        <option value="2">Cat 2</option>
-                                        <option value="3">Cat 3</option>
-                                    </select>
-                                </div>
-                                <div id="btn-form" class="row d-flex justify-content-around pb-4">
-                                    <button type="button" class="btn btn-danger">Eliminar</button>
-                                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="mb-n2">Categorias principales</label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mt-2 mt-md-n2 mb-n2">Sub-categoria </label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mt-2 mb-n2">Seleccione producto a eliminar </label>
+                                            <select class="custom-select" id="inputGroupSelect01">
+                                                <option selected>Seleccione...</option>
+                                                <option value="1">Cat 1</option>
+                                                <option value="2">Cat 2</option>
+                                                <option value="3">Cat 3</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div id="btn-form" class="row d-flex justify-content-around pb-4 pb-md-2 mt-md-4">
+                                                <button type="button" class="btn btn-danger mt-md-2">Eliminar</button>
+                                                <button type="button" class="btn btn-secondary mt-md-2">Cancelar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>

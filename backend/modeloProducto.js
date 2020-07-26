@@ -10,7 +10,7 @@ var EsquemaProducto = mongoose.Schema({
     categoria: String,
     subCategoria: String,
     precio: Number,
-    fecha: Date,
+    fecha: {type: Date, default: Date.now},
     imagen: String
 });
 

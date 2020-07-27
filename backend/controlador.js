@@ -1,7 +1,6 @@
 'use strict'
 
 var Producto = require('./modeloProducto');
-const { query } = require('express');
 
 var controlador = {
     crearProducto: (req, res) => {
@@ -28,7 +27,6 @@ var controlador = {
                 });
             }
 
-            // Devolver una respuesta 
             return res.status(200).send({
                 mensaje: 'success',
                 prod: productoCreado
@@ -79,36 +77,70 @@ var controlador = {
 
     /* **************************** */
     actualizarProducto: (req, res) => {
-        var param = req.body;
-        var idProducto = param.id;
+        var params = req.body;
+        var idProducto = req.params.id;
 
         Producto.findOneAndUpdate({ _id: idProducto },
-            param, { new: true }, (err, actualizaProducto) => {
+            params, { new: true }, (err, actualizaProducto) => {
                 if (err) {
                     return res.status(400).send({
                         mensaje: 'Falla al buscar id producto'
                     });
                 }
                 return res.status(200).send({
-                    nombre: 'gatito',
                     mensaje: ' Se pudo actualizar producto en bd ',
-                    actualizaProducto
-
+                    prod: actualizaProducto
                 });
-
             })
-
     },
+
     /* **************************** */
     eliminarProducto: (req, res) => {
+        var params = req.body;
+        var idProducto = req.params.id;
 
-        return res.status(200).send({
-
-            nombre: '',
-            mensaje: ''
-
-        });
+        Producto.findOneAndDelete({_id: idProducto}, (err, delProd)=>{
+            if(err){
+                return res.status(400).send({
+                    mensaje: 'no se puede eliminar porque no existe'
+                })
+            }
+            return res.status(200).send({
+                mensaje: 'Producto eliminado correctamente',
+                eliminado: delProd
+            })
+        })
     },
+
+    /******************************* */
+    busqueda: (req, res)=>{
+        var variableBusqueda = req.params.var;
+        
+        Producto.find({"$or": [ 
+            {"nombre": {"$regex": variableBusqueda, "$options": "i"}},
+            {"marca": {"$regex": variableBusqueda, "$options": "i"}},
+            {"descripcion": {"$regex": variableBusqueda, "$options": "i"}},
+            {"categoria": {"$regex": variableBusqueda, "$options": "i"}},
+            {"subCategoria": {"$regex": variableBusqueda, "$options": "i"}}        
+        ]}).exec((err, encontrados)=>{
+            if(err){
+                return res.status(400).send({
+                    mensaje: 'mala peticion del comando'
+                })
+            }
+            if(!encontrados || encontrados.length === 0){
+                return res.status(500).send({
+                    mensaje: 'no se encontraron articulos'
+                })
+            }
+            if(encontrados.length > 1){
+                return res.status(200).send({
+                    mensaje: 'ok',
+                    productos: encontrados
+                })
+            }
+        })
+    }
 };
 
 module.exports = controlador;

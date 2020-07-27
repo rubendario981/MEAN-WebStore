@@ -1,79 +1,103 @@
 'use strict'
 
-var valida = require('validator');
 var Producto = require('./modeloProducto');
+const { query } = require('express');
 
 var controlador = {
-
     crearProducto: (req, res) => {
-        var param = req.body;
+        // Recoger parametros por post
+        var params = req.body;
 
-        try {
-            var vNombre = !valida.isEmpty(param.nombre);
-            var vMarca = !valida.isEmpty( param.marca)
-            var vDescripcion = !valida.isEmpty( param.descripcion);
-            var vDescripcion = !valida.isEmpty( param.categoria);
-            var vSubCategoria = !valida.isEmpty( param.subCategoria);
-            var vPrecio = !valida.isNumeric( param.precio);             
+        //Crear el objeto a guardar
+        var prod = new Producto();
 
-        } catch (error) {
-            return res.status(400).send({
-                mensaje: 'error en validacion de datos',
-                Error: error
-            })
-        }
-        //creacion de objeto para guardar producto en base de datos            
-        var producto = new Producto();
-        producto.nombre = param.nombre;
-        producto.marca = param.marca;
-        producto.descripcion = param.descripcion;
-        producto.categoria = param.categoria;
-        producto.subCategoria = param.subCategoria;
-        producto.precio = param.precio;
+        // Asignar valores
+        prod.nombre = params.nombre;
+        prod.marca = params.marca;
+        prod.descripcion = params.descripcion;
+        prod.categoria = params.categoria
+        prod.subCategoria = params.subCategoria;
+        prod.precio = params.precio;
 
-        //si todo es valido guardar en bdMongo
-        producto.save((err, productoCreado) => {
+        // Guardar el articulo
+        prod.save((err, productoCreado) => {
+
             if (err || !productoCreado) {
-                return res.status(400).send({
-                    mensaje: 'Error al guardar en base de datos '
-
+                return res.status(404).send({
+                    mensaje: 'Algun dato invalido'
                 });
             }
-            return status(200).send({
-                mensaje: 'Producto guardado en base de datos!!!',
-                producto: productoCreado
+
+            // Devolver una respuesta 
+            return res.status(200).send({
+                mensaje: 'success',
+                prod: productoCreado
             });
+
         });
+
     },
+
     /* **************************** */
     listarProductos: (req, res) => {
-
-        return res.status(200).send({
-
-            nombre: '',
-            mensaje: '  '
-
+        Producto.find({}).exec((err, productos) => {
+            if (err) {
+                return res.status(500).send({
+                    mensaje: 'error en consulta',
+                });
+            }
+            if (!productos || productos.length === 0) {
+                return res.status(404).send({
+                    mensaje: 'No hay productos en base de datos'
+                })
+            }
+            return res.status(200).send({
+                mensaje: 'ok',
+                productos
+            })
         });
     },
+
     /* **************************** */
-    buscar: (req, res) => {
+    buscar: (req, res) => {        
+        var idProd = req.params.id;
+        console.log('parametro es: ' + idProd)
 
-        return res.status(200).send({
-
-            nombre: '',
-            mensaje: '  '
-
-        });
+        Producto.findById(idProd, (err, prod) => {            
+            if (err || !prod) {
+                return res.status(500).send({
+                    mensaje: 'Producto no encontrado'
+                })
+            } else{
+                return res.status(200).send({
+                    mensaje: 'ok',
+                    prod
+                })
+            }
+        })
     },
+
     /* **************************** */
     actualizarProducto: (req, res) => {
+        var param = req.body;
+        var idProducto = param.id;
 
-        return res.status(200).send({
+        Producto.findOneAndUpdate({ _id: idProducto },
+            param, { new: true }, (err, actualizaProducto) => {
+                if (err) {
+                    return res.status(400).send({
+                        mensaje: 'Falla al buscar id producto'
+                    });
+                }
+                return res.status(200).send({
+                    nombre: 'gatito',
+                    mensaje: ' Se pudo actualizar producto en bd ',
+                    actualizaProducto
 
-            nombre: '',
-            mensaje: ''
+                });
 
-        });
+            })
+
     },
     /* **************************** */
     eliminarProducto: (req, res) => {

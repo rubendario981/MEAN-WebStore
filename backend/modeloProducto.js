@@ -1,7 +1,7 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var esquema = mongoose.Schema;
+//var esquema = mongoose.Schema;
 
 var EsquemaProducto = mongoose.Schema({
     nombre: String,
@@ -10,7 +10,7 @@ var EsquemaProducto = mongoose.Schema({
     categoria: String,
     subCategoria: String,
     precio: Number,
-    fecha: Date,
+    fecha: {type: Date, default: Date.now},
     imagen: String
 });
 

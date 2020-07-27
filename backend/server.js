@@ -18,7 +18,8 @@ server.use(bodyparse.json());
 
 //CORS  PETICIONES DESDE EL FRONTEND
 
-//añadir prefijos a rutas (opcional)
+//Poner en funcionamiento modulo de rutas
+//Se puede poner un prefijo a las rutas ('/xxx', modulo-rutas)
 server.use('/', rutas);
 
 //exportar modulo

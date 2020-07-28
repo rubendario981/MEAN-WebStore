@@ -117,24 +117,25 @@ var controlador = {
     busqueda: (req, res)=>{
         var variableBusqueda = req.params.var;
         
-        Producto.find({"$or": [ 
-            {"nombre": {"$regex": variableBusqueda, "$options": "i"}},
-            {"marca": {"$regex": variableBusqueda, "$options": "i"}},
-            {"descripcion": {"$regex": variableBusqueda, "$options": "i"}},
-            {"categoria": {"$regex": variableBusqueda, "$options": "i"}},
-            {"subCategoria": {"$regex": variableBusqueda, "$options": "i"}}        
+        
+        Producto.find({ "$or": [ 
+            { "nombre": { "$regex": variableBusqueda, "$options": "i"}},
+            { "marca": { "$regex": variableBusqueda, "$options": "i"}},
+            { "descripcion": { "$regex": variableBusqueda, "$options": "i"}},
+            { "categoria": { "$regex": variableBusqueda, "$options": "i"}},
+            { "subCategoria": { "$regex": variableBusqueda, "$options": "i"}}        
         ]}).exec((err, encontrados)=>{
             if(err){
                 return res.status(400).send({
                     mensaje: 'mala peticion del comando'
                 })
             }
-            if(!encontrados || encontrados.length === 0){
+            if(!encontrados || encontrados.length <= 0){
                 return res.status(500).send({
                     mensaje: 'no se encontraron articulos'
                 })
             }
-            if(encontrados.length > 1){
+            if(encontrados.length >= 1){
                 return res.status(200).send({
                     mensaje: 'ok',
                     productos: encontrados

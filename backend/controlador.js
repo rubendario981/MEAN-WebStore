@@ -1,6 +1,7 @@
 'use strict'
 
 var Producto = require('./modeloProducto');
+var fs = require('fs');
 
 var controlador = {
     crearProducto: (req, res) => {
@@ -139,6 +140,41 @@ var controlador = {
                     productos: encontrados
                 })
             }
+        })
+    },
+
+    /*************************************** */
+    subirImagen: (req, res)=>{
+        var params = req.body;
+        var idProd = req.params.id;
+
+        if(req.files.file0.type == null){
+            return res.status(400).send({
+                mensaje: 'Imagen no subida',
+                mid: idProd
+            })
+        }
+
+        var rutaArchivo = req.files.file0.path;
+        var ext = rutaArchivo.split('.')[1];
+        
+        if(!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')){
+            return res.status(400).send({
+                mensaje: 'solo imagenes',
+            })
+        }
+
+        Producto.findOneAndUpdate({_id: idProd}, {imagen: rutaArchivo}, {new: true}, (err, prodEncotrado)=>{
+            if(err || !prodEncotrado){
+                return res.status(500).send({
+                    mensaje: 'No se encontro el producto',
+                    evento: err
+                })
+            }
+            return res.status(200).send({
+                mensaje: 'producto actualizado',
+                DatosActualizados: prodEncotrado
+            })
         })
     }
 };

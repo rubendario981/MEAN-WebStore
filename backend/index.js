@@ -17,3 +17,4 @@ mongoose.connect('mongodb://localhost:27017/bdWebStore', {useNewUrlParser: true}
     }).catch(()=>{
         console.log('No se pudo conectar a la base de datos ', error);
 });
+

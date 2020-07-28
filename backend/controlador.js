@@ -1,64 +1,51 @@
 'use strict'
 
-var valida = require('validator');
 var Producto = require('./modeloProducto');
+var fs = require('fs');
 
 var controlador = {
     crearProducto: (req, res) => {
-        var param = req.body;
-        try {
-            var vNombre = !valida.isEmpty(param.nombre);
-            var vMarca = !valida.isEmpty(param.marca)
-            var vDescripcion = !valida.isEmpty(param.descripcion);
-            var vCategoria = !valida.isEmpty(param.categoria);
-            var vSubCategoria = !valida.isEmpty(param.subCategoria);
-            var vPrecio = !valida.isNumeric(param.precio);
+        // Recoger parametros por post
+        var params = req.body;
 
-        } catch (error) {
-            return res.status(400).send({
-                mensaje: 'error en validacion de datos'
-            });
-        }
+        //Crear el objeto a guardar
+        var prod = new Producto();
 
-        if (vNombre && vMarca && vDescripcion && vCategoria && vSubCategoria && vPrecio) {
-            //creacion de objeto para guardar producto en base de datos            
-            var producto = new Producto();
-            producto.nombre = param.nombre;
-            producto.marca = param.marca;
-            producto.descripcion = param.descripcion;
-            producto.categoria = param.categoria;
-            producto.subCategoria = param.subCategoria;
-            producto.precio = param.precio;
+        // Asignar valores
+        prod.nombre = params.nombre;
+        prod.marca = params.marca;
+        prod.descripcion = params.descripcion;
+        prod.categoria = params.categoria
+        prod.subCategoria = params.subCategoria;
+        prod.precio = params.precio;
 
-            //si todo es valido guardar en bdMongo
-            producto.save((err, productoCreado) => {
-                if (err || !productoCreado) {
-                    return res.status(404).send({
-                        mensaje: 'Error al guardar en base de datos'
-                    });
-                }
-                //si no hay error
-                return res.status(200).send({
-                    mensaje: 'ok',
-                    productoCreado
+        // Guardar el articulo
+        prod.save((err, productoCreado) => {
+
+            if (err || !productoCreado) {
+                return res.status(404).send({
+                    mensaje: 'Algun dato invalido'
                 });
+            }
+
+            return res.status(200).send({
+                mensaje: 'success',
+                prod: productoCreado
             });
-        } 
-        else {
-            return res.status(400).send({
-                mensaje: 'Falla en algun dato, no se ha creado el producto'
-            });
-        }
+
+        });
+
     },
+
     /* **************************** */
     listarProductos: (req, res) => {
-        Producto.find({}).exec((err, productos)=>{
-            if(err){
+        Producto.find({}).exec((err, productos) => {
+            if (err) {
                 return res.status(500).send({
                     mensaje: 'error en consulta',
-                });                
+                });
             }
-            if(!productos || productos.length === 0){
+            if (!productos || productos.length === 0) {
                 return res.status(404).send({
                     mensaje: 'No hay productos en base de datos'
                 })
@@ -67,51 +54,128 @@ var controlador = {
                 mensaje: 'ok',
                 productos
             })
+        });
+    },
+
+    /* **************************** */
+    buscar: (req, res) => {        
+        var idProd = req.params.id;
+        console.log('parametro es: ' + idProd)
+
+        Producto.findById(idProd, (err, prod) => {            
+            if (err || !prod) {
+                return res.status(500).send({
+                    mensaje: 'Producto no encontrado'
+                })
+            } else{
+                return res.status(200).send({
+                    mensaje: 'ok',
+                    prod
+                })
+            }
         })
     },
-    /* **************************** */
-    buscar: (req, res) => {
-        return res.status(200).send({
 
-            nombre: '',
-            mensaje: ''
-
-        });
-        
-
-    },
     /* **************************** */
     actualizarProducto: (req, res) => {
-        var param = req.body;
-        var idProducto = param.id;
+        var params = req.body;
+        var idProducto = req.params.id;
 
         Producto.findOneAndUpdate({ _id: idProducto },
-            param, { new: true }, (err, actualizaProducto) => {
+            params, { new: true }, (err, actualizaProducto) => {
                 if (err) {
                     return res.status(400).send({
                         mensaje: 'Falla al buscar id producto'
                     });
                 }
                 return res.status(200).send({
-                    nombre: 'gatito',
                     mensaje: ' Se pudo actualizar producto en bd ',
-                    actualizaProducto
-
+                    prod: actualizaProducto
                 });
-
             })
-
     },
+
     /* **************************** */
     eliminarProducto: (req, res) => {
+        var params = req.body;
+        var idProducto = req.params.id;
 
-        return res.status(200).send({
-
-            nombre: '',
-            mensaje: ''
-
-        });
+        Producto.findOneAndDelete({_id: idProducto}, (err, delProd)=>{
+            if(err){
+                return res.status(400).send({
+                    mensaje: 'no se puede eliminar porque no existe'
+                })
+            }
+            return res.status(200).send({
+                mensaje: 'Producto eliminado correctamente',
+                eliminado: delProd
+            })
+        })
     },
+
+    /******************************* */
+    busqueda: (req, res)=>{
+        var variableBusqueda = req.params.var;
+        
+        Producto.find({"$or": [ 
+            {"nombre": {"$regex": variableBusqueda, "$options": "i"}},
+            {"marca": {"$regex": variableBusqueda, "$options": "i"}},
+            {"descripcion": {"$regex": variableBusqueda, "$options": "i"}},
+            {"categoria": {"$regex": variableBusqueda, "$options": "i"}},
+            {"subCategoria": {"$regex": variableBusqueda, "$options": "i"}}        
+        ]}).exec((err, encontrados)=>{
+            if(err){
+                return res.status(400).send({
+                    mensaje: 'mala peticion del comando'
+                })
+            }
+            if(!encontrados || encontrados.length === 0){
+                return res.status(500).send({
+                    mensaje: 'no se encontraron articulos'
+                })
+            }
+            if(encontrados.length > 1){
+                return res.status(200).send({
+                    mensaje: 'ok',
+                    productos: encontrados
+                })
+            }
+        })
+    },
+
+    /*************************************** */
+    subirImagen: (req, res)=>{
+        var idProd = req.params.id;
+
+        if(req.files.file0.type == null){
+            return res.status(400).send({
+                mensaje: 'Imagen no subida',
+                mid: idProd
+            })
+        }
+
+        var rutaArchivo = req.files.file0.path;
+        var ext = rutaArchivo.split('.')[1];
+        
+        if(!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')){
+            return res.status(400).send({
+                mensaje: 'solo imagenes',
+            })
+        }
+
+        Producto.findOneAndUpdate({_id: idProd}, {imagen: rutaArchivo}, {new: true}, (err, prodEncotrado)=>{
+            if(err || !prodEncotrado){
+                return res.status(500).send({
+                    mensaje: 'No se encontro el producto',
+                    evento: err
+                })
+            }
+            return res.status(200).send({
+                mensaje: 'producto actualizado',
+                DatosActualizados: prodEncotrado
+            })
+        })
+    }
 };
 
 module.exports = controlador;

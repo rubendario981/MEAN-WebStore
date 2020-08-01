@@ -2,6 +2,7 @@
 
 var Producto = require('./modeloProducto');
 var fs = require('fs');
+const { resolve } = require('path');
 
 var controlador = {
     crearProducto: (req, res) => {
@@ -54,6 +55,36 @@ var controlador = {
                 mensaje: 'ok',
                 productos
             })
+        });
+    },
+
+    listarCategorias: (req, res)=>{  
+        var misCat =[];
+        Producto.find({categoria: 'Tecnologia'}).exec((err, lista)=>{
+            if(err) return console.log('paila bebe ' + err)
+            return res.status(200).send({
+                lista
+            })
+        })
+        
+    },
+
+    /********************************* */
+    mostrarImagen: (req, res) => {
+        var file = req.params.imagen;
+        var path_file = 'imgProductos/' +file;        
+
+        fs.exists(path_file,(exists) => {
+            if(exists){
+                return res.sendFile(resolve(path_file));
+                
+            }else{
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'La imagen no existe !!!',
+                    ruta: path_file
+                });
+            }
         });
     },
 
@@ -150,13 +181,14 @@ var controlador = {
 
         if(req.files.file0.type == null){
             return res.status(400).send({
-                mensaje: 'Imagen no subida',
-                mid: idProd
+                mensaje: 'Imagen no subida'
             })
         }
 
         var rutaArchivo = req.files.file0.path;
         var ext = rutaArchivo.split('.')[1];
+        var nomArchivo = rutaArchivo.split('\\')[1]
+        console.log('el nombre del archivo es ' + nomArchivo)
         
         if(!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')){
             return res.status(400).send({
@@ -164,7 +196,7 @@ var controlador = {
             })
         }
 
-        Producto.findOneAndUpdate({_id: idProd}, {imagen: rutaArchivo}, {new: true}, (err, prodEncotrado)=>{
+        Producto.findOneAndUpdate({_id: idProd}, {imagen: nomArchivo}, {new: true}, (err, prodEncotrado)=>{
             if(err || !prodEncotrado){
                 return res.status(500).send({
                     mensaje: 'No se encontro el producto',
@@ -176,7 +208,10 @@ var controlador = {
                 DatosActualizados: prodEncotrado
             })
         })
-    }
+    }, 
+    
+    /************************** */
+    
 };
 
 module.exports = controlador;

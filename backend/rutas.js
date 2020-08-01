@@ -9,6 +9,9 @@ var router = express.Router();
 
 router.post('/crearProducto', controlador.crearProducto);
 router.get('/listarProductos', controlador.listarProductos);
+router.get('/listarCategorias', controlador.listarCategorias);
+router.get('/mostrarImagen/:imagen', controlador.mostrarImagen);
+
 //ruta para buscar articulo por su id
 router.get('/buscar/:id', controlador.buscar);
 router.put('/actualizaProducto/:id', controlador.actualizarProducto);

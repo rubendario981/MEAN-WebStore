@@ -1,7 +1,6 @@
 'use strict'
 
 var mongoose = require('mongoose');
-//var esquema = mongoose.Schema;
 
 var EsquemaProducto = mongoose.Schema({
     nombre: String,

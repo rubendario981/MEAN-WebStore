@@ -3,6 +3,7 @@
 var Producto = require('./modeloProducto');
 var fs = require('fs');
 const { resolve } = require('path');
+const { set } = require('mongoose');
 
 var controlador = {
     crearProducto: (req, res) => {
@@ -58,15 +59,19 @@ var controlador = {
         });
     },
 
-    listarCategorias: (req, res)=>{  
-        var misCat =[];
-        Producto.find({categoria: 'Tecnologia'}).exec((err, lista)=>{
-            if(err) return console.log('paila bebe ' + err)
-            return res.status(200).send({
-                lista
-            })
-        })
-        
+    listarCategorias: (req, res)=>{ 
+        const filtrarCat = []
+        const myObj = []
+        Producto.find({}, {"categoria": 1, "_id":0}).exec((err, listaCat)=>{
+            if(err) res.status(400)
+            if(listaCat){               
+                listaCat.forEach(el => !(el in myObj) && (myObj[el] = true) && filtrarCat.push(el))
+                return res.status(200).send({
+                    mensaje: 'ok', 
+                    filtrarCat
+                })  
+            } 
+        })        
     },
 
     /********************************* */

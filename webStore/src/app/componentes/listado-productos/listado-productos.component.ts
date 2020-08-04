@@ -14,9 +14,7 @@ export class ListadoProductosComponent implements OnInit {
   public producto: modeloProducto[];
   public url: String;
 
-  constructor(
-    private _listadoArticulos: ProductoService
-  ) { 
+  constructor(private _listadoArticulos: ProductoService) { 
     this.url = variable.url;
   }
 

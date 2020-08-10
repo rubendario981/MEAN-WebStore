@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloCat } from '../../modelos-servicios/modeloCategoria';
+import { ModeloSubCategoria } from '../../modelos-servicios/modeloSubCategoria';
 import { variable } from '../../modelos-servicios/constantes';
 
 @Component({
@@ -13,16 +14,21 @@ export class NavegacionComponent implements OnInit {
 
   url = variable.url;
   public categoria: modeloCat[];
+  public subCategoria: modeloCat[];
   misCategorias: [];
   misCategorias3: [];
-  constructor(private _listarCategorias: ProductoService) {
+  constructor(
+    private _rutas: ProductoService
+    
+    ) {
   }
 
   ngOnInit(): void {
-    this._listarCategorias.listarCategorias().subscribe(
+    this._rutas.listarCategorias().subscribe(
       res =>{
         if(res.mensaje == 'ok'){
-          this.categoria = res.filtrarCat;
+          this.categoria = res.listaCat;
+          this.subCategoria = res.listaSubCat
           
         }
         else{
@@ -33,6 +39,20 @@ export class NavegacionComponent implements OnInit {
         console.log(err);
       }
     )
+/* 
+    this._rutas.listarSubCategorias().subscribe(
+      res =>{ 
+        if(res.mensaje == 'ok'){
+          this.subCategoria = res.filtrarSubCat
+        }
+        else{
+          console.log('Problemas con el servidor')
+        }
+      },
+      err =>{
+        console.log(err)
+      }
+    ) */
   }
 
 }

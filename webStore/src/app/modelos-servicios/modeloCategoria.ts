@@ -1,5 +1,8 @@
 export class modeloCat{
-    constructor(public nombreCat: String){
+    constructor(
+        public nombreCat: String,
+        public nombreSubCat: String    )
+    {
         
     }
 }

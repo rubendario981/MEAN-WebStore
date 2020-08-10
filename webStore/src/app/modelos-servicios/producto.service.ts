@@ -21,6 +21,12 @@ export class ProductoService{
     listarCategorias():Observable<any>{
         return this._http.get(this.url + 'listarCategorias')
     }
+    
+    listarSubCategorias():Observable<any>{
+        return this._http.get(this.url + 'listarSubCategorias')
+    }
+
+    
 
 
 }

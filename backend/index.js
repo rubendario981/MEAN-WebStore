@@ -13,6 +13,7 @@ mongoose.connect('mongodb://localhost:27017/bdWebStore', {useNewUrlParser: true}
         //Implementacion del servidor
         server.listen(server.get('port'), ()=>{
             console.log(`Servidor corriendo en puerto => ${server.get('port')}`);
+            console.log(`*********************************************************`);
         })
     }).catch(()=>{
         console.log('No se pudo conectar a la base de datos ', error);

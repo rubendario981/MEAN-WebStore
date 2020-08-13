@@ -13,10 +13,7 @@ import { variable } from '../../modelos-servicios/constantes';
 export class NavegacionComponent implements OnInit {
 
   url = variable.url;
-  public categoria: modeloCat[];
-  public subCategoria: modeloCat[];
   misCategorias: [];
-  misCategorias3: [];
   constructor(
     private _rutas: ProductoService
     
@@ -24,12 +21,11 @@ export class NavegacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('carga mod nav')
     this._rutas.listarCategorias().subscribe(
       res =>{
         if(res.mensaje == 'ok'){
-          this.categoria = res.listaCat;
-          this.subCategoria = res.listaSubCat
-          
+          this.misCategorias = res.filtrarCat;  
         }
         else{
           console.log('Problemas con el servidor')
@@ -39,20 +35,6 @@ export class NavegacionComponent implements OnInit {
         console.log(err);
       }
     )
-/* 
-    this._rutas.listarSubCategorias().subscribe(
-      res =>{ 
-        if(res.mensaje == 'ok'){
-          this.subCategoria = res.filtrarSubCat
-        }
-        else{
-          console.log('Problemas con el servidor')
-        }
-      },
-      err =>{
-        console.log(err)
-      }
-    ) */
   }
 
 }

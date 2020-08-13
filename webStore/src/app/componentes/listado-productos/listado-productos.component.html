@@ -11,18 +11,18 @@
     </div>
   </div> 
 
-  <!-- ALTERNATIVA CON BOOTSTRAP
-    <div class="row d-flex justify-content-around">
+  <!-- ALTERNATIVA CON BOOTSTRAP -->
+  <!-- <div class="row d-flex justify-content-around" *ngFor='let modeloProducto of producto'>
     <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2">
-      <div class="card producto" style="width: 18rem;">
-        <img src="../../../assets/img/cats.jpg" class="card-img-top" alt="un gatito muy cool">
+      <div class="card producto" style="width: 18rem;" >
+        <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
         <div class="card-body">
-          <h5 class="card-title">Card title BTS</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-            content.</p>
+          <h5 class="card-title">{{modeloProducto.nombre}}</h5>
+          <p class="card-text">{{modeloProducto.descripcion}}</p>
+          <p>{{modeloProducto.precio}}</p>
           <a href="#" class="btn btn-primary">Ver mas..</a>
         </div>
       </div>
     </div>
-  </div>-->
+  </div> -->
 </main>

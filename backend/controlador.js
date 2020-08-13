@@ -9,6 +9,24 @@ var controlador = {
     crearProducto: (req, res) => {
         // Recoger parametros por post
         var params = req.body;
+        var nomArchivo = null
+
+        if (req.files.imagen.type == null) {
+            return res.status(400).send({
+                mensaje: 'Imagen no subida'
+            })
+        }
+
+        var rutaArchivo = req.files.imagen.path;
+        var ext = rutaArchivo.split('.')[1];
+        var nomArchivo = rutaArchivo.split('\\')[1]
+        console.log('el nombre del archivo es ' + nomArchivo)
+
+        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) {
+            return res.status(400).send({
+                mensaje: 'solo imagenes',
+            })
+        }
 
         //Crear el objeto a guardar
         var prod = new Producto();
@@ -20,6 +38,7 @@ var controlador = {
         prod.categoria = params.categoria
         prod.subCategoria = params.subCategoria;
         prod.precio = params.precio;
+        prod.imagen = nomArchivo;
 
         // Guardar el articulo
         prod.save((err, productoCreado) => {
@@ -41,7 +60,7 @@ var controlador = {
 
     /* **************************** */
     listarProductos: (req, res) => {
-        Producto.find({}).exec((err, productos) => {
+        Producto.find({}).sort({fecha: -1}).exec((err, productos) => {
             if (err) {
                 return res.status(500).send({
                     mensaje: 'error en consulta',
@@ -56,17 +75,17 @@ var controlador = {
                 mensaje: 'ok',
                 productos
             })
-        });
+        })
     },
 
     /************************************** */
     listarCategorias: (req, res) => {
         const filtrarCat = []
-        const myObj = {}
+        const objCat = {}
         Producto.find({}, { "categoria": 1, "_id": 0 }).exec((err, listaCat) => {
             if (err) res.status(400)
             if (listaCat) {
-                listaCat.forEach(el => !(el in myObj) && (myObj[el] = true) && filtrarCat.push(el))
+                listaCat.forEach(el => !(el in objCat) && (objCat[el] = true) && filtrarCat.push(el))
                 return res.status(200).send({
                     mensaje: 'ok',
                     filtrarCat
@@ -75,50 +94,21 @@ var controlador = {
         })
     },
 
-    /********************************** 
-    listarSubCategorias: (req, res)=>{
-        const filtrarSubCat = []
-        const objSubCat = {}        
-        Producto.find({'categoria': 'Tecnologia'}, { '_id':0, 'subCategoria':1}).exec((err, listaSubCat)=>{
-            if(err) res.status(400)
-            if(listaSubCat){               
-                listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
-                return res.status(200).send({
-                    mensaje: 'ok', 
-                    filtrarSubCat
-                })  
-            } 
-        })
-    },*/
-
+    /********************************** */
     listarSubCategorias: (req, res) => {        
         
-        const listaCat = []
-        const objCat = {}
-        const listaSubCat = []
+        const filtrarSubCat = []
         const objSubCat = {}
-
-        Producto.find({}, {'_id':0, 'categoria':1}).exec((err, resultado)=>{
-            if(err) console.log('paila bebe')
-            if(resultado){
-                resultado.forEach(e => (!(e in objCat)) && (objCat[e] = true) && (listaCat.push(e)));
-                            
-            }
-            listaCat.forEach(cat => {
-                Producto.find({'categoria': cat.toString().split("'")[1]}, {'_id':0, 'subCategoria':1}).exec((err, resultado)=>{
-                    console.log('el resultado es ' + cat.toString().split("'")[1])
-                    if(err) console.log('paila bebe no 2')
-                    if(resultado){
-                        resultado.forEach(el => (!(el in objSubCat)) && (objSubCat[el] = true) && (listaSubCat.push(el)));
-                        res.status(200).send({
-                            fresco: miGranListado.liC
-                        })     
-                    }
+        Producto.find({}, { "subCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
+            if (err) res.status(400)
+            if (listaSubCat) {
+                listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
+                return res.status(200).send({
+                    mensaje: 'ok',
+                    filtrarSubCat
                 })
-                
-            });
+            }
         })
-        
     },
 
     /********************************* */

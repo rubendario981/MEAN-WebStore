@@ -1,5 +1,6 @@
 export class modeloProducto{
     constructor(
+        public _id: String,
         public nombre: String,
         public marca: String,
         public descripcion: String,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { modeloProducto } from 'src/app/modelos-servicios/modeloProducto';
+import { modeloCategoria } from 'src/app/modelos-servicios/modeloCategoria';
 import { ProductoService } from 'src/app/modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 
@@ -24,17 +25,20 @@ export class CrearProductoComponent implements OnInit {
     fecha: null
   };
 
-  categorias: []
-  subCategorias: []
+  categoria: modeloCategoria= {
+    nombreCat: '', 
+    nombreSubCat: ''
+  };
+  subCategoria: String
+  listaCategorias: []
+  listaSubCategorias: []
 
   url: String
 
-  constructor
-    (private _router: Router,
-      private _servicioProducto: ProductoService) {
+  constructor (private _router: Router,  private _servicioProducto: ProductoService) {
     this.url = variable.url
   }
-
+/* 
   afuConfig = {
     multiple: false,
     formatsAllowed: ".jpg,.png",
@@ -56,41 +60,53 @@ export class CrearProductoComponent implements OnInit {
       afterUploadMsg_error: 'Upload Failed !',
       sizeLimit: 'Tamaño limite: '
     }
-  };
+  }; */
 
 
-  ngOnInit(){
-    console.log('hola')
+  ngOnInit() {
     this._servicioProducto.listarCategorias().subscribe(
       res => {
-        if(res.mensaje == 'ok'){
-          this.categorias = res.filtrarCat         
-        }         
+        if (res.mensaje == 'ok') {
+          this.listaCategorias = res.filtrarCat
+        }
       },
       err => console.log(err)
-      )
-    
-      this._servicioProducto.listarSubCategorias().subscribe(
-        res => {
-          if(res.mensaje == 'ok'){
-            this.subCategorias = res.filtrarSubCat         
-          }         
-        },
-        err => console.log(err)
-        )
+    )
+  }
+
+  crearCategoria() {
+    console.log('respuesta del metodo crear categoria')
+    this._servicioProducto.crearCategoria(this.categoria.nombreCat).subscribe(
+      res => {
+        if(res.mensaje == 'ok') {
+          
+          console.log('Nom categoria ' + res.categoriaNueva)
+          console.log('cont response ' + res.mensaje)
+
+        }
+      },
+      err => {
+        console.log('No se pudo crear la categoria ') 
+        console.log(err)
+      }
+    )
+  }
+
+  crearSubCategoria() {
+    console.log('respuesta del metodo crear subcategoria ****')
   }
 
   crearProducto() {
     console.log('respuetsa al crear producto')
     console.log(this.producto)
-    /* 
+    
     this._servicioProducto.crearProducto(this.producto).subscribe(
       res => {
         alert('Se ha creado el producto')
         console.log(res)
       },
       err => console.log(err)
-    ) */
+    )
   }
 
   DocUpload(e) {

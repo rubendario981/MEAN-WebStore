@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
-import { modeloCat } from '../../modelos-servicios/modeloCategoria';
-import { ModeloSubCategoria } from '../../modelos-servicios/modeloSubCategoria';
+//import { modeloCat } from '../../modelos-servicios/modeloCategoria';
 import { variable } from '../../modelos-servicios/constantes';
 
 @Component({

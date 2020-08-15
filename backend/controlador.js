@@ -1,11 +1,42 @@
 'use strict'
 
 var Producto = require('./modeloProducto');
-var Navegacion = require('./modeloNav');
+var Categorias = require('./modeloCategoria')
 var fs = require('fs');
 const { resolve } = require('path');
+//Crear el objeto a guardar
+var prod = new Producto();
+var cat = new Categorias();
 
-var controlador = {
+var controlador = {    
+    /***************************** */
+    crearCategoria: (req, res) => {
+        var params = req.body;
+        cat.categoria = params.categoria;
+        cat.save((err, categoriaNueva) =>{
+            if(err || categoriaNueva == undefined) console.log('error al obtener categoria' + err)            
+            return res.status(200).send({
+                mensaje: 'ok',
+                newCat: categoriaNueva
+            });
+        });
+    },
+    
+    /***************************** */
+    crearSubCategoria: (req, res) => {  
+        var params = req.body;
+        cat.subCategoria = params.subCategoria;
+        cat.save((err, subCategoriaNueva)=>{
+            if(err) console.log('error al obtener categoria' + err)
+            
+            return res.status(200).send({
+                mensaje: 'ok',
+                newCat: subCategoriaNueva
+            });
+        });
+    },
+
+    /***************************** */
     crearProducto: (req, res) => {
         // Recoger parametros por post
         var params = req.body;
@@ -28,14 +59,11 @@ var controlador = {
             })
         }
 
-        //Crear el objeto a guardar
-        var prod = new Producto();
-
         // Asignar valores
         prod.nombre = params.nombre;
         prod.marca = params.marca;
         prod.descripcion = params.descripcion;
-        prod.categoria = params.categoria
+        prod.categoria = params.categoria;
         prod.subCategoria = params.subCategoria;
         prod.precio = params.precio;
         prod.imagen = nomArchivo;
@@ -82,7 +110,7 @@ var controlador = {
     listarCategorias: (req, res) => {
         const filtrarCat = []
         const objCat = {}
-        Producto.find({}, { "categoria": 1, "_id": 0 }).exec((err, listaCat) => {
+        Categorias.find({}, { "categoria": 1, "_id": 0 }).exec((err, listaCat) => {
             if (err) res.status(400)
             if (listaCat) {
                 listaCat.forEach(el => !(el in objCat) && (objCat[el] = true) && filtrarCat.push(el))
@@ -99,7 +127,7 @@ var controlador = {
         
         const filtrarSubCat = []
         const objSubCat = {}
-        Producto.find({}, { "subCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
+        Categorias.find({}, { "subCategorias.nomSubCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
             if (err) res.status(400)
             if (listaSubCat) {
                 listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
@@ -231,11 +259,10 @@ var controlador = {
         var rutaArchivo = req.files.file0.path;
         var ext = rutaArchivo.split('.')[1];
         var nomArchivo = rutaArchivo.split('\\')[1]
-        console.log('el nombre del archivo es ' + nomArchivo)
 
         if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) {
             return res.status(400).send({
-                mensaje: 'solo imagenes',
+                mensaje: 'solo imagenes'
             })
         }
 

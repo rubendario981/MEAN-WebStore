@@ -1,8 +1,6 @@
-export class modeloCat{
+export class modeloCategoria{
     constructor(
         public nombreCat: String,
-        public nombreSubCat: String    )
-    {
-        
-    }
+        public nombreSubCat: String
+    ){}
 }

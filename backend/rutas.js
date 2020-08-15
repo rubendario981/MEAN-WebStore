@@ -7,6 +7,8 @@ var cargaArchivos = multyParty({uploadDir: './imgProductos'})
 
 var router = express.Router();
 
+router.post('/crearCategoria', controlador.crearCategoria);
+router.post('/crearSubCategoria', controlador.crearSubCategoria);
 router.post('/crearProducto', cargaArchivos, controlador.crearProducto);
 router.get('/listarProductos', controlador.listarProductos);
 router.get('/listarCategorias', controlador.listarCategorias);

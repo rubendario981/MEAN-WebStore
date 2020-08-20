@@ -1,38 +1,40 @@
 <div class="modAdmin w-75">
   <div class="card crearCategoria">
     <h4 class="card-header bg-primary text-center text-white">Crear Categoria</h4>
-    <div class="card-body my-4">
-      <label class="pb-0">Nombre Categoria nueva</label>
-      <input type="text" name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria"
-        placeholder="Ingresa nombre del producto" required/>
-      <div class="grupoBotones mt-4">
-        <button class="btn btn-primary" type="submit" (click)='crearCategoria()' >Crear categoria</button>
-        <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
+    <form (ngSubmit)="crearCategoria()">
+      <div class="card-body">
+        <label class="pb-0">Nombre categoria nueva</label>
+        <input type="text" name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria"
+          placeholder="Ingresa nueva categoria" required />
+        <div class="grupoBotones mt-4">
+          <button class="btn btn-primary" type="submit">Crear categoria</button>
+          <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 
   <div class="card crearSubCategoria">
     <h4 class="card-header bg-primary text-center text-white">Crear SubCategoria</h4>
     <div class="card-body">
       <label class="pb-0">Selecciona la Categoria principal</label>
-      <select>
-        <option selected value="0">Elige una opcion </option>
-        <option *ngFor="let cat of listaCategorias" value="">{{cat.categoria}}</option>
+      <select (change)='obtenerCategoria()' name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria">
+        <option value="0">Elige una opcion </option>
+        <option *ngFor="let cat of listaCategorias" >{{cat.categoria}}</option>
       </select>
 
       <label class="mt-4 pb-0">Nombre SubCategoria nueva</label>
       <input type="text" name="nomSubCat" #nomSubCat='ngModel' [(ngModel)]="producto.subCategoria"
-        placeholder="Ingresa nombre del producto" />
+        placeholder="Nueva subCategoria" />
       <div class="grupoBotones mt-4">
-        <button class="btn btn-primary" type="submit">Crear Subcategoria</button>
+        <button class="btn btn-primary" type="submit" (click)="crearSubCategoria()" >Crear Subcategoria</button>
         <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
       </div>
     </div>
   </div>
   <div class="card creaProducto">
     <h4 class="card-header bg-primary text-center text-white">Ingresa los datos del producto nuevo</h4>
-    <form class="miForm" #login2="ngForm" (ngSubmit)="crearProducto()">
+    <form class="miForm" (ngSubmit)="crearProducto()">
       <div class="card-body">
         <div class="row d-flex">
           <div class="col-6 d-flex flex-column">
@@ -56,25 +58,23 @@
 
           <div class="col-6 d-flex flex-column">
             <label class="pb-0">Selecciona la Categoria</label>
-            <select name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria">
-              <option selected value="0">Elige una opcion </option>
-              <option *ngFor="let cat of listaCategorias" value="">{{cat.categoria}}</option>
+            <select (change)='obtenerCategoria2()' name="categoria" #categoria='ngModel'
+              [(ngModel)]="producto.categoria">
+              <option value="0">Elige una opcion </option>
+              <option *ngFor="let cat2 of listaCategorias">{{cat2.categoria}}</option>
             </select>
 
             <label class="mt-4 pb-0">Selecciona la SubCategoria</label>
-            <select name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria">
-              <option selected value="0">Elige una opcion </option>
-              <option *ngFor="let cat of listaSubCategorias" value="">{{cat.subCategoria}}</option>
+            <select (change)='obtenerSubCategoria()' name="subCategoria" #subCategoria='ngModel'
+              [(ngModel)]="producto.subCategoria">
+              <option value="0">Elige una opcion </option>
+              <option *ngFor="let cat2 of listaSubCategorias" value="">{{cat2.subCategoria}}</option>
             </select>
-            
-            <label class="mt-4 pb-0">Sube la imagen del producto</label>
-            <!-- <angular-file-uploader
-                  [config]="afuConfig"
-                  (ApiResponse)="DocUpload($event)">
-            </angular-file-uploader> -->
-            
-          </div>
 
+            <label class="mt-4 pb-0">Sube la imagen del producto</label>
+            <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)">
+            </angular-file-uploader>
+          </div>
         </div>
 
         <div class="grupoBotones mt-4">

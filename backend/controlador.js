@@ -1,20 +1,20 @@
 'use strict'
 
 var Producto = require('./modeloProducto');
-var Categorias = require('./modeloCategoria')
+var Categorias = require('./modeloCategoria');
 var fs = require('fs');
 const { resolve } = require('path');
-//Crear el objeto a guardar
+//Crear objetos para guardar en Bd
 var prod = new Producto();
 var cat = new Categorias();
 
-var controlador = {    
+var controlador = {
     /***************************** */
     crearCategoria: (req, res) => {
         var params = req.body;
         cat.categoria = params.categoria;
         cat.save((err, categoriaNueva) =>{
-            if(err || categoriaNueva == undefined) console.log('error al obtener categoria' + err)            
+            if(err || categoriaNueva == undefined) console.log('error al crear categoria' + err)            
             return res.status(200).send({
                 mensaje: 'ok',
                 newCat: categoriaNueva
@@ -40,25 +40,7 @@ var controlador = {
     crearProducto: (req, res) => {
         // Recoger parametros por post
         var params = req.body;
-        var nomArchivo = null
-
-        if (req.files.imagen.type == null) {
-            return res.status(400).send({
-                mensaje: 'Imagen no subida'
-            })
-        }
-
-        var rutaArchivo = req.files.imagen.path;
-        var ext = rutaArchivo.split('.')[1];
-        var nomArchivo = rutaArchivo.split('\\')[1]
-        console.log('el nombre del archivo es ' + nomArchivo)
-
-        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) {
-            return res.status(400).send({
-                mensaje: 'solo imagenes',
-            })
-        }
-
+        
         // Asignar valores
         prod.nombre = params.nombre;
         prod.marca = params.marca;
@@ -66,7 +48,7 @@ var controlador = {
         prod.categoria = params.categoria;
         prod.subCategoria = params.subCategoria;
         prod.precio = params.precio;
-        prod.imagen = nomArchivo;
+        prod.imagen = params.imagen;
 
         // Guardar el articulo
         prod.save((err, productoCreado) => {
@@ -78,7 +60,7 @@ var controlador = {
             }
 
             return res.status(200).send({
-                mensaje: 'success',
+                mensaje: 'ok',
                 prod: productoCreado
             });
 
@@ -123,11 +105,10 @@ var controlador = {
     },
 
     /********************************** */
-    listarSubCategorias: (req, res) => {        
-        
+    listarSubCategorias: (req, res) => {   
         const filtrarSubCat = []
         const objSubCat = {}
-        Categorias.find({}, { "subCategorias.nomSubCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
+        Categorias.find({}, { "subCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
             if (err) res.status(400)
             if (listaSubCat) {
                 listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
@@ -251,7 +232,7 @@ var controlador = {
         var idProd = req.params.id;
 
         if (req.files.file0.type == null) {
-            return res.status(400).send({
+            res.status(400).send({
                 mensaje: 'Imagen no subida'
             })
         }
@@ -260,24 +241,30 @@ var controlador = {
         var ext = rutaArchivo.split('.')[1];
         var nomArchivo = rutaArchivo.split('\\')[1]
 
-        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) {
-            return res.status(400).send({
-                mensaje: 'solo imagenes'
+        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) res.status(400).send({mensaje: 'solo imagenes'})
+        
+
+        if(idProd){
+            Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true }, (err, subeImagen) => {
+                if (err || !subeImagen) {
+                    return res.status(500).send({
+                        mensaje: 'No se encontro el producto',
+                        evento: err
+                    })
+                }
+                return res.status(200).send({
+                    mensaje: 'producto actualizado',
+                    imagen: subeImagen
+                })
+            })
+        }
+        else {
+            return res.status(200).send({
+                mensaje: 'producto actualizado',
+                imagen: nomArchivo
             })
         }
 
-        Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true }, (err, prodEncotrado) => {
-            if (err || !prodEncotrado) {
-                return res.status(500).send({
-                    mensaje: 'No se encontro el producto',
-                    evento: err
-                })
-            }
-            return res.status(200).send({
-                mensaje: 'producto actualizado',
-                DatosActualizados: prodEncotrado
-            })
-        })
     },
 
     /************************** */

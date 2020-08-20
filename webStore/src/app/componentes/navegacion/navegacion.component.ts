@@ -20,7 +20,6 @@ export class NavegacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('carga mod nav')
     this._rutas.listarCategorias().subscribe(
       res =>{
         if(res.mensaje == 'ok'){

@@ -24,6 +24,6 @@ router.delete('/eliminarProducto/:id', controlador.eliminarProducto);
 router.get('/busqueda/:var', controlador.busqueda);
 
 //ruta para subir una imagen
-router.put('/subirImagen/:id', cargaArchivos, controlador.subirImagen)
+router.post('/subirImagen/:id?', cargaArchivos, controlador.subirImagen)
 
 module.exports = router;

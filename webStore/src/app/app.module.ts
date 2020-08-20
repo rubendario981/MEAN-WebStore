@@ -4,6 +4,7 @@ import { appRoutingProviders, routing } from './app.routing';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AngularFileUploaderModule } from 'angular-file-uploader'
+import { ProductoService } from './modelos-servicios/producto.service'
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './componentes/header/header.component';
@@ -35,7 +36,7 @@ import { from } from 'rxjs';
     AngularFileUploaderModule
   ],
   //se agregan los servicios o providers
-  providers: [appRoutingProviders],
+  providers: [appRoutingProviders, ProductoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

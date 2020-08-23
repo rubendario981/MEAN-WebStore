@@ -20,11 +20,13 @@ var controlador = {
                 newCat: categoriaNueva
             });
         });
+        console.log('rs')
     },
     
     /***************************** */
     crearSubCategoria: (req, res) => {  
         var params = req.body;
+        cat.categoria = params.categoria;
         cat.subCategoria = params.subCategoria;
         cat.save((err, subCategoriaNueva)=>{
             if(err) console.log('error al obtener categoria' + err)

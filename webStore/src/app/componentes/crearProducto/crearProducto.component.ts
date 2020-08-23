@@ -99,10 +99,9 @@ export class CrearProductoComponent implements OnInit {
     delete(this.producto.marca)
     delete(this.producto.descripcion)
     delete(this.producto.precio)
-    delete(this.producto.categoria)
     delete(this.producto.fecha)
     delete(this.producto.imagen)
-    console.log(this.producto)
+    console.log('llamado crea subcat' + this.producto)
     this._servicioProducto.crearSubCategoria(this.producto).subscribe(
       res =>{
         if(res) res.subCategoriaNueva = this.producto

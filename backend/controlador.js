@@ -4,9 +4,8 @@ var Producto = require('./modeloProducto');
 var Categorias = require('./modeloCategoria');
 var fs = require('fs');
 const { resolve } = require('path');
-//Crear objetos para guardar en Bd
-var prod = new Producto();
 var cat = new Categorias();
+var prod;
 
 var controlador = {
     /***************************** */
@@ -20,7 +19,6 @@ var controlador = {
                 newCat: categoriaNueva
             });
         });
-        console.log('rs')
     },
     
     /***************************** */
@@ -42,6 +40,9 @@ var controlador = {
     crearProducto: (req, res) => {
         // Recoger parametros por post
         var params = req.body;
+                
+        //Crear objetos para guardar en Bd
+        prod = new Producto();
         
         // Asignar valores
         prod.nombre = params.nombre;
@@ -54,7 +55,6 @@ var controlador = {
 
         // Guardar el articulo
         prod.save((err, productoCreado) => {
-
             if (err || !productoCreado) {
                 return res.status(404).send({
                     mensaje: 'Algun dato invalido'
@@ -90,6 +90,16 @@ var controlador = {
         })
     },
 
+    /* **************************** */
+    detalleProducto: (req, res) => {
+        var params = req.body
+        prod.id = params.id
+
+        Producto.findById({})
+
+        return res.status(200).send({mensaje: prod})
+    },
+
     /************************************** */
     listarCategorias: (req, res) => {
         const filtrarCat = []
@@ -108,6 +118,29 @@ var controlador = {
 
     /********************************** */
     listarSubCategorias: (req, res) => {   
+        /* const filtrarCat = []
+        const objCat = {}
+        const filtrarSubCat = []
+        const objSubCat = {}
+        const subCats = []
+        Categorias.find({}, { "categoria": 1, "_id": 0 }).exec((err, listaCat) => {
+            if (err) res.status(400).send({mensaje: 'no se pudieron listar categorias'})
+            if (listaCat) {
+                listaCat.forEach(el => !(el in objCat) && (objCat[el] = true) && filtrarCat.push(el))
+                filtrarCat.forEach(element => {
+                    Categorias.find({categoria: element.toString().split("'")[1]}, {subCategoria: 1, categoria: 1, _id: 0}).exec((err2, listaSubCat)=>{
+                        if(err2) res.status(400).send({mensaje: 'no se pudieron listar SubCategorias', err2})                        
+                        if(listaSubCat){
+                            listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
+                        }
+                    })
+                });
+                return res.status(200).send({
+                    mensaje: 'ok',
+                    filtrarSubCat
+                })
+            }
+        }) */
         const filtrarSubCat = []
         const objSubCat = {}
         Categorias.find({}, { "subCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
@@ -144,7 +177,7 @@ var controlador = {
     /* **************************** */
     buscar: (req, res) => {
         var idProd = req.params.id;
-        console.log('parametro es: ' + idProd)
+        //console.log('parametro es: ' + idProd)
 
         Producto.findById(idProd, (err, prod) => {
             if (err || !prod) {
@@ -232,6 +265,8 @@ var controlador = {
     /*************************************** */
     subirImagen: (req, res) => {
         var idProd = req.params.id;
+        
+        prod = new Producto();
 
         if (req.files.file0.type == null) {
             res.status(400).send({

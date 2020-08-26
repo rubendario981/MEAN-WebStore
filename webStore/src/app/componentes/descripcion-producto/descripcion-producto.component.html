@@ -1,0 +1,36 @@
+<div class="detalleProducto">
+  <img src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="imagenProducto" alt={{producto?.nombre}}
+    style="width: 18rem;">
+  <div class="card">
+    <div class="card-body">
+      <h3 class="nombreProducto mb-4 font-weight-bolder">{{producto?.nombre}}</h3>
+      <h4 class="card-text mb-3"> Marca: <small> {{producto?.marca}} </small> </h4>
+      <h4 class="card-text mb-3"> Precio: <small> {{producto?.precio}} </small> </h4>
+      <h4 class="card-text mb-3"> Descripcion: <small> {{producto?.descripcion}} </small> </h4>
+      <div class="marcarProductos d-flex align-items-end">
+        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">          
+          <i class="fas fa-cart-plus fa-2x"></i>
+        </button>
+
+        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir a mis favoritos">          
+          <i class="far fa-star fa-2x"></i>          
+        </button>
+        
+        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Me gusta este producto">          
+          <i class="far fa-thumbs-up fa-2x"></i>          
+        </button>
+
+        <button class="btn btn-warning">Editar</button>
+        <button class="btn btn-danger">Eliminar</button>
+        
+      </div>
+    </div>
+  </div>
+  <div class="nubeSubCats">
+    <h3 class="text-center">Nube de marcas</h3>
+    <ul>
+      <li><a [routerLink]="['/']">probando ando</a></li>
+    </ul>
+  </div> 
+
+</div>

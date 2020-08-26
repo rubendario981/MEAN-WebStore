@@ -49,6 +49,10 @@ export class ProductoService{
         let headers = new HttpHeaders().set('Content-Type', 'application/json')
         return this._http.post(this.url + 'crearProducto', params, {headers: headers} )
     }
+
+    detalleProducto(idProducto):Observable<any>{
+        return this._http.get(this.url + 'buscar/' + idProducto)
+    }
     
 
 

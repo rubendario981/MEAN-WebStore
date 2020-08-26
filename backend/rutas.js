@@ -14,6 +14,7 @@ router.get('/listarProductos', controlador.listarProductos);
 router.get('/listarCategorias', controlador.listarCategorias);
 router.get('/listarSubCategorias', controlador.listarSubCategorias);
 router.get('/mostrarImagen/:imagen', controlador.mostrarImagen);
+router.get('/detalleProducto/:id?', controlador.detalleProducto);
 
 //ruta para buscar articulo por su id
 router.get('/buscar/:id', controlador.buscar);

@@ -9,6 +9,7 @@ import {ErrorComponent } from '../app/componentes/error/error.component'
 import {ListadoProductosComponent} from '../app/componentes/listado-productos/listado-productos.component';
 import {InicioSesionComponent} from '../app/componentes/inicio-sesion/inicio-sesion.component';
 import {CrearProductoComponent} from '../app/componentes/crearProducto/crearProducto.component';
+import {DescripcionProductoComponent} from '../app/componentes/descripcion-producto/descripcion-producto.component';
 
 const misRutas: Routes=[
     {path: '', component: InicioComponent},
@@ -17,6 +18,7 @@ const misRutas: Routes=[
     {path: 'busqueda', component: BusquedaComponent},
     {path: 'inicioSesion', component: InicioSesionComponent},
     {path: 'crearProducto', component: CrearProductoComponent},
+    {path: 'detallesProducto/:id', component: DescripcionProductoComponent},
     {path: '**', component: ErrorComponent}
 ];
 

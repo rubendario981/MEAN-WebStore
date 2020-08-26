@@ -120,7 +120,7 @@ export class CrearProductoComponent implements OnInit {
   }
 
   obtenerSubCategoria(){
-
+    console.log(this.producto.subCategoria)
   }
 
   crearProducto() {

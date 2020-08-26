@@ -1,0 +1,6 @@
+<div class="nubeSubCats">
+    <h3 class="text-center">Nube de marcas</h3>
+    <ul *ngFor="let subCats of arraySubCats">
+      <li><a [routerLink]="['/']" class="badge" >{{subCats?.subCategoria}}</a></li>
+    </ul>
+  </div>

@@ -10,7 +10,17 @@ import { modeloProducto } from './modeloProducto';
 export class ProductoService{
 
     url: String
-    producto: modeloProducto
+    public producto: modeloProducto= {
+        _id: '',
+        nombre: '',
+        marca: '',
+        categoria: '',
+        subCategoria: '',
+        imagen: '',
+        descripcion: '',
+        precio: null,
+        fecha: null
+      };
     
     
     constructor(private _http: HttpClient ){
@@ -52,6 +62,17 @@ export class ProductoService{
 
     detalleProducto(idProducto):Observable<any>{
         return this._http.get(this.url + 'buscar/' + idProducto)
+    }
+    
+    editarProducto(producto):Observable<any>{
+        let params = JSON.stringify(producto)
+        let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.put(this.url + 'actualizaProducto/' + producto._id, params, {headers: miCabecera})         
+    }
+    
+    eliminarProducto(id):Observable<any>{
+        let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.delete(this.url + '/eliminarProducto' + id)
     }
     
 

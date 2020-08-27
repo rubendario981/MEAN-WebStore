@@ -65,7 +65,12 @@ export class CrearProductoComponent implements OnInit {
       err => console.log(err)
     )
     this._servicioProducto.listarSubCategorias().subscribe(
-      res =>{if(res) this.listaSubCategorias = res.filtrarSubCat},
+      res =>{
+        if(res){ 
+          this.listaSubCategorias = res.filtrarSubCat
+          this.listaSubCategorias.shift()
+        }
+      },
       err => console.log(err)
     )
   }

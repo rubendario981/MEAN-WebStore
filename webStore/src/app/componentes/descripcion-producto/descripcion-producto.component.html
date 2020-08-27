@@ -7,7 +7,7 @@
       <h4 class="card-text mb-3"> Marca: <small> {{producto?.marca}} </small> </h4>
       <h4 class="card-text mb-3"> Precio: <small> {{producto?.precio}} </small> </h4>
       <h4 class="card-text mb-3"> Descripcion: <small> {{producto?.descripcion}} </small> </h4>
-      <div class="marcarProductos d-flex align-items-end">
+      <div class="marcarProductos">
         <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">          
           <i class="fas fa-cart-plus fa-2x"></i>
         </button>
@@ -20,18 +20,72 @@
           <i class="far fa-thumbs-up fa-2x"></i>          
         </button>
 
-        <button class="btn btn-warning">Editar</button>
-        <button class="btn btn-danger">Eliminar</button>
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editarProducto">Editar</button>
+        <button type="button" class="btn btn-danger" [routerLink]="['/']">Eliminar</button>
         
       </div>
     </div>
   </div>
   <app-nube-tags></app-nube-tags>
-  <!-- <div class="nubeSubCats">
-    <h3 class="text-center">Nube de marcas</h3>
-    <ul>
-      <li><a [routerLink]="['/']">probando ando</a></li>
-    </ul>
-  </div>  -->
+</div>
 
+<!-- Ventana emergente para actualizar producto -->
+<div class="modal fade" id="editarProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Ingresa los nuevos datos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row d-flex">
+          <div class="col-6 d-flex flex-column">
+            <label class="pb-0">Nombre producto</label>
+            <input type="text" name="nomProd" #nomProd='ngModel' [(ngModel)]="producto.nombre"
+              placeholder="Ingresa nombre del producto" required />
+
+            <label class="mt-4 pb-0">Marca del producto</label>
+            <input type="text" name="marca" #marca='ngModel' [(ngModel)]="producto.marca"
+              placeholder="Ingresa nombre del producto" required />
+
+            <label class="mt-4 pb-0">Precio producto</label>
+            <input type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
+              onkeypress='return event.charCode >= 48 && event.charCode <= 57' [(ngModel)]="producto.precio"
+              placeholder="Ingresa precio del producto" pattern="[0-9]" required />
+
+            <label class="mt-4 pb-0">Descripcion producto</label>
+            <textarea name="descrip" #descrip='ngModel' rows="4" [(ngModel)]="producto.descripcion"
+              placeholder="Ingresa la descripcion del producto" required></textarea>
+          </div>
+
+          <div class="col-6 d-flex flex-column">
+            <label class="pb-0">Selecciona la categoria</label>
+            <select (change)='obtenerCategoria()' name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria">
+              <option value="0">Elige una opcion </option>
+              <option *ngFor="let cat of listaCategorias">{{cat.categoria}}</option>
+            </select>
+
+            <label class="mt-4 pb-0">Selecciona la SubCategoria</label>
+            <select (change)='obtenerSubCategoria()' name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria">
+              <option value="0">Elige una opcion </option>
+              <option *ngFor="let subCat of listaSubCategorias">{{subCat.subCategoria}}</option>
+            </select>            
+
+            <label class="mt-4 pb-0">Sube la imagen del producto</label>
+            <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)">
+            </angular-file-uploader>
+            <img src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="imagenProducto mx-auto" alt={{producto?.nombre}} style="width: 6rem;">
+          </div>
+        </div>  
+      </div>
+
+      <div class="modal-footer d-flex justify-content-around">        
+        <button class="btn btn-primary" type="submit" (click)='editarProducto()'>Actualizar producto</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>        
+      </div>
+
+    </div>
+  </div>
 </div>

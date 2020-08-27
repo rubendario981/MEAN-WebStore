@@ -214,7 +214,7 @@ var controlador = {
 
     /* **************************** */
     eliminarProducto: (req, res) => {
-        var params = req.body;
+        //var params = req.body;
         var idProducto = req.params.id;
 
         Producto.findOneAndDelete({ _id: idProducto }, (err, delProd) => {
@@ -223,10 +223,13 @@ var controlador = {
                     mensaje: 'no se puede eliminar porque no existe'
                 })
             }
-            return res.status(200).send({
+            if(delProd){
+                return res.status(200).send({
                 mensaje: 'Producto eliminado correctamente',
-                eliminado: delProd
-            })
+                    eliminado: delProd
+                })
+            }
+                
         })
     },
 

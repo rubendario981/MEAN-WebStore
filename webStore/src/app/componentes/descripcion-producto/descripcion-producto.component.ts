@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloProducto } from  '../../modelos-servicios/modeloProducto';
 import { variable } from '../../modelos-servicios/constantes'
+import swal from 'sweetalert';
 
 @Component({
   selector: 'app-descripcion-producto',
@@ -78,7 +79,6 @@ export class DescripcionProductoComponent implements OnInit {
         res =>{
           if(res.prod) {
             this.producto = res.prod
-            console.log(this.producto)
           }
           else{ this.ruta.navigate['/listado']}
         },
@@ -86,17 +86,51 @@ export class DescripcionProductoComponent implements OnInit {
       )
     })
   }
-  editarProducto(){
-    console.log('llamado metodo edita prod')
-    console.log(this.producto)
+  editarProducto(){    
     this.detalleProd.editarProducto(this.producto).subscribe(
       res =>{
         if(res.actualizaProducto){
-          this.producto = res.actualizaProducto
+          this.producto = res.actualizaProducto          
         }
       },
       error => alert('No se pudo editar producto' + error)
     )
+    swal("El producto ha sido actualizado", {
+      icon: "success",
+    });
+    this.ruta.navigate(['detallesProducto/', this.producto._id])
+
+  }
+  eliminarProducto(){
+    swal({
+      title: "Confirmar eliminado del producto" ,
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: [true, true],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        this.detalleProd.eliminarProducto(this.producto._id).subscribe(
+          res =>{
+            if(res.delProd){
+              swal("El producto ha sido eliminado", {
+                icon: "success",
+              });
+              this.ruta.navigate(['listado'])
+            }
+          },
+          error=>{
+            swal("No se pudo eliminar el producto", {
+              icon: "info",
+              text: error
+            });
+          }
+        )
+      } else {
+        swal("Todo esta bien ");        
+        this.ruta.navigate(['detallesProducto/', this.producto._id])
+      }
+    });
   }
   
   obtenerCategoria(){

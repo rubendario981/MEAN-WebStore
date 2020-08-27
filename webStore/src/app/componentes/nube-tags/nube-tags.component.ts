@@ -21,7 +21,7 @@ export class NubeTagsComponent implements OnInit {
     this.listaSubCategorias.listarSubCategorias().subscribe(
       res=>{
         if(res.filtrarSubCat) this.arraySubCats = res.filtrarSubCat
-        console.log(this.arraySubCats.shift())
+        this.arraySubCats.shift()
       },
 
       error=> console.log(error)

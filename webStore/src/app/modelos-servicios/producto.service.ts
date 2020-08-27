@@ -71,8 +71,8 @@ export class ProductoService{
     }
     
     eliminarProducto(id):Observable<any>{
-        let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
-        return this._http.delete(this.url + '/eliminarProducto' + id)
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        return this._http.delete(this.url + '/eliminarProducto' + id, {headers: headers})
     }
     
 

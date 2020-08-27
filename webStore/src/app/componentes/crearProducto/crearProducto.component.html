@@ -68,16 +68,15 @@
             <select (change)='obtenerSubCategoria()' name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria">
               <option value="0">Elige una opcion </option>
               <option *ngFor="let subCat of listaSubCategorias">{{subCat.subCategoria}}</option>
-            </select>         
-            <!-- <label class="mt-4 pb-0">Selecciona la SubCategoria</label>
-            <select (change)='obtenerSubCategoria()' name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria">
-              <option value="0">Elige una opcion </option>
-              <option *ngFor="let cat2 of listaSubCategorias" value="">{{cat2.subCategoria}}</option>
-            </select> -->
+            </select> 
 
             <label class="mt-4 pb-0">Sube la imagen del producto</label>
-            <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)">
+            <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
             </angular-file-uploader>
+            <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg" class="imagenProducto mt-4 mx-auto" alt={{producto?.nombre}} style="width: 8rem;">
+                        
+            <img *ngIf="producto?.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="imagenProducto mt-4 mx-auto" alt={{producto?.nombre}} style="width: 8rem;">
+            
           </div>
         </div>
 

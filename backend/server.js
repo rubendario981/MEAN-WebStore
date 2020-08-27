@@ -25,6 +25,8 @@ server.use((req, res, next) => {
     next();
 });
 
+
+
 //Poner en funcionamiento modulo de rutas
 //Se puede poner un prefijo a las rutas ('/xxx', modulo-rutas)
 server.use('/', rutas);

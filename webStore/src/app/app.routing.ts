@@ -4,8 +4,8 @@ import {Routes, RouterModule } from '@angular/router';
 
 //se importan componentes del sitio 
 import {InicioComponent} from '../app/componentes/inicio/inicio.component';
-import {BusquedaComponent} from '../app/componentes/busqueda/busqueda.component';
-import {ErrorComponent } from '../app/componentes/error/error.component'
+import {BusquedaComponent } from '../app/componentes/busqueda/busqueda.component';
+import {ErrorComponent } from '../app/componentes/error/error.component';
 import {ListadoProductosComponent} from '../app/componentes/listado-productos/listado-productos.component';
 import {InicioSesionComponent} from '../app/componentes/inicio-sesion/inicio-sesion.component';
 import {CrearProductoComponent} from '../app/componentes/crearProducto/crearProducto.component';
@@ -15,7 +15,7 @@ const misRutas: Routes=[
     {path: '', component: InicioComponent},
     {path: 'inicio', component: InicioComponent},
     {path: 'listado', component: ListadoProductosComponent},
-    {path: 'busqueda', component: BusquedaComponent},
+    {path: 'busqueda/:params', component: BusquedaComponent},
     {path: 'inicioSesion', component: InicioSesionComponent},
     {path: 'crearProducto', component: CrearProductoComponent},
     {path: 'detallesProducto/:id', component: DescripcionProductoComponent},

@@ -1,16 +1,16 @@
-<main class="listadoProductos">
-  
+<h2 class="text-center mt-4 mb-4">Nuestro catalogo de productos</h2>
+<main class="listadoProductos">  
   <!-- Esta es modelado con display grid -->
   <div class="card producto" *ngFor='let modeloProducto of producto'>
-    <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
+    <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}} >
     <div class="card-body">
       <h5 class="card-title">{{modeloProducto.nombre}}</h5>
-      <p class="card-text">{{modeloProducto.descripcion}}</p>
       <p>{{modeloProducto.precio}}</p>
-      <a [routerLink]="['/detallesProducto', modeloProducto._id]">Ver mas..</a>
     </div>
+    <a class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]" >Ver mas detalles...</a>
+    <!-- <button class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]">Ver detalles</button> -->
   </div> 
-
+  <app-nube-tags class="personalizadaNube"></app-nube-tags>
   <!-- ALTERNATIVA CON BOOTSTRAP -->
   <!-- <div class="row d-flex justify-content-around" *ngFor='let modeloProducto of producto'>
     <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2">

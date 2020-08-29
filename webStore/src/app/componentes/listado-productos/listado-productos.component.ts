@@ -14,12 +14,12 @@ export class ListadoProductosComponent implements OnInit {
   public producto: modeloProducto[];
   public url: String;
 
-  constructor(private _listadoArticulos: ProductoService) { 
+  constructor(private consultaBackend: ProductoService) { 
     this.url = variable.url;
   }
 
   ngOnInit(): void {
-    this._listadoArticulos.listarArticulos().subscribe(
+    this.consultaBackend.listarArticulos().subscribe(
       res =>{
         if(res.mensaje == 'ok'){
           this.producto = res.productos;

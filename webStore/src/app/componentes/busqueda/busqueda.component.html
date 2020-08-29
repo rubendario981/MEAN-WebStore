@@ -1,3 +1,22 @@
-<p>
-  busqueda works!
-</p>
+<div class="sinEncontrados" *ngIf="arrayProductos.length == 0">
+    <h2 class="text-center mt-4 mb-4">No se han encontrado productos</h2>
+    <div class="d-flex justify-content center">
+      <img src="../../../assets/img/undraw_Lighthouse_frb8.svg" alt="Sin articulos para mostrar" class="rounded mx-auto d-block w-50 mb-4">
+      <app-nube-tags class="w-25"></app-nube-tags>
+    </div>
+</div>
+
+<div *ngIf='arrayProductos.length > 0'>
+  <h2 class="text-center mt-4 mb-4">Se han encontrado los siguientes productos</h2>
+  <main class="listadoProductos">
+    <div class="card producto" *ngFor='let modeloProducto of arrayProductos'>
+      <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
+      <div class="card-body">
+        <h5 class="card-title">{{modeloProducto.nombre}}</h5>
+        <p>{{modeloProducto.precio}}</p>
+      </div>
+      <a class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]">Ver mas detalles...</a>
+    </div>
+  </main>
+  <app-nube-tags class="d-flex flex-column w-75 mx-auto"></app-nube-tags>
+</div>

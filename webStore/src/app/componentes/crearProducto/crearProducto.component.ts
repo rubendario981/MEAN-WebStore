@@ -3,6 +3,7 @@ import { Router } from '@angular/router'
 import { modeloProducto } from 'src/app/modelos-servicios/modeloProducto';
 import { ProductoService } from 'src/app/modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
+import swal from 'sweetalert'
 
 @Component({
   selector: 'app-crearProducto',
@@ -128,12 +129,13 @@ export class CrearProductoComponent implements OnInit {
     console.log(this.producto.subCategoria)
   }
 
-  crearProducto() {
-    console.log('respuetsa al crear producto')
-    
+  crearProducto() {    
     this._servicioProducto.crearProducto(this.producto).subscribe(
       res => {
-        alert('Se ha creado el producto')
+        swal("Producto creado", {
+          icon: "info",              
+          text: 'Se ha creado producto de manera exitosa'
+        });
         res.productoCreado = this.producto
       },
       err => console.log(err)

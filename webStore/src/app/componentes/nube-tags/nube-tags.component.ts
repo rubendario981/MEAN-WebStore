@@ -11,19 +11,19 @@ import { variable } from '../../modelos-servicios/constantes'
 })
 export class NubeTagsComponent implements OnInit {
 
-  arraySubCats: modeloSubCategorias []
+  arraySubCats: modeloSubCategorias []  
   url: string
-  constructor(private listaSubCategorias: ProductoService) {
+  parametros: String
+  constructor(private serviciosProducto: ProductoService) {
     this.url = variable.url
   }
 
   ngOnInit(): void {
-    this.listaSubCategorias.listarSubCategorias().subscribe(
+    this.serviciosProducto.listarSubCategorias().subscribe(
       res=>{
         if(res.filtrarSubCat) this.arraySubCats = res.filtrarSubCat
         this.arraySubCats.shift()
       },
-
       error=> console.log(error)
     )
   }

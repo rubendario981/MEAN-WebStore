@@ -4,6 +4,7 @@
 var express = require('express');
 var bodyparse = require('body-parser');
 var morgan = require('morgan');
+const cors = require('cors');
 
 //ejecutar servidor express
 var server = express();
@@ -24,6 +25,7 @@ server.use((req, res, next) => {
     res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
+server.use(cors({ origin: true, credentials: true  }));
 
 
 

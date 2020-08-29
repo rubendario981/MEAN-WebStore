@@ -259,7 +259,7 @@ var controlador = {
             if (encontrados.length >= 1) {
                 return res.status(200).send({
                     mensaje: 'ok',
-                    productos: encontrados
+                    encontrados
                 })
             }
         })

@@ -72,9 +72,11 @@ export class ProductoService{
     
     eliminarProducto(id):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
-        return this._http.delete(this.url + '/eliminarProducto' + id, {headers: headers})
+        return this._http.delete(this.url + 'eliminarProducto/' + id, {headers: headers})
+    }
+
+    busqueda(varBusqueda):Observable<any>{
+        return this._http.get(this.url + 'busqueda/' + varBusqueda)
     }
     
-
-
 }

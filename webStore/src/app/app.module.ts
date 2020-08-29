@@ -16,6 +16,7 @@ import { CrearProductoComponent } from './componentes/crearProducto/crearProduct
 import { FooterComponent } from './componentes/footer/footer.component';
 import { from } from 'rxjs';
 import { NubeTagsComponent } from './componentes/nube-tags/nube-tags.component';
+import { BusquedaComponent } from './componentes/busqueda/busqueda.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { NubeTagsComponent } from './componentes/nube-tags/nube-tags.component';
     InicioSesionComponent,
     CrearProductoComponent,
     FooterComponent,
-    NubeTagsComponent
+    NubeTagsComponent,
+    BusquedaComponent
   ],
   imports: [
     //se importan los modulos funcionales 

@@ -29,7 +29,7 @@ export class DescripcionProductoComponent implements OnInit {
   listaCategorias: []
   listaSubCategorias: []
 
-  constructor(private detalleProd: ProductoService, private idProducto: ActivatedRoute, private ruta: Router) {
+  constructor(private consultaBackend: ProductoService, private idProducto: ActivatedRoute, private ruta: Router) {
 
   }  
     
@@ -59,11 +59,11 @@ export class DescripcionProductoComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.detalleProd.listarCategorias().subscribe(
+    this.consultaBackend.listarCategorias().subscribe(
       res => this.listaCategorias = res.filtrarCat,
       err => console.log(err)
     )
-    this.detalleProd.listarSubCategorias().subscribe(
+    this.consultaBackend.listarSubCategorias().subscribe(
       res =>{
         if(res) {
           this.listaSubCategorias = res.filtrarSubCat
@@ -75,7 +75,7 @@ export class DescripcionProductoComponent implements OnInit {
     this.idProducto.params.subscribe(params =>{ 
       let id = params['id'];
 
-      this.detalleProd.detalleProducto(id).subscribe(
+      this.consultaBackend.detalleProducto(id).subscribe(
         res =>{
           if(res.prod) {
             this.producto = res.prod
@@ -87,7 +87,7 @@ export class DescripcionProductoComponent implements OnInit {
     })
   }
   editarProducto(){    
-    this.detalleProd.editarProducto(this.producto).subscribe(
+    this.consultaBackend.editarProducto(this.producto).subscribe(
       res =>{
         if(res.actualizaProducto){
           this.producto = res.actualizaProducto          
@@ -98,47 +98,51 @@ export class DescripcionProductoComponent implements OnInit {
     swal("El producto ha sido actualizado", {
       icon: "success",
     });
-    this.ruta.navigate(['detallesProducto/', this.producto._id])
-
   }
   eliminarProducto(){
     swal({
-      title: "Confirmar eliminado del producto" ,
-      text: "Once deleted, you will not be able to recover this imaginary file!",
+      title: "Proceso de eliminacion del producto" ,
+      text: "Confirma que desea eliminar el producto? ",
       icon: "warning",
       buttons: [true, true],
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        this.detalleProd.eliminarProducto(this.producto._id).subscribe(
+        this.consultaBackend.eliminarProducto(this.producto._id).subscribe(
           res =>{
-            if(res.delProd){
-              swal("El producto ha sido eliminado", {
-                icon: "success",
-              });
-              this.ruta.navigate(['listado'])
-            }
+            swal("El producto ha sido eliminado", {
+              icon: "success",
+              buttons: {
+                ok: {
+                  text: "Enterado",
+                  value: "aceptar",
+                }
+              },
+            })
+            .then((value) => {
+              if(value === "aceptar") this.ruta.navigate(['listado'])
+            });         
           },
           error=>{
             swal("No se pudo eliminar el producto", {
-              icon: "info",
+              icon: "info",              
               text: error
             });
           }
         )
       } else {
-        swal("Todo esta bien ");        
+        swal({          
+          title: "Cancelado proceso de eliminacion" ,
+          text: "No se ha eliminado el producto"});        
+        }
         this.ruta.navigate(['detallesProducto/', this.producto._id])
-      }
     });
   }
   
   obtenerCategoria(){
-    console.log(this.producto.categoria)
   }
   
   obtenerSubCategoria(){
-    console.log(this.producto.subCategoria)
   }
 
   DocUpload(event){
@@ -148,6 +152,4 @@ export class DescripcionProductoComponent implements OnInit {
   cancela() {
     this.ruta.navigate(['/'])
   }
-
-
 }

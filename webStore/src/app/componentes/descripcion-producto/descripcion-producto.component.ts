@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
 import { ProductoService } from '../../modelos-servicios/producto.service';
-import { modeloProducto } from  '../../modelos-servicios/modeloProducto';
 import { variable } from '../../modelos-servicios/constantes'
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { modeloProducto } from  '../../modelos-servicios/modeloProducto';
 import swal from 'sweetalert';
 
 @Component({
@@ -25,12 +25,13 @@ export class DescripcionProductoComponent implements OnInit {
     fecha: null
   };
 
-  url = variable.url   
+  url: String
   listaCategorias: []
-  listaSubCategorias: []
+  listaSubCategorias: []  
+  parametro = '../../busqueda/'
 
-  constructor(private consultaBackend: ProductoService, private idProducto: ActivatedRoute, private ruta: Router) {
-
+  constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router) {
+    this.url = variable.url
   }  
     
   afuConfig = {
@@ -72,7 +73,7 @@ export class DescripcionProductoComponent implements OnInit {
       },
       err => console.log(err)
     )
-    this.idProducto.params.subscribe(params =>{ 
+    this.paramRuta.params.subscribe(params =>{ 
       let id = params['id'];
 
       this.consultaBackend.detalleProducto(id).subscribe(
@@ -86,6 +87,7 @@ export class DescripcionProductoComponent implements OnInit {
       )
     })
   }
+
   editarProducto(){    
     this.consultaBackend.editarProducto(this.producto).subscribe(
       res =>{

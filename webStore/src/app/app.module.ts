@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AngularFileUploaderModule } from 'angular-file-uploader'
 import { ProductoService } from './modelos-servicios/producto.service'
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './componentes/header/header.component';
 import { NavegacionComponent } from './componentes/navegacion/navegacion.component';
@@ -14,9 +13,9 @@ import { DescripcionProductoComponent } from './componentes/descripcion-producto
 import { InicioSesionComponent } from './componentes/inicio-sesion/inicio-sesion.component';
 import { CrearProductoComponent } from './componentes/crearProducto/crearProducto.component';
 import { FooterComponent } from './componentes/footer/footer.component';
-import { from } from 'rxjs';
 import { NubeTagsComponent } from './componentes/nube-tags/nube-tags.component';
 import { BusquedaComponent } from './componentes/busqueda/busqueda.component';
+import { FormularioRegistroComponent } from './componentes/formulario-registro/formulario-registro.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +28,8 @@ import { BusquedaComponent } from './componentes/busqueda/busqueda.component';
     CrearProductoComponent,
     FooterComponent,
     NubeTagsComponent,
-    BusquedaComponent
+    BusquedaComponent,
+    FormularioRegistroComponent
   ],
   imports: [
     //se importan los modulos funcionales 

@@ -2,7 +2,7 @@
 <main class="listadoProductos">  
   <!-- Esta es modelado con display grid -->
   <div class="card producto" *ngFor='let modeloProducto of producto'>
-    <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}} >
+    <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
     <div class="card-body">
       <h5 class="card-title">{{modeloProducto.nombre}}</h5>
       <p>{{modeloProducto.precio}}</p>

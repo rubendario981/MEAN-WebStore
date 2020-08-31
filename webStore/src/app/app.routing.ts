@@ -10,6 +10,7 @@ import {ListadoProductosComponent} from '../app/componentes/listado-productos/li
 import {InicioSesionComponent} from '../app/componentes/inicio-sesion/inicio-sesion.component';
 import {CrearProductoComponent} from '../app/componentes/crearProducto/crearProducto.component';
 import {DescripcionProductoComponent} from '../app/componentes/descripcion-producto/descripcion-producto.component';
+import {FormularioRegistroComponent} from '../app/componentes/formulario-registro/formulario-registro.component';
 
 const misRutas: Routes=[
     {path: '', component: InicioComponent},
@@ -17,6 +18,7 @@ const misRutas: Routes=[
     {path: 'listado', component: ListadoProductosComponent},
     {path: 'busqueda/:params', component: BusquedaComponent},
     {path: 'inicioSesion', component: InicioSesionComponent},
+    {path: 'registro', component: FormularioRegistroComponent},
     {path: 'crearProducto', component: CrearProductoComponent},
     {path: 'detallesProducto/:id', component: DescripcionProductoComponent},
     {path: '**', component: ErrorComponent}

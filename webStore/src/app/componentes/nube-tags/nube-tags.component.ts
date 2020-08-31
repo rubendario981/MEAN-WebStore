@@ -1,9 +1,8 @@
-import { Component, OnInit, DoCheck, Input  } from '@angular/core';
-import { ActivatedRoute, Params, Route } from '@angular/router'
+import { Component, OnInit, Input  } from '@angular/core';
+import { ActivatedRoute } from '@angular/router'
 import { modeloSubCategorias } from  '../../modelos-servicios/modeloSubCategorias';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-nube-tags',
@@ -11,7 +10,7 @@ import { from } from 'rxjs';
   styleUrls: ['./nube-tags.component.css'],
   providers: [ProductoService]
 })
-export class NubeTagsComponent implements OnInit, DoCheck {
+export class NubeTagsComponent implements OnInit {
 
   arraySubCats: modeloSubCategorias []  
   url: string
@@ -30,13 +29,4 @@ export class NubeTagsComponent implements OnInit, DoCheck {
       error=> console.log(error)
     )    
   }
-
-  ngDoCheck(){
-    /* console.log('inicia do check')
-    this.paramRuta.params.subscribe((varPara: Params) =>
-    this.parametros = '../'
-    console.log(this.url + this.parametros)
-    ) */
-  }
-
 }

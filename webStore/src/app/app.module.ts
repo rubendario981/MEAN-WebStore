@@ -16,6 +16,7 @@ import { FooterComponent } from './componentes/footer/footer.component';
 import { NubeTagsComponent } from './componentes/nube-tags/nube-tags.component';
 import { BusquedaComponent } from './componentes/busqueda/busqueda.component';
 import { FormularioRegistroComponent } from './componentes/formulario-registro/formulario-registro.component';
+import { InicioComponent } from './componentes/inicio/inicio.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FormularioRegistroComponent } from './componentes/formulario-registro/f
     FooterComponent,
     NubeTagsComponent,
     BusquedaComponent,
-    FormularioRegistroComponent
+    FormularioRegistroComponent,
+    InicioComponent
   ],
   imports: [
     //se importan los modulos funcionales 

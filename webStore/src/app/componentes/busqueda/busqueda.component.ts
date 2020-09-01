@@ -25,7 +25,6 @@ export class BusquedaComponent implements OnInit {
   ngOnInit() {    
     this.paramRuta.params.subscribe((params: Params) =>{ 
       let varBusqueda = params['params'];
-      console.log(params)
       this.consultaBackend.busqueda(varBusqueda).subscribe(
         res =>{  
           this.arrayProductos = res.encontrados

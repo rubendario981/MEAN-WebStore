@@ -68,13 +68,12 @@ export class DescripcionProductoComponent implements OnInit {
       res =>{
         if(res) {
           this.listaSubCategorias = res.filtrarSubCat
-          this.listaSubCategorias.shift()
         }
       },
       err => console.log(err)
     )
     this.paramRuta.params.subscribe(params =>{ 
-      let id = params['id'];
+      let id = params['id']; 
 
       this.consultaBackend.detalleProducto(id).subscribe(
         res =>{

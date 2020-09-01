@@ -19,7 +19,7 @@ export class BusquedaComponent implements OnInit {
 
   constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router) {
     this.url = variable.url;
-    
+    this.parametro = '../'
   }
 
   ngOnInit() {    

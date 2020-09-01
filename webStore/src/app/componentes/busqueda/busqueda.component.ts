@@ -15,16 +15,17 @@ export class BusquedaComponent implements OnInit {
   
   arrayProductos: modeloProducto []
   url: String
-  parametro = "../"
+  parametro: string
 
   constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router) {
     this.url = variable.url;
+    
   }
 
   ngOnInit() {    
     this.paramRuta.params.subscribe((params: Params) =>{ 
       let varBusqueda = params['params'];
-      console.log(varBusqueda)
+      console.log(params)
       this.consultaBackend.busqueda(varBusqueda).subscribe(
         res =>{  
           this.arrayProductos = res.encontrados

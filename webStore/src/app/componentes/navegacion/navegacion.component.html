@@ -5,21 +5,9 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">    
-    <!-- prueba con esto   -->
-    
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">        
     <li class="categoria" *ngFor="let cat of misCategorias">
-        <a href="#" class="categoria">{{cat.categoria}}</a>
-        <ul class="d-flex flex-row flex-wrap">
-            <li class="sub-cat">
-                <!-- <a href="#">  </a>
-                <ul class="lista-producto">
-                    <li><a href="#">Huawei</a></li>
-                    <li><a href="#">Samsung</a></li>
-                    <li><a href="#">Motorola</a></li> 
-                </ul>-->
-            </li>
-        </ul>
-    </li>
+      <a [routerLink]="['/busqueda', cat.categoria]" class="categoria">{{cat.categoria}}</a>        
+    </li>   
   </div>
 </nav>

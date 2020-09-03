@@ -4,7 +4,9 @@
 var express = require('express');
 var bodyparse = require('body-parser');
 var morgan = require('morgan');
-const cors = require('cors');
+var passport = require('passport');
+var session = require('express-session')
+var cors = require('cors');
 
 //ejecutar servidor express
 var server = express();
@@ -16,6 +18,9 @@ var rutas = require('./rutas');
 server.use(morgan('dev'));
 server.use(bodyparse.urlencoded({extended: false}));
 server.use(bodyparse.json());
+server.use(session({secret: 'gatitoloco', resave: false, saveUninitialized: false}))
+server.use(passport.initialize());
+server.use(passport.session());
 
 //CORS  PETICIONES DESDE EL FRONTEND
 server.use((req, res, next) => {

@@ -2,33 +2,79 @@
 
 var Producto = require('./modeloProducto');
 var Categorias = require('./modeloCategoria');
+var Usuario = require('./modeloUsuario');
+var passport = require('passport')
+var localStrategy = require('passport-local').Strategy
+var bcrypt = require('bcrypt');
 var fs = require('fs');
 const { resolve } = require('path');
 var cat = new Categorias();
+var usu;
 var prod;
 
 var controlador = {
     /***************************** */
+    registroUsuario: (req, res, next) => {
+        var params = req.body;
+        usu = new Usuario();
+        usu.nombres = params.nombres;
+        usu.nickName = params.nickName;
+        usu.correo = params.correo;
+        usu.password = usu.encriptaPass(params.clave)
+        usu.rol = params.rol;
+
+        Usuario.findOne({'correo': params.correo}).exec((error, correoEncontrado)=>{
+            if(error) res.send({error})
+            if(correoEncontrado) res.send({mensaje: 'Ya estas registrado'})
+            if(!correoEncontrado){
+                Usuario.findOne({'nickName': params.nickName}).exec((error, nickEncontrado)=>{
+                    if(error) res.send({error})
+                    if(nickEncontrado) res.send({mensaje: 'Ya existe el nickName, escoje otro'})
+                    if(!nickEncontrado){
+                        usu.save((error, usuCreado) => {
+                            if (error || !usuCreado) res.send({ error })
+                            return res.send({ usuCreado })
+                        })
+                    }
+                })
+            }
+        })  
+    },
+    /***************************** */
+    inicioSesion: (req, res, next) => {
+        var params = req.body;
+        usu = new Usuario();
+        usu.nickName = params.nickName;
+        //usu.password = params.clave;
+       
+        Usuario.findOne({'nickName': usu.nickName}).exec((error, nickEncontrado)=>{
+            error || !nickEncontrado ? res.status(400).send({mensaje: 'no se pudo encontrat'}) : 
+            nickEncontrado == null ? res.status(500).send({mensaje: 'consulta con resultados nulos'}) :
+            bcrypt.compareSync(params.clave, nickEncontrado.password) ? res.status(200).send({nickEncontrado}) :
+            res.send({mensaje: 'ingreso imposible'})                    
+        })
+    },
+    /***************************** */
     crearCategoria: (req, res) => {
         var params = req.body;
         cat.categoria = params.categoria;
-        cat.save((err, categoriaNueva) =>{
-            if(err || categoriaNueva == undefined) console.log('error al crear categoria' + err)            
+        cat.save((err, categoriaNueva) => {
+            if (err || categoriaNueva == undefined) console.log('error al crear categoria' + err)
             return res.status(200).send({
                 mensaje: 'ok',
                 newCat: categoriaNueva
             });
         });
     },
-    
+
     /***************************** */
-    crearSubCategoria: (req, res) => {  
+    crearSubCategoria: (req, res) => {
         var params = req.body;
         cat.categoria = params.categoria;
         cat.subCategoria = params.subCategoria;
-        cat.save((err, subCategoriaNueva)=>{
-            if(err) console.log('error al obtener categoria' + err)
-            
+        cat.save((err, subCategoriaNueva) => {
+            if (err) console.log('error al obtener categoria' + err)
+
             return res.status(200).send({
                 mensaje: 'ok',
                 newCat: subCategoriaNueva
@@ -40,10 +86,8 @@ var controlador = {
     crearProducto: (req, res) => {
         // Recoger parametros por post
         var params = req.body;
-                
         //Crear objetos para guardar en Bd
         prod = new Producto();
-        
         // Asignar valores
         prod.nombre = params.nombre;
         prod.marca = params.marca;
@@ -52,7 +96,6 @@ var controlador = {
         prod.subCategoria = params.subCategoria;
         prod.precio = params.precio;
         prod.imagen = params.imagen;
-
         // Guardar el articulo
         prod.save((err, productoCreado) => {
             if (err || !productoCreado) {
@@ -60,19 +103,16 @@ var controlador = {
                     mensaje: 'Algun dato invalido'
                 });
             }
-
             return res.status(200).send({
                 mensaje: 'ok',
                 prod: productoCreado
             });
-
         });
-
     },
 
     /* **************************** */
     listarProductos: (req, res) => {
-        Producto.find({}).sort({fecha: -1}).exec((err, productos) => {
+        Producto.find({}).sort({ fecha: -1 }).exec((err, productos) => {
             if (err) {
                 return res.status(500).send({
                     mensaje: 'error en consulta',
@@ -97,7 +137,7 @@ var controlador = {
 
         Producto.findById({})
 
-        return res.status(200).send({mensaje: prod})
+        return res.status(200).send({ mensaje: prod })
     },
 
     /************************************** */
@@ -117,7 +157,7 @@ var controlador = {
     },
 
     /********************************** */
-    listarSubCategorias: (req, res) => {           
+    listarSubCategorias: (req, res) => {
         const filtrarSubCat = []
         const objSubCat = {}
         Producto.find({}, { "subCategoria": 1, "_id": 0 }).exec((err, listaSubCat) => {
@@ -200,13 +240,13 @@ var controlador = {
                     mensaje: 'no se puede eliminar porque no existe'
                 })
             }
-            if(delProd){
+            if (delProd) {
                 return res.status(200).send({
-                mensaje: 'Producto eliminado correctamente',
+                    mensaje: 'Producto eliminado correctamente',
                     eliminado: delProd
                 })
             }
-                
+
         })
     },
 
@@ -245,7 +285,7 @@ var controlador = {
     /*************************************** */
     subirImagen: (req, res) => {
         var idProd = req.params.id;
-        
+
         prod = new Producto();
 
         if (req.files.file0.type == null) {
@@ -258,10 +298,10 @@ var controlador = {
         var ext = rutaArchivo.split('.')[1];
         var nomArchivo = rutaArchivo.split('\\')[1]
 
-        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) res.status(400).send({mensaje: 'solo imagenes'})
-        
+        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) res.status(400).send({ mensaje: 'solo imagenes' })
 
-        if(idProd){
+
+        if (idProd) {
             Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true }, (err, subeImagen) => {
                 if (err || !subeImagen) {
                     return res.status(500).send({

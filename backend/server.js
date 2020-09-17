@@ -1,10 +1,8 @@
 'use strict'
-//cargar modulos de node para el servidor 
-//y convertidor de datos bodyParser
+
 var express = require('express');
 var bodyparse = require('body-parser');
 var morgan = require('morgan');
-var passport = require('passport');
 var session = require('express-session')
 var cors = require('cors');
 
@@ -19,8 +17,6 @@ server.use(morgan('dev'));
 server.use(bodyparse.urlencoded({extended: false}));
 server.use(bodyparse.json());
 server.use(session({secret: 'gatitoloco', resave: false, saveUninitialized: false}))
-server.use(passport.initialize());
-server.use(passport.session());
 
 //CORS  PETICIONES DESDE EL FRONTEND
 server.use((req, res, next) => {
@@ -31,8 +27,6 @@ server.use((req, res, next) => {
     next();
 });
 server.use(cors({ origin: true, credentials: true  }));
-
-
 
 //Poner en funcionamiento modulo de rutas
 //Se puede poner un prefijo a las rutas ('/xxx', modulo-rutas)

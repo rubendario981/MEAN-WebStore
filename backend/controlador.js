@@ -7,7 +7,6 @@ var bcrypt = require('bcrypt');
 var JWT = require('jsonwebtoken')
 var fs = require('fs');
 const { resolve } = require('path');
-//const { param } = require('./rutas');
 var cat = new Categorias();
 var prod, token, usu;
 

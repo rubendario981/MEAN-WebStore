@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var EsquemaProducto = mongoose.Schema({
+var EsquemaProducto = new Schema({
     nombre: String,
     marca: String,
     descripcion: String,

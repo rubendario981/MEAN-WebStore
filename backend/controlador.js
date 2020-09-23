@@ -18,7 +18,7 @@ var controlador = {
         usu.nombres = params.nombres;
         usu.nickName = params.nickName;
         usu.correo = params.correo;
-        usu.password = usu.encriptaPass(params.clave)
+        usu.password = usu.encriptaPass(params.password)
         usu.rol = params.rol;
 
         if (!params.rol) usu.rol = 'cliente'
@@ -29,21 +29,23 @@ var controlador = {
             const nickFound = await Usuario.findOne({ nickName: params.nickName })
             if (nickFound) res.status(400).send({ mensaje: 'Ya existe el nickName ' + nickFound.nickName + ' escoje otro' })
             if (!nickFound) {
-                const userCreated = usu.save()
-                if (!userCreated) return res.status(404).send({ mensaje: 'no se pudo crear usuario' })
+                const userCreated = await usu.save()
+                if (!userCreated) {
+                    return res.status(404).send({ mensaje: 'no se pudo crear usuario' })                    
+                }
                 token = JWT.sign({ id: userCreated._id }, 'eres un secreto', { expiresIn: 86400 })
-                res.send({ mensaje: 'ok', token })
+                res.send({ mensaje: 'ok', token })                
             }
         }
     },
     /***************************** */
     inicioSesion: async (req, res, next) => {
-        const { correo, clave } = req.body;
+        const { correo, password } = req.body;
 
         const userFound = await Usuario.findOne({ correo: correo })
         if (!userFound) return res.status(404).send({ mensaje: 'usuario no existe ' })
 
-        const passIsValid = await bcrypt.compareSync(clave, userFound.password)
+        const passIsValid = bcrypt.compareSync(password, userFound.password)
         if (!passIsValid) res.status(401).send({ mensaje: 'Contraseña invalida ' })
 
         const token = JWT.sign({ id: userFound._id }, 'eres un secreto', { expiresIn: 86400 })
@@ -67,7 +69,7 @@ var controlador = {
         cat.categoria = categoria;
         cat.subCategoria = subCategoria;
 
-        const findSubCat = Categorias.findOne({ subCategoria })
+        const findSubCat = await Categorias.findOne({ subCategoria })
         if (findSubCat) return res.status(402).send({ mensaje: 'ya existe la subcategoria' })
         const newSubCat = await cat.save()
         if (!newSubCat) return res.status(404).send({ mensaje: 'No se pudo crear la nueva subCategoria' })
@@ -104,12 +106,11 @@ var controlador = {
 
     /* **************************** */
     detalleProducto: (req, res) => {
-        var params = req.body
-        prod.id = params.id
-
-        Producto.findById({})
-
-        return res.status(200).send({ mensaje: prod })
+        var idProducto = req.params.id
+        Producto.findById({ _id: idProducto }).exec((err, prod)=>{
+            if(err || !prod) return res.status(404).send({mensaje: 'No se encontro el producto'})
+            return res.send({mensaje: 'ok', prod})
+        })
     },
 
     /************************************** */
@@ -139,8 +140,8 @@ var controlador = {
         var file = req.params.imagen;
         var path_file = 'imgProductos/' + file;
 
-        const exiteImagen = await fs.existsSync(path_file)
-        if(!exiteImagen) res.status(404).send({mensaje: 'No existe imagen '})
+        const existeImagen = await fs.existsSync(path_file)
+        if(!existeImagen) res.status(404).send({mensaje: 'No existe imagen '})
         res.sendFile(resolve(path_file))
         
     },
@@ -148,32 +149,38 @@ var controlador = {
     /* **************************** */
     buscar: async (req, res) => {
         var idProd = req.params.id;        
-
-        const findProd = await Producto.findById({_id: idProd})
-        if(!findProd) return res.status(404).send({mensaje: 'No existe producto con el id ' + idProd})
-        return res.send({mensaje: 'ok', findProd})
-        /* pendiente corregir bloqueo de ruta cuando el id no existe */
+        try {
+            const findProd = await Producto.findById({_id: idProd})
+            return res.send({mensaje: 'ok', findProd})
+            
+        } catch (error) {
+            return res.status(500).send({mensaje: 'No se pudo resolver promesa', error})
+        }
     },
 
     /* **************************** */
-    actualizarProducto: async (req, res) => {
-        var params = req.body;
+    actualizarProducto: (req, res) => {
+        var params = req.body
         var idProducto = req.params.id;
-
-        const actualizaProd = await Producto.findOneAndUpdate({ _id: idProducto}, params, {new: true})
-        if(!actualizaProd) return res.status(404).send({mensaje: 'No se pudo actualizar producto ' + idProd})
-        return res.send({mensaje: 'ok', actualizaProd })
-       
+        Producto.findOneAndUpdate({_id: idProducto }, params, { new: true }).exec((err, actualizado)=>{
+            if(err) return res.status(500).send({mensaje:'error', err})
+            if(!actualizado) return res.status(404).send({mensaje:'No actualizado'})
+            return res.send({mensaje: 'ok', actualizado})
+        })       
     },
 
     /* **************************** */
     eliminarProducto: async (req, res) => {
         var idProducto = req.params.id;
-        
-        const eliminaProd = await Producto.findOneAndDelete({ _id: idProducto })
-        if(!eliminaProd) return res.status(404).send({mensaje: 'No se pudo eliminar producto ' + idProd})
-        return res.status(200).send({mensaje: 'Producto eliminado correctamente', eliminado: eliminaProd})
-        /* pendiente corregir bloqueo de ruta cuando el id no existe */
+        try {
+            const eliminaProd = await Producto.findOneAndDelete({ _id: idProducto })
+            if(!eliminaProd) return res.status(404).send({mensaje: 'No se pudo eliminar producto '})
+            return res.status(200).send({mensaje: 'ok', eliminado: eliminaProd})
+            
+        } catch (error) {
+            return res.status(500).send({mensaje: 'No se pudo manejar promesa '})
+            
+        }
     },
 
     /******************************* */
@@ -213,21 +220,15 @@ var controlador = {
         if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) res.status(400).send({ mensaje: 'solo imagenes' })
 
         if (idProd) {
-            const uploadImage = await Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true })
-            if (!uploadImage) return res.status(500).send({ mensaje: 'No se encontro el producto'})
-            return res.status(200).send({ mensaje: 'imagen subida', imagen: uploadImage })
-            // Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true }, (err, subeImagen) => {
-            //     if (err || !subeImagen) {
-            //         return res.status(500).send({
-            //             mensaje: 'No se encontro el producto',
-            //             evento: err
-            //         })
-            //     }
-            //     return res.status(200).send({
-            //         mensaje: 'producto actualizado',
-            //         imagen: subeImagen
-            //     })
-            // })
+            try {
+                const uploadImage = await Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true })
+                if (!uploadImage) return res.status(500).send({ mensaje: 'No se encontro el producto'})
+                return res.status(200).send({ mensaje: 'imagen subida', imagen: uploadImage })
+                
+            } catch (error) {
+                return res.status(500).send({mensaje: 'No valido el parametro'})
+            }
+            
         }
         else {
             return res.status(200).send({

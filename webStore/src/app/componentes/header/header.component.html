@@ -6,22 +6,10 @@
       </a>
     </div>
 
-    <h2 class="title"><a [routerLink]="['/']">Colombia de todito </a></h2>
+    <h2 class="title"><a [routerLink]="['/']">Colombia de todito </a></h2> 
 
-    <div class="logos-header text-center ">
-      <div class="logos-inline d-inline-flex">
-        <div>
-          <a [routerLink]="['/registro']">
-            <i class="fa fa-user-plus"></i>
-            <p>Registrate</p>          
-          </a>
-        </div>
-        <div>
-          <a [routerLink]="['/inicioSesion']">
-            <i class="fa fa-key"></i> 
-            <p>Inicio sesion</p>
-          </a>          
-        </div>
+    <div *ngIf="userLogged" class="logos-header text-center ">
+      <div class="logos-inline d-inline-flex">        
         <div>
           <a [routerLink]="['/inicioSesion']">
             <i class="fa fa-cart-plus"></i>
@@ -37,9 +25,26 @@
       </div>
     </div>
 
+    <div *ngIf="!userLogged" class="logos-header text-center" >
+      <div class="logos-inline d-inline-flex">
+        <div>
+          <a [routerLink]="['/registro']">
+            <i class="fa fa-user-plus"></i>
+            <p>Registrate</p>          
+          </a>
+        </div>
+        <div>
+          <a [routerLink]="['/inicioSesion']">
+            <i class="fa fa-key"></i> 
+            <p>Inicio sesion</p>
+          </a>          
+        </div>
+      </div>
+    </div>
+
     <div class="form-search">
       <form class="form-inline">
-        <input class="form-control mr-0" type="search" placeholder="Ingresa tu busqueda..." name="busqueda" [(ngModel)]="busqueda"/>
+        <input class="form-control mr-0 w-75" type="search" placeholder="Ingresa tu busqueda..." name="busqueda" [(ngModel)]="busqueda"/>
         <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit" (click)='buscar()' >
           <i class="fa fa-search"></i> 
         </button>

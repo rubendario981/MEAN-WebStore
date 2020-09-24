@@ -11,6 +11,7 @@ import {InicioSesionComponent} from '../app/componentes/inicio-sesion/inicio-ses
 import {CrearProductoComponent} from '../app/componentes/crearProducto/crearProducto.component';
 import {DescripcionProductoComponent} from '../app/componentes/descripcion-producto/descripcion-producto.component';
 import {FormularioRegistroComponent} from '../app/componentes/formulario-registro/formulario-registro.component';
+import { ValidarAuthGuard } from './validar-auth.guard';
 
 const misRutas: Routes=[
     {path: '', component: InicioComponent},
@@ -19,11 +20,10 @@ const misRutas: Routes=[
     {path: 'busqueda/:params', component: BusquedaComponent},
     {path: 'inicioSesion', component: InicioSesionComponent},
     {path: 'registro', component: FormularioRegistroComponent},
-    {path: 'crearProducto', component: CrearProductoComponent},
+    {path: 'crearProducto', component: CrearProductoComponent, canActivate: [ValidarAuthGuard]},
     {path: 'detallesProducto/:id', component: DescripcionProductoComponent},
     {path: '**', component: ErrorComponent}
 ];
 
 export const appRoutingProviders: any[] = [];
 export const routing: ModuleWithProviders<any> = RouterModule.forRoot(misRutas);
-//export const MisRutasRoutes = RouterModule.forChild(misRutas);

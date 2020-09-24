@@ -1,32 +1,45 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProductoService } from '../../modelos-servicios/producto.service'
+import swal from 'sweetalert'
 
 @Component({
   selector: 'app-inicio-sesion',
   templateUrl: './inicio-sesion.component.html',
-  styleUrls: ['./inicio-sesion.component.css']
+  styleUrls: ['./inicio-sesion.component.css'],
+  providers: [ProductoService]
 })
 export class InicioSesionComponent implements OnInit {
-
   public usuario : any
-  constructor(private _router: Router) {
+
+  constructor(private _router: Router, private consultaBackend: ProductoService) {
     this.usuario = {
-      identificacion: '',
-      passwd: ''
+      correo: '',
+      password: ''
     }
   }
 
   ngOnInit() {
   }
 
-  enviar(){ 
-    alert('se ha enviado formulario ')
-    if(this.usuario.identificacion == 16 && this.usuario.passwd == '123'){
-      this._router.navigate(['/crearProducto'])
-    }
-    else{
-      alert('Credenciales no validas')
-    }
+  ingresar(){ 
+    this.consultaBackend.inicioSesion(this.usuario).subscribe(
+      res=>{
+        swal("Bienvenido", {
+          icon: "info",              
+          text: `Bienvenido ${this.usuario.correo}`
+        });
+        localStorage.setItem('token', res.token)
+        this._router.navigate(['/'])
+      },
+      error=>{
+        swal("Error al ingresar", {
+          icon: "warning",              
+          text: 'No se ha podido identificar al usuario, por favor intenta de nuevo '
+        });
+      }
+      )
+      console.log(this.usuario)
   }
 
   cancela(){

@@ -34,7 +34,7 @@
   </div>
   <div class="card creaProducto">
     <h4 class="card-header bg-primary text-center text-white">Ingresa los datos del producto nuevo</h4>
-    <form class="miForm" (ngSubmit)="crearProducto()">
+    <form method="POST" class="miForm" #userForm="ngForm" (ngSubmit)="crearProducto()">
       <div class="card-body">
         <div class="row d-flex">
           <div class="col-6 d-flex flex-column">
@@ -53,7 +53,7 @@
 
             <label class="mt-4 pb-0">Descripcion producto</label>
             <textarea name="descrip" #descrip='ngModel' rows="4" [(ngModel)]="producto.descripcion"
-              placeholder="Ingresa la descripcion del producto" required></textarea>
+              placeholder="Ingresa la descripcion del producto"></textarea>
           </div>
 
           <div class="col-6 d-flex flex-column">
@@ -70,7 +70,7 @@
               <option *ngFor="let subCat of listaSubCategorias">{{subCat.subCategoria}}</option>
             </select> 
 
-            <label class="mt-4 pb-0">Sube la imagen del producto</label>
+            <label class="mt-4 pb-0">Sube la imagen del producto</label> 
             <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
             </angular-file-uploader>
             <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg" class="imagenProducto mt-4 mx-auto" alt={{producto?.nombre}} style="width: 8rem;">
@@ -81,7 +81,7 @@
         </div>
 
         <div class="grupoBotones mt-4">
-          <button class="btn btn-primary" type="submit">Crear producto</button>
+          <button class="btn btn-primary" type="submit" >Crear producto</button>
           <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
         </div>
       </div>

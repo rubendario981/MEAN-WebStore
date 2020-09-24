@@ -19,10 +19,10 @@ export class CrearProductoComponent implements OnInit {
     marca: '',
     categoria: '',
     subCategoria: '',
-    imagen: '',
     descripcion: '',
     precio: null,
-    fecha: null
+    fecha: null,
+    imagen: ''
   };
 
   listaCategorias: []
@@ -30,7 +30,7 @@ export class CrearProductoComponent implements OnInit {
 
   url: String
 
-  constructor (private _router: Router,  private _servicioProducto: ProductoService) {
+  constructor (private _router: Router,  private consultaBackend: ProductoService) {
     this.url = variable.url    
   }
 
@@ -61,11 +61,11 @@ export class CrearProductoComponent implements OnInit {
 
 
   ngOnInit() {
-    this._servicioProducto.listarCategorias().subscribe(
+    this.consultaBackend.listarCategorias().subscribe(
       res => this.listaCategorias = res.filtrarCat,
       err => console.log(err)
     )
-    this._servicioProducto.listarSubCategorias().subscribe(
+    this.consultaBackend.listarSubCategorias().subscribe(
       res =>{
         if(res){ 
           this.listaSubCategorias = res.filtrarSubCat
@@ -84,8 +84,7 @@ export class CrearProductoComponent implements OnInit {
     delete(this.producto.precio)
     delete(this.producto.fecha)
     delete(this.producto.imagen)
-    console.log(this.producto)
-    this._servicioProducto.crearCategoria(this.producto).subscribe(
+    this.consultaBackend.crearCategoria(this.producto).subscribe(
       res => {
         if(res.mensaje == 'ok') {      
           res.categoriaNueva = this.producto
@@ -107,8 +106,7 @@ export class CrearProductoComponent implements OnInit {
     delete(this.producto.precio)
     delete(this.producto.fecha)
     delete(this.producto.imagen)
-    console.log('llamado crea subcat' + this.producto)
-    this._servicioProducto.crearSubCategoria(this.producto).subscribe(
+    this.consultaBackend.crearSubCategoria(this.producto).subscribe(
       res =>{
         if(res) res.subCategoriaNueva = this.producto
       },
@@ -130,7 +128,7 @@ export class CrearProductoComponent implements OnInit {
   }
 
   crearProducto() {    
-    this._servicioProducto.crearProducto(this.producto).subscribe(
+    this.consultaBackend.crearProducto(this.producto).subscribe(
       res => {
         swal("Producto creado", {
           icon: "info",              
@@ -138,7 +136,12 @@ export class CrearProductoComponent implements OnInit {
         });
         res.productoCreado = this.producto
       },
-      err => console.log(err)
+      err => {
+        swal("No se pudo crear producto", {
+          icon: "warning",              
+          text: 'Error creando producto ' + err
+        });
+      }
     )
   }
 

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { appRoutingProviders, routing } from './app.routing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AngularFileUploaderModule } from 'angular-file-uploader'
 import { ProductoService } from './modelos-servicios/producto.service'
@@ -17,6 +17,8 @@ import { NubeTagsComponent } from './componentes/nube-tags/nube-tags.component';
 import { BusquedaComponent } from './componentes/busqueda/busqueda.component';
 import { FormularioRegistroComponent } from './componentes/formulario-registro/formulario-registro.component';
 import { InicioComponent } from './componentes/inicio/inicio.component';
+import { ValidarAuthGuard } from './validar-auth.guard';
+import { ValidaTokenService } from './modelos-servicios/valida-token.service';
 
 @NgModule({
   declarations: [
@@ -34,15 +36,20 @@ import { InicioComponent } from './componentes/inicio/inicio.component';
     InicioComponent
   ],
   imports: [
-    //se importan los modulos funcionales 
     BrowserModule,
     routing,
     HttpClientModule,
     FormsModule,
     AngularFileUploaderModule
   ],
-  //se agregan los servicios o providers
-  providers: [appRoutingProviders, ProductoService],
+  providers: [
+    appRoutingProviders, 
+    ProductoService, 
+    ValidarAuthGuard,
+    { provide: HTTP_INTERCEPTORS, 
+      useClass: ValidaTokenService,
+      multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

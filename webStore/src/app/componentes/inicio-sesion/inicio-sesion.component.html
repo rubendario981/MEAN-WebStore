@@ -1,14 +1,14 @@
 <div class="inicioSesion" style="background-image: url(../../../assets/img/undraw_Lighthouse_frb8.svg);">
   <div class="card">
     <h4 class="card-header text-center bg-primary text-white">Modulo para inicio de sesion</h4>
-    <form class="card-body" #login="ngForm" (ngSubmit)="enviar()">
-      <label for="" class="mb-0">Identificacion</label>
-      <input type="text" id="identificacion" name="identificacion" placeholder="Ingresa tu id" #identificacion="ngModel" [(ngModel)]="usuario.identificacion"/>
+    <form class="card-body" #login="ngForm" (ngSubmit)="ingresar()">
+      <label for="" class="mb-0">Correo electronico </label>
+      <input type="text" name="correo" placeholder="Ingresa tu correo electronico " #correo="ngModel" [(ngModel)]="usuario.correo"/>
       <label for="" class="mt-4 mb-0">Contraseña</label>
-      <input type="password" id="passwd" name="passwd" id="" placeholder="Ingresa tu contraseña" #passwd="ngModel" [(ngModel)]="usuario.passwd" />
+      <input type="password" name="password" id="" placeholder="Ingresa tu contraseña" #password="ngModel" [(ngModel)]="usuario.password" />
       <div class="grupoBotones">
         <button class="btn btn-primary" type="submit">Ingresar</button>
-        <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
+        <button class="btn btn-danger" (click)="cancela()">Cancelar</button> 
       </div>
     </form>
   </div>

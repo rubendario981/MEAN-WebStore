@@ -22,7 +22,7 @@ export class ListadoProductosComponent implements OnInit {
     this.consultaBackend.listarArticulos().subscribe(
       res =>{
         if(res.mensaje == 'ok'){
-          this.producto = res.productos;
+          this.producto = res.listaProductos;
         }
         else{
           console.log('Problemas con el servidor')

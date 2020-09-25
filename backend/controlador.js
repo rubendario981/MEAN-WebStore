@@ -38,6 +38,7 @@ var controlador = {
             }
         }
     },
+    
     /***************************** */
     inicioSesion: async (req, res, next) => {
         const { correo, password } = req.body;
@@ -52,6 +53,25 @@ var controlador = {
         res.send({ mensaje: 'ok', token })
 
     },
+
+    /***************************** */
+    identificarUsuario: async(req, res)  =>{
+        const idUsuario = req.params.id
+
+        const findUser = await Usuario.findById({_id: idUsuario})
+        if(!findUser) return res.status(404).send({mensaje: 'No encontrado usuario'})
+        return res.send({mensaje: 'ok', findUser, rol: findUser.rol})
+    },
+    
+    /***************************** */
+    eliminarUsuario: async(req, res)  =>{
+        const idUsuario = req.params.id
+
+        const delUser = await Usuario.findByIdAndDelete({_id: idUsuario})
+        if(!delUser) return res.status(404).send({mensaje: 'No se elimino usuario'})
+        return res.send({mensaje: 'ok', delUser})
+    },
+    
     /***************************** */
     crearCategoria: async (req, res) => {
         cat.categoria = req.body.categoria;
@@ -117,7 +137,7 @@ var controlador = {
     listarCategorias: async (req, res) => {        
         const filtrarCat = []
         const objCat = {}
-        const listaCat = await Producto.find({}, { "categoria": 1, "_id": 0 })
+        const listaCat = await Categorias.find({}, { "categoria": 1, "_id": 0 })
         if (!listaCat) return res.status(404).send({ mensaje: 'No hay listado de categorias ' })
         listaCat.forEach(el => !(el in objCat) && (objCat[el] = true) && filtrarCat.push(el))
         return res.send({mensaje: 'ok', filtrarCat})
@@ -128,7 +148,7 @@ var controlador = {
     listarSubCategorias: async (req, res) => {
         const filtrarSubCat = []
         const objSubCat = {}
-        const listaSubCat = await Producto.find({}, { "subCategoria": 1, "_id": 0 })
+        const listaSubCat = await Categorias.find({}, { "subCategoria": 1, "_id": 0 })
         if (!listaSubCat) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
         listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
         return res.status(200).send({mensaje: 'ok', filtrarSubCat})
@@ -142,7 +162,7 @@ var controlador = {
 
         const existeImagen = await fs.existsSync(path_file)
         if(!existeImagen) res.status(404).send({mensaje: 'No existe imagen '})
-        res.sendFile(resolve(path_file))
+        return res.sendFile(resolve(path_file))
         
     },
 

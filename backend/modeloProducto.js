@@ -11,6 +11,6 @@ var EsquemaProducto = new Schema({
     precio: Number,
     fecha: {type: Date, default: Date.now},
     imagen: String
-});
+}, {versionKey: false, timestamps: true});
 
 module.exports = mongoose.model('Producto', EsquemaProducto);

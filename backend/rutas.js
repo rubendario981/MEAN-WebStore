@@ -13,6 +13,8 @@ router.post('/inicioSesion', controlador.inicioSesion);
 router.post('/crearCategoria', validarToken, controlador.crearCategoria);
 router.post('/crearSubCategoria', validarToken, controlador.crearSubCategoria);
 router.post('/crearProducto', validarToken, cargaArchivos, controlador.crearProducto);
+router.get('/identificarUsuario/:id', controlador.identificarUsuario);
+router.delete('/eliminarUsuario/:id', controlador.eliminarUsuario);
 router.get('/listarProductos', controlador.listarProductos);
 router.get('/listarCategorias', controlador.listarCategorias);
 router.get('/listarSubCategorias', controlador.listarSubCategorias);
@@ -28,6 +30,6 @@ router.delete('/eliminarProducto/:id', validarToken, controlador.eliminarProduct
 router.get('/busqueda/:var', controlador.busqueda);
 
 //ruta para subir una imagen
-router.post('/subirImagen/:id?', validarToken, cargaArchivos, controlador.subirImagen)
+router.post('/subirImagen/:id?', cargaArchivos, controlador.subirImagen)
 
 module.exports = router;

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema; 
 var bcrypt = require('bcrypt');
 
-const Usuario = mongoose.Schema({
+const Usuario = new Schema({
     nombres: String,
     nickName: String,
     correo: String,
@@ -12,7 +12,7 @@ const Usuario = mongoose.Schema({
     listaCompras: [],
     listaFavoritos: [],
     rol: String
-})
+}, {versionKey: false, timestamps: true})
 
 Usuario.methods.encriptaPass = (password) =>{
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))

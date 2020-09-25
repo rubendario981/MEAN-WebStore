@@ -1,0 +1,12 @@
+<div class="card w-50 mx-auto mt-4 border border-primary rounded">
+    <div class="card-body">
+        <h3 class="card-title text-center">Esta es la informacion registrada</h3>
+        <p class="card-text">Nombres: <span class="text-muted">{{nombres}}</span></p>
+        <p class="card-text">Nick Name: <span class="text-muted">{{nickName}}</span></p>
+        <p class="card-text">Correo electronico: <span class="text-muted">{{correo}}</span></p>
+        <div class="contBotones d-flex justify-content-around">
+            <button (click)="eliminaUsuario()" class="btn btn-danger">Dar de baja al usuario</button>
+            <button [routerLink]="['/listado']" class="btn btn-info ">Ver listado productos</button>
+        </div>
+    </div>
+</div>

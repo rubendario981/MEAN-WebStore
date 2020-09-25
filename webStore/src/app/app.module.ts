@@ -19,6 +19,7 @@ import { FormularioRegistroComponent } from './componentes/formulario-registro/f
 import { InicioComponent } from './componentes/inicio/inicio.component';
 import { ValidarAuthGuard } from './validar-auth.guard';
 import { ValidaTokenService } from './modelos-servicios/valida-token.service';
+import { PerfilComponent } from './componentes/perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ValidaTokenService } from './modelos-servicios/valida-token.service';
     NubeTagsComponent,
     BusquedaComponent,
     FormularioRegistroComponent,
-    InicioComponent
+    InicioComponent,
+    PerfilComponent
   ],
   imports: [
     BrowserModule,

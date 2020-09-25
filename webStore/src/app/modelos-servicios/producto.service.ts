@@ -41,6 +41,14 @@ export class ProductoService {
         return this._http.get(this.url + 'listarSubCategorias')
     }
 
+    identificaUsuario(idUsuario): Observable<any> {
+        return this._http.get(this.url + 'identificarUsuario/' + idUsuario)
+    }
+
+    eliminaUsuario(idUsuario): Observable<any> {
+        return this._http.delete(this.url + 'eliminarUsuario/' + idUsuario)
+    }
+
     crearCategoria(producto): Observable<any> {
         let params = JSON.stringify(producto)
         let headers = new HttpHeaders().set('Content-Type', 'application/json')
@@ -60,7 +68,7 @@ export class ProductoService {
     }
 
     detalleProducto(idProducto): Observable<any> {
-        return this._http.get(this.url + 'buscar/' + idProducto)
+        return this._http.get(this.url + 'detalleProducto/' + idProducto)
     }
 
     editarProducto(producto): Observable<any> {

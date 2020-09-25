@@ -8,7 +8,7 @@
       <h4 class="card-text mb-3"> Precio: <small> {{producto?.precio}} </small> </h4>
       <h4 class="card-text mb-3"> Descripcion: <small> {{producto?.descripcion}} </small> </h4>
       <div class="marcarProductos">
-        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">          
+        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">           
           <i class="fas fa-cart-plus fa-2x"></i>
         </button>
 
@@ -20,8 +20,10 @@
           <i class="far fa-thumbs-up fa-2x"></i>          
         </button>
 
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editarProducto">Editar</button>
-        <button type="button" class="btn btn-danger" (click)='eliminarProducto()'>Eliminar</button>
+        <div *ngIf="admin">
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editarProducto">Editar</button>
+          <button type="button" class="btn btn-danger" (click)='eliminarProducto()'>Eliminar</button>
+        </div>
         
       </div>
     </div>

@@ -23,7 +23,10 @@ export class NubeTagsComponent implements OnInit {
   ngOnInit(): void {
     this.consultaBackend.listarSubCategorias().subscribe(
       res=>{
-        if(res.filtrarSubCat) this.arraySubCats = res.filtrarSubCat
+        if(res.filtrarSubCat) {
+          this.arraySubCats = res.filtrarSubCat
+          this.arraySubCats.shift()
+        }
       },
       error=> {console.log(error), this.arraySubCats = []}
     )    

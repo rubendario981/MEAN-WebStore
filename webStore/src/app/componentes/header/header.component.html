@@ -10,16 +10,24 @@
 
     <div *ngIf="userLogged" class="logos-header text-center ">
       <div class="logos-inline d-inline-flex">        
-        <div>
-          <a [routerLink]="['/inicioSesion']">
+        <div data-toggle="tooltip" data-placement="top" title="Ir a mi carrito de compras">
+          <a (click)="aviso()">
             <i class="fa fa-cart-plus"></i>
-            <p>Carrito de compras</p>
           </a>
         </div>
-        <div>
-          <a [routerLink]="['/inicioSesion']">
+        <div data-toggle="tooltip" data-placement="top" title="Lista de mis favoritos">
+          <a (click)="aviso()">
             <i class="fa fa-heart"></i>
-            <p>Favoritos</p>
+          </a>
+        </div>
+        <div data-toggle="tooltip" data-placement="top" title="Salir de la pagina">
+          <a (click)="auth.salida()">
+            <i class="fas fa-sign-out-alt"></i>
+          </a>
+        </div>
+        <div data-toggle="tooltip" data-placement="top" title="Identidad usuario">
+          <a [routerLink]="['/perfil/', nombreUsuario]">
+            <p >Estas identificado como: <span class="text-muted">{{nombreUsuario}}</span></p>
           </a>
         </div>
       </div>
@@ -27,16 +35,14 @@
 
     <div *ngIf="!userLogged" class="logos-header text-center" >
       <div class="logos-inline d-inline-flex">
-        <div>
+        <div data-toggle="tooltip" data-placement="top" title="Registrate en nuestra pagina">
           <a [routerLink]="['/registro']">
             <i class="fa fa-user-plus"></i>
-            <p>Registrate</p>          
           </a>
         </div>
-        <div>
+        <div data-toggle="tooltip" data-placement="top" title="Inicio session">
           <a [routerLink]="['/inicioSesion']">
             <i class="fa fa-key"></i> 
-            <p>Inicio sesion</p>
           </a>          
         </div>
       </div>

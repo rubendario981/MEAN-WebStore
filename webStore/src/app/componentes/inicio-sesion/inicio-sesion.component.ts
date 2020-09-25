@@ -35,11 +35,18 @@ export class InicioSesionComponent implements OnInit {
       error=>{
         swal("Error al ingresar", {
           icon: "warning",              
-          text: 'No se ha podido identificar al usuario, por favor intenta de nuevo '
+          text: 'No se ha podido identificar al usuario, por favor intenta de nuevo ' + error
         });
       }
-      )
-      console.log(this.usuario)
+    )
+  }
+
+  aviso(){
+    swal("Aviso", {
+      icon: "info",              
+      text: `Muy pronto tendremos la funcionalidad en esta pagina `
+    });
+    this._router.navigate(['/listado'])
   }
 
   cancela(){

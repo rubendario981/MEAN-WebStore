@@ -1,23 +1,22 @@
 <div class="detalleProducto">
-  <img src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="imagenProducto" alt={{producto?.nombre}}
-    style="width: 18rem;">
+  <img src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="imagenProducto" alt={{producto?.nombre}}>
   <div class="card">
     <div class="card-body">
       <h3 class="nombreProducto mb-4 font-weight-bolder">{{producto?.nombre}}</h3>
-      <h4 class="card-text mb-3"> Marca: <small> {{producto?.marca}} </small> </h4>
-      <h4 class="card-text mb-3"> Precio: <small> {{producto?.precio}} </small> </h4>
-      <h4 class="card-text mb-3"> Descripcion: <small> {{producto?.descripcion}} </small> </h4>
+      <h4 class="card-text mb-2"> Marca: <small> {{producto?.marca}} </small> </h4>
+      <h4 class="card-text mb-2"> Precio: <small> {{producto?.precio}} </small> </h4>
+      <h4 class="card-text mb-2"> Descripcion: <small> {{producto?.descripcion}} </small> </h4>
       <div class="marcarProductos">
-        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">           
-          <i class="fas fa-cart-plus fa-2x"></i>
+        <button type="button" class="btn btn-transparent" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">           
+          <i class="fas fa-cart-plus"></i>
         </button>
 
-        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Añadir a mis favoritos">          
-          <i class="far fa-star fa-2x"></i>          
+        <button type="button" class="btn btn-transparent" data-toggle="tooltip" data-placement="top" title="Añadir a mis favoritos">          
+          <i class="far fa-star"></i>          
         </button>
         
-        <button type="button" class="btn btn-transparente" data-toggle="tooltip" data-placement="top" title="Me gusta este producto">          
-          <i class="far fa-thumbs-up fa-2x"></i>          
+        <button type="button" class="btn btn-transparent" data-toggle="tooltip" data-placement="top" title="Me gusta este producto">          
+          <i class="far fa-thumbs-up"></i>          
         </button>
 
         <div *ngIf="admin">

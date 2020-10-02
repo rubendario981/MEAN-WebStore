@@ -5,7 +5,6 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { modeloProducto } from '../../modelos-servicios/modeloProducto';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-descripcion-producto',

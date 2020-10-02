@@ -1,4 +1,4 @@
-<div class="modAdmin w-75">
+<div class="modAdmin">
   <div class="card crearCategoria">
     <h4 class="card-header bg-primary text-center text-white">Crear Categoria</h4>
     <form (ngSubmit)="crearCategoria()">
@@ -37,7 +37,7 @@
     <form method="POST" class="miForm" #userForm="ngForm" (ngSubmit)="crearProducto()">
       <div class="card-body">
         <div class="row d-flex">
-          <div class="col-6 d-flex flex-column">
+          <div class="col-12 col-sm-6 d-flex flex-column">
             <label class="pb-0">Nombre producto</label>
             <input type="text" name="nomProd" #nomProd='ngModel' [(ngModel)]="producto.nombre"
               placeholder="Ingresa nombre del producto" required />
@@ -56,7 +56,7 @@
               placeholder="Ingresa la descripcion del producto"></textarea>
           </div>
 
-          <div class="col-6 d-flex flex-column">
+          <div class="col-12 col-sm-6 d-flex flex-column">
             <label class="pb-0">Selecciona la Categoria</label>
             <select (change)='obtenerCategoria2()' name="categoria" #categoria='ngModel'
               [(ngModel)]="producto.categoria">

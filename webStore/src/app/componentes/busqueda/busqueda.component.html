@@ -15,7 +15,7 @@
       <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
       <div class="card-body">
         <h5 class="card-title">{{modeloProducto.nombre}}</h5>
-        <p>{{modeloProducto.precio}}</p>
+        <p class="text-muted"> <span><samll>{{modeloProducto.precio | currency}}</samll></span></p>
       </div>
       <a class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]">Ver mas detalles...</a>
     </div>

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { modeloProducto } from '../../modelos-servicios/modeloProducto';
+import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert';
 
@@ -12,7 +13,7 @@ import swal from 'sweetalert';
   styleUrls: ['./descripcion-producto.component.css'],
   providers: [ProductoService, AuthService]
 })
-export class DescripcionProductoComponent implements OnInit {
+export class DescripcionProductoComponent implements OnInit, AfterContentInit {
 
   public producto: modeloProducto = {
     _id: '',
@@ -26,15 +27,30 @@ export class DescripcionProductoComponent implements OnInit {
     fecha: null
   };
 
+  public usuario: modeloUsuario = {
+    _id: '',
+    listaCompras: [],
+    listaFavoritos: [],
+    nombres: '',
+    nickName: '',
+    correo: '',
+    password: '',
+    password2: '',
+    rol: ''
+  };
+
   url: String
   listaCategorias: []
   listaSubCategorias: []
   admin: boolean
-  parametro = '../../busqueda/'
+  parametro: string
+  favButton: boolean
 
   constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router, private auth: AuthService) {
     this.url = variable.url
     this.admin = false
+    this.parametro = '../../busqueda/'
+    this.favButton = false
   }
 
   afuConfig = {
@@ -64,8 +80,8 @@ export class DescripcionProductoComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.auth.identificaUsuario()) {
-      const id = this.auth.identificaUsuario().split('"')[3];
-      this.consultaBackend.identificaUsuario(id).subscribe(
+      this.usuario._id = this.auth.identificaUsuario().split('"')[3];
+      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(
         res => {
           if (res.findUser.rol == 'administrador') this.admin = true
         },
@@ -79,27 +95,35 @@ export class DescripcionProductoComponent implements OnInit {
       res => this.listaCategorias = res.filtrarCat,
       err => console.log(err)
     )
-    this.consultaBackend.listarSubCategorias().subscribe(
-      res => {
-        if (res) {
-          this.listaSubCategorias = res.filtrarSubCat
-        }
-      },
+    this.consultaBackend.listarSubCategorias().subscribe(res => {
+      if (res) {
+        this.listaSubCategorias = res.filtrarSubCat
+      }
+    },
       err => console.log(err)
     )
     this.paramRuta.params.subscribe(params => {
       let id = params['id'];
 
-      this.consultaBackend.detalleProducto(id).subscribe(
-        res => {
-          if (res) {
-            this.producto = res.prod
-          }
-          else { this.ruta.navigate['/listado'] }
-        },
+      this.consultaBackend.detalleProducto(id).subscribe(res => {
+        if (res) {
+          this.producto = res.prod
+        }
+        else { this.ruta.navigate['/listado'] }
+      },
         error => console.log(error)
       )
     })
+
+    this.consultaBackend.validarFav(this.usuario._id).subscribe(res => {
+      this.favButton = res.validarFav.listaFavoritos.includes(this.producto._id)
+    },
+      err => console.log(err)
+    )
+  }
+
+  ngAfterContentInit() {
+
   }
 
   editarProducto() {
@@ -114,6 +138,31 @@ export class DescripcionProductoComponent implements OnInit {
     swal("El producto ha sido actualizado", {
       icon: "success",
     });
+  }
+
+  agregarFav() {
+    this.usuario.listaFavoritos = this.producto._id
+
+    if (!this.favButton) {
+      this.consultaBackend.agregaFav(this.usuario).subscribe(res => {
+        if (res) {
+          this.usuario = res.listaFav
+          this.favButton = true
+        }
+      },
+        error => { swal("No se agrego el producto a favoritos, por favor contactar al administrador", { icon: 'info', text: error }) }
+      )
+    } 
+    else {
+      this.consultaBackend.borrarFav(this.usuario).subscribe(res => {
+        if (res) {
+          this.usuario = res.borraFav
+          this.favButton = false
+        }
+      },
+        err => { console.log('No se pudo eliminar de favoritos ' + err) }
+      )
+    }
   }
 
   eliminarProducto() {

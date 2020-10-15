@@ -20,6 +20,7 @@ import { InicioComponent } from './componentes/inicio/inicio.component';
 import { ValidarAuthGuard } from './validar-auth.guard';
 import { ValidaTokenService } from './modelos-servicios/valida-token.service';
 import { PerfilComponent } from './componentes/perfil/perfil.component';
+import { ListaFavoritosComponent } from './componentes/lista-favoritos/lista-favoritos.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { PerfilComponent } from './componentes/perfil/perfil.component';
     BusquedaComponent,
     FormularioRegistroComponent,
     InicioComponent,
-    PerfilComponent
+    PerfilComponent,
+    ListaFavoritosComponent
   ],
   imports: [
     BrowserModule,

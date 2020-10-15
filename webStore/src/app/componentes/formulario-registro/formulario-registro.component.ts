@@ -17,6 +17,8 @@ export class FormularioRegistroComponent implements OnInit {
   coincidePass: boolean;
   usuario: modeloUsuario = {
     _id: '',
+    listaCompras: [],
+    listaFavoritos: [],
     nombres: '',
     correo: '',
     password: '',

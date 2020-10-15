@@ -1,5 +1,4 @@
 import { Component, OnInit, Input  } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'
 import { modeloSubCategorias } from  '../../modelos-servicios/modeloSubCategorias';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
@@ -15,7 +14,7 @@ export class NubeTagsComponent implements OnInit {
   arraySubCats: modeloSubCategorias []  
   url: string
   @Input () parametros: String
-  constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute) {
+  constructor(private consultaBackend: ProductoService) {
     this.url = variable.url
     this.parametros = '../busqueda/'
   }

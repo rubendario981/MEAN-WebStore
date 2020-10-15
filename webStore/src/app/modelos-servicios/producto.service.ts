@@ -3,27 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { variable } from './constantes'
-import { modeloProducto } from './modeloProducto';
-import { modeloUsuario } from './modeloUsuario';
 
 @Injectable()
 
 export class ProductoService {
 
     url: String
-    public producto: modeloProducto/*  = {
-        _id: '',
-        nombre: '',
-        marca: '',
-        categoria: '',
-        subCategoria: '',
-        imagen: '',
-        descripcion: '',
-        precio: null,
-        fecha: null
-    }; */
-
-    public usuario: modeloUsuario
 
     constructor(private _http: HttpClient) {
         this.url = variable.url
@@ -75,6 +60,28 @@ export class ProductoService {
         let params = JSON.stringify(producto)
         let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
         return this._http.put(this.url + 'actualizaProducto/' + producto._id, params, { headers: miCabecera })
+    }
+
+    validarFav(idUsuario): Observable<any>{
+        return this._http.get(this.url + 'validaFav/'+ idUsuario)
+    }
+
+    agregaFav(usuario): Observable<any> {
+        let params = JSON.stringify(usuario)
+        let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'agregaFav/'+usuario._id, params, { headers: miCabecera })
+    }
+
+    borrarFav(usuario): Observable<any> {
+        console.log(usuario)
+        let params = JSON.stringify(usuario)
+        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'borrarFav/'+usuario._id, params, {headers: cabecera})
+    }
+
+    borrarFavlistado(id): Observable<any> {
+        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'borrarTodoFav/'+id, {headers: cabecera})
     }
 
     eliminarProducto(id): Observable<any> {

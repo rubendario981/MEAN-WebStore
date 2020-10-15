@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { modeloProducto } from 'src/app/modelos-servicios/modeloProducto';
 import { ProductoService } from 'src/app/modelos-servicios/producto.service';
+import { modeloUsuario } from 'src/app/modelos-servicios/modeloUsuario';
+import { AuthService } from 'src/app/modelos-servicios/auth.service'
 import { variable } from '../../modelos-servicios/constantes'
 import swal from 'sweetalert'
 
@@ -24,13 +26,25 @@ export class CrearProductoComponent implements OnInit {
     fecha: null,
     imagen: ''
   };
-
+  
+  public usuario: modeloUsuario ={    
+    _id: '',
+    listaCompras: [],
+    listaFavoritos: [],
+    nombres: '',
+    nickName: '',
+    correo: '',
+    password: '',
+    password2: '',
+    rol: '' 
+  };
+  
   listaCategorias: []
   listaSubCategorias: []
 
   url: String
 
-  constructor (private _router: Router,  private consultaBackend: ProductoService) {
+  constructor (private _router: Router,  private consultaBackend: ProductoService, private auth: AuthService) {
     this.url = variable.url    
   }
 
@@ -60,7 +74,19 @@ export class CrearProductoComponent implements OnInit {
   };
 
 
-  ngOnInit() {
+  ngOnInit() {    
+    if (this.auth.identificaUsuario()) {
+      this.usuario._id = this.auth.identificaUsuario().split('"')[3];
+      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(
+        res => {
+          if (res.findUser.rol != 'administrador') this._router.navigate(['listado'])
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    }
+
     this.consultaBackend.listarCategorias().subscribe(
       res => this.listaCategorias = res.filtrarCat,
       err => console.log(err)

@@ -151,7 +151,46 @@ var controlador = {
         const listaSubCat = await Categorias.find({}, { "subCategoria": 1, "_id": 0 })
         if (!listaSubCat) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
         listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
-        return res.status(200).send({mensaje: 'ok', filtrarSubCat})
+        return res.status(200).send({mensaje: 'ok', filtrarSubCat})        
+    },
+
+    /********************************** */
+    validaFav: async (req, res) => {
+        var params = req.body
+        var idUsuario = req.params.id        
+
+        const validarFav = await Usuario.findById({_id: idUsuario}, {listaFavoritos: 1, _id:0})
+        res.send({mensaje: 'ok',  validarFav})
+        
+    },
+
+    /********************************** */
+    agregaFav: async (req, res) => {
+        var params = req.body
+        var idUsuario = req.params.idUsuario
+        
+        const listaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaFavoritos": params.listaFavoritos}}, {new: true})        
+        res.send({mensaje: 'ok', listaFav})
+        
+    },
+
+    /********************************** */
+    borrarFav: async (req, res) => {
+        var params = req.body
+        var idUsuario = req.params.idUsuario
+        
+        const borraFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {$pull:{"listaFavoritos": params.listaFavoritos}}, {new: true})        
+        res.send({mensaje: 'ok', borraFav})
+        
+    },
+
+    /********************************** */
+    borrarTodoFav: async (req, res) => {
+        //var params = req.body
+        var idUsuario = req.params.idUsuario
+        
+        const borraListaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaFavoritos: []}/* {$pullAll:{"listaFavoritos": params.listaFavoritos}} */, {new: true})        
+        res.send({mensaje: 'ok', borraListaFav})
         
     },
 

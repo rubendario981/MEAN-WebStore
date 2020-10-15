@@ -13,12 +13,16 @@ router.post('/inicioSesion', controlador.inicioSesion);
 router.post('/crearCategoria', validarToken, controlador.crearCategoria);
 router.post('/crearSubCategoria', validarToken, controlador.crearSubCategoria);
 router.post('/crearProducto', validarToken, cargaArchivos, controlador.crearProducto);
+router.post('/agregaFav/:idUsuario', controlador.agregaFav);
+router.post('/borrarFav/:idUsuario', controlador.borrarFav);
+router.post('/borrarTodoFav/:idUsuario', controlador.borrarTodoFav);
+router.get('/validaFav/:id', controlador.validaFav);
 router.get('/identificarUsuario/:id', controlador.identificarUsuario);
 router.delete('/eliminarUsuario/:id', controlador.eliminarUsuario);
 router.get('/listarProductos', controlador.listarProductos);
 router.get('/listarCategorias', controlador.listarCategorias);
 router.get('/listarSubCategorias', controlador.listarSubCategorias);
-router.get('/mostrarImagen/:imagen', controlador.mostrarImagen);
+router.get('/mostrarImagen/:imagen?', controlador.mostrarImagen);
 router.get('/detalleProducto/:id?', controlador.detalleProducto);
 
 //ruta para buscar articulo por su id

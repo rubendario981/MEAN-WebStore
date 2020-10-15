@@ -6,7 +6,7 @@ server.set('port', process.env.port || 3000);
 
 mongoose.Promise = global.Promise;
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect('mongodb://localhost:27017/bdWebStore', {useNewUrlParser: true})
+mongoose.connect('mongodb://localhost:27017/bdWebStore', {useNewUrlParser: true, useFindAndModify: false })
     .then(()=>{
         console.log('Conexion a base de datos exitosa');
 

@@ -189,7 +189,7 @@ var controlador = {
         //var params = req.body
         var idUsuario = req.params.idUsuario
         
-        const borraListaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaFavoritos: []}/* {$pullAll:{"listaFavoritos": params.listaFavoritos}} */, {new: true})        
+        const borraListaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaFavoritos: []}, {new: true})        
         res.send({mensaje: 'ok', borraListaFav})
         
     },

@@ -7,7 +7,7 @@ var bcrypt = require('bcrypt');
 var JWT = require('jsonwebtoken')
 var fs = require('fs');
 const { resolve } = require('path');
-var cat = new Categorias();
+var cat;
 var prod, token, usu;
 
 var controlador = {
@@ -74,8 +74,10 @@ var controlador = {
     
     /***************************** */
     crearCategoria: async (req, res) => {
-        cat.categoria = req.body.categoria;
-
+        cat = new Categorias()
+        cat.categoria = req.body.categoria
+        console.log(req.body.categoria)
+        
         const findCat = await Categorias.findOne({ categoria: req.body.categoria })
         if (findCat) return res.status(402).send({ mensaje: 'ya existe la categoria ' })
         const newCategory = await cat.save()
@@ -85,15 +87,13 @@ var controlador = {
 
     /***************************** */
     crearSubCategoria: async (req, res) => {
-        var { categoria, subCategoria } = req.body;
-        cat.categoria = categoria;
-        cat.subCategoria = subCategoria;
+        const { categoria, subCategoria } = req.body;
 
-        const findSubCat = await Categorias.findOne({ subCategoria })
-        if (findSubCat) return res.status(402).send({ mensaje: 'ya existe la subcategoria' })
-        const newSubCat = await cat.save()
-        if (!newSubCat) return res.status(404).send({ mensaje: 'No se pudo crear la nueva subCategoria' })
-        return res.send({ mensaje: 'ok', newSubCat })
+        const existeSubCat = await Categorias.findOne({categoria, subCategoria: subCategoria})
+        if(existeSubCat) return res.status(402).send({mensaje: `ya existe ${subCategoria} dentro de la categoria ${categoria}`})
+        const crearSubCategoria = await Categorias.findOneAndUpdate({categoria}, {$push:{"subCategoria": subCategoria}}, {new: true})
+        crearSubCategoria ? res.status(200).send({mensaje: 'ok', crearSubCategoria}) : res.status(404).send({mensaje: 'no se pudo crear subCat'})
+
     },
 
     /***************************** */
@@ -111,7 +111,7 @@ var controlador = {
 
         const productCreated = await prod.save()
         if (!productCreated) res.status(404).send({ mensaje: 'No se pudo crear el producto' })
-        res.send({ mensaje: 'ok', productCreated })
+        return res.send({ mensaje: 'ok', productCreated })
 
     },
 
@@ -145,13 +145,19 @@ var controlador = {
     },
 
     /********************************** */
-    listarSubCategorias: async (req, res) => {
-        const filtrarSubCat = []
-        const objSubCat = {}
-        const listaSubCat = await Categorias.find({}, { "subCategoria": 1, "_id": 0 })
+    listarTags: async (req, res) => {
+        const listaTags = await Categorias.find({}, { "subCategoria": 1, "_id": 0 })
+        if (!listaTags) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
+        
+        return res.send({mensaje: 'ok', listaTags})
+    },
+
+    /*********************************** */
+    listarSubCategorias: async (req, res) => {        
+        const listaSubCat = await Categorias.findOne({categoria: req.params.cat}, { subCategoria: 1, _id: 0 })
         if (!listaSubCat) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
-        listaSubCat.forEach(el => !(el in objSubCat) && (objSubCat[el] = true) && filtrarSubCat.push(el))
-        return res.status(200).send({mensaje: 'ok', filtrarSubCat})        
+        
+        return res.send({mensaje: 'ok', listaSubCat})
     },
 
     /********************************** */
@@ -170,8 +176,7 @@ var controlador = {
         var idUsuario = req.params.idUsuario
         
         const listaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaFavoritos": params.listaFavoritos}}, {new: true})        
-        res.send({mensaje: 'ok', listaFav})
-        
+        res.send({mensaje: 'ok', listaFav})        
     },
 
     /********************************** */
@@ -180,18 +185,41 @@ var controlador = {
         var idUsuario = req.params.idUsuario
         
         const borraFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {$pull:{"listaFavoritos": params.listaFavoritos}}, {new: true})        
-        res.send({mensaje: 'ok', borraFav})
-        
+        res.send({mensaje: 'ok', borraFav})        
     },
 
     /********************************** */
     borrarTodoFav: async (req, res) => {
-        //var params = req.body
         var idUsuario = req.params.idUsuario
         
         const borraListaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaFavoritos: []}, {new: true})        
-        res.send({mensaje: 'ok', borraListaFav})
+        res.send({mensaje: 'ok', borraListaFav})        
+    },
+
+    /********************************** */
+    agregarCarrito: async (req, res) => {
+        var params = req.body
+        var idUsuario = req.params.idUsuario
         
+        const addCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaCompras": params.listaCompras}}, {new: true})        
+        return res.send({mensaje: 'ok', addCart})        
+    },
+
+    /********************************** */
+    borrarCarrito: async (req, res) => {
+        var params = req.body
+        var idUsuario = req.params.idUsuario
+        
+        const delCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {$pull:{"listaCompras": params.listaCompras}}, {new: true})        
+        return res.send({mensaje: 'ok', delCart})        
+    },
+
+    /********************************** */
+    vaciarCarrito: async (req, res) => {
+        var idUsuario = req.params.idUsuario
+        
+        const addCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaCompras: []}, {new: true})        
+        return res.send({mensaje: 'ok', addCart})        
     },
 
     /********************************* */

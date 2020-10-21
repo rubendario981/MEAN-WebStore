@@ -16,12 +16,16 @@ router.post('/crearProducto', validarToken, cargaArchivos, controlador.crearProd
 router.post('/agregaFav/:idUsuario', controlador.agregaFav);
 router.post('/borrarFav/:idUsuario', controlador.borrarFav);
 router.post('/borrarTodoFav/:idUsuario', controlador.borrarTodoFav);
+router.post('/agregarCarrito/:idUsuario', controlador.agregarCarrito);
+router.post('/borrarCarrito/:idUsuario', controlador.borrarCarrito);
+router.post('/vaciarCarrito/:idUsuario', controlador.vaciarCarrito);
 router.get('/validaFav/:id', controlador.validaFav);
 router.get('/identificarUsuario/:id', controlador.identificarUsuario);
 router.delete('/eliminarUsuario/:id', controlador.eliminarUsuario);
 router.get('/listarProductos', controlador.listarProductos);
 router.get('/listarCategorias', controlador.listarCategorias);
-router.get('/listarSubCategorias', controlador.listarSubCategorias);
+router.get('/listarSubCategorias/:cat', controlador.listarSubCategorias);
+router.get('/listarTags', controlador.listarTags);
 router.get('/mostrarImagen/:imagen?', controlador.mostrarImagen);
 router.get('/detalleProducto/:id?', controlador.detalleProducto);
 

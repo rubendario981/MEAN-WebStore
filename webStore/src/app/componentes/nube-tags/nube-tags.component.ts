@@ -1,5 +1,4 @@
 import { Component, OnInit, Input  } from '@angular/core';
-import { modeloSubCategorias } from  '../../modelos-servicios/modeloSubCategorias';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 
@@ -11,22 +10,24 @@ import { variable } from '../../modelos-servicios/constantes'
 })
 export class NubeTagsComponent implements OnInit {
 
-  arraySubCats: modeloSubCategorias []  
+  arraySubCats: any  
   url: string
   @Input () parametros: String
   constructor(private consultaBackend: ProductoService) {
     this.url = variable.url
     this.parametros = '../busqueda/'
+    this.arraySubCats = []
   }
 
   ngOnInit(): void {
-    this.consultaBackend.listarSubCategorias().subscribe(
-      res=>{
-        if(res.filtrarSubCat) {
-          this.arraySubCats = res.filtrarSubCat
-          this.arraySubCats.shift()
-        }
-      },
+    let nubePalabras: String
+    this.consultaBackend.listarTags().subscribe(res=>{
+      res.listaTags.forEach(element => {
+        nubePalabras += ',' + (Object.values(element))
+      });
+      this.arraySubCats = nubePalabras.split(",")
+      this.arraySubCats.shift()
+    },
       error=> {console.log(error), this.arraySubCats = []}
     )    
   }

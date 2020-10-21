@@ -6,28 +6,32 @@
       <h4 class="card-text mb-2"> Marca: <small> {{producto?.marca}} </small> </h4>
       <h4 class="card-text mb-2"> Precio: <small> {{producto?.precio | currency}} </small> </h4>
       <h4 class="card-text mb-2"> Descripcion: <small> {{producto?.descripcion}} </small> </h4>
-      <div class="marcarProductos">
-        <button type="button" class="btn btn-transparent" data-toggle="tooltip" data-placement="top" title="Añadir al carrito de compras">           
-          <i class="fas fa-cart-plus"></i>
+      <div class="d-flex justify-content-around mt-2">
+        <button type="button" class="btn btn-transparent" data-toggle="tooltip" (click)="adminCarrito()"
+                data-placement="top" title={{tituloCarrito}}
+                [style.color]= "cartButton ? 'green' : 'gray'"> 
+          <span *ngIf="cartButton"><i class="fas fa-cart-plus"></i></span>
+          <span *ngIf="!cartButton">
+            <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-cart-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+              <path fill-rule="evenodd" d="M11.354 5.646a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L8 8.293l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+          </span>
         </button>
 
-        <button id="favButton" type="button" class="btn btn-transparent" (click)="agregarFav()" 
+        <button id="favButton" type="button" class="btn btn-transparent" (click)="adminFavs()" 
                 data-toggle="tooltip" data-placement="top" title="Añadir a mis favoritos"
                   [style.color]="favButton ? 'yellow' : 'black'">         
                     <span *ngIf="favButton"><i class="fas fa-star"></i></span>
                     <span *ngIf="!favButton"><i class="far fa-star"></i></span>
         </button>
-        
-        <button type="button" class="btn btn-transparent" data-toggle="tooltip" data-placement="top" title="Me gusta este producto">          
-          <i class="fas fa-thumbs-up"></i>          
-        </button>
-
-        <div *ngIf="admin">
-          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editarProducto">Editar</button>
-          <button type="button" class="btn btn-danger" (click)='eliminarProducto()'>Eliminar</button>
-        </div>
-        
       </div>
+      
+      <div *ngIf="admin" class="d-flex justify-content-around border p-2">
+        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarProducto">Editar</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)='eliminarProducto()'>Eliminar</button>
+      </div>
+      
     </div>
   </div>
   <app-nube-tags [parametros]="parametro"></app-nube-tags>
@@ -35,7 +39,7 @@
 
 <!-- Ventana emergente para actualizar producto --> 
 <div class="modal fade" id="editarProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <h5 class="modal-title text-white" id="exampleModalLabel">Ingresa los nuevos datos</h5>
@@ -45,7 +49,7 @@
       </div>
       <div class="modal-body">
         <div class="row d-flex">
-          <div class="col-6 d-flex flex-column">
+          <div class="col-6 d-flex flex-column mb-3">
             <label class="pb-0">Nombre producto</label>
             <input type="text" name="nomProd" #nomProd='ngModel' [(ngModel)]="producto.nombre"
               placeholder="Ingresa nombre del producto" required />
@@ -56,25 +60,24 @@
 
             <label class="mt-4 pb-0">Precio producto</label>
             <input type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
-              onkeypress='return event.charCode >= 48 && event.charCode <= 57' [(ngModel)]="producto.precio"
-              placeholder="Ingresa precio del producto" pattern="[0-9]" required />
+              onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Ingresa precio del producto" required />
 
             <label class="mt-4 pb-0">Descripcion producto</label>
             <textarea name="descrip" #descrip='ngModel' rows="4" [(ngModel)]="producto.descripcion"
               placeholder="Ingresa la descripcion del producto" required></textarea>
           </div>
 
-          <div class="col-6 d-flex flex-column">
+          <div class="col-6 d-flex flex-column mb-3">
             <label class="pb-0">Selecciona la categoria</label>
-            <select (change)='obtenerCategoria()' name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria">
+            <select (change)='listarCategoria(producto.categoria)' name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria">
               <option value="0">Elige una opcion </option>
               <option *ngFor="let cat of listaCategorias">{{cat.categoria}}</option>
             </select>
 
             <label class="mt-4 pb-0">Selecciona la SubCategoria</label>
-            <select (change)='obtenerSubCategoria()' name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria">
+            <select name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria">
               <option value="0">Elige una opcion </option>
-              <option *ngFor="let subCat of listaSubCategorias">{{subCat.subCategoria}}</option>
+              <option *ngFor="let subCat of listaSubCategorias">{{subCat}}</option>
             </select>            
 
             <label class="mt-4 pb-0">Sube la imagen del producto</label>

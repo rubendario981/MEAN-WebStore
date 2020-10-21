@@ -21,6 +21,7 @@ import { ValidarAuthGuard } from './validar-auth.guard';
 import { ValidaTokenService } from './modelos-servicios/valida-token.service';
 import { PerfilComponent } from './componentes/perfil/perfil.component';
 import { ListaFavoritosComponent } from './componentes/lista-favoritos/lista-favoritos.component';
+import { CarritoComprasComponent } from './componentes/carrito-compras/carrito-compras.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ListaFavoritosComponent } from './componentes/lista-favoritos/lista-fav
     FormularioRegistroComponent,
     InicioComponent,
     PerfilComponent,
-    ListaFavoritosComponent
+    ListaFavoritosComponent,
+    CarritoComprasComponent
   ],
   imports: [
     BrowserModule,

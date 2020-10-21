@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -13,7 +13,7 @@ import swal from 'sweetalert';
   styleUrls: ['./descripcion-producto.component.css'],
   providers: [ProductoService, AuthService]
 })
-export class DescripcionProductoComponent implements OnInit, AfterContentInit {
+export class DescripcionProductoComponent implements OnInit {
 
   public producto: modeloProducto = {
     _id: '',
@@ -45,12 +45,16 @@ export class DescripcionProductoComponent implements OnInit, AfterContentInit {
   admin: boolean
   parametro: string
   favButton: boolean
+  cartButton: boolean
+  tituloCarrito: String
 
   constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router, private auth: AuthService) {
     this.url = variable.url
     this.admin = false
     this.parametro = '../../busqueda/'
     this.favButton = false
+    this.cartButton = false
+    this.tituloCarrito = 'Agregar al carrito de compras'
   }
 
   afuConfig = {
@@ -95,35 +99,32 @@ export class DescripcionProductoComponent implements OnInit, AfterContentInit {
       res => this.listaCategorias = res.filtrarCat,
       err => console.log(err)
     )
-    this.consultaBackend.listarSubCategorias().subscribe(res => {
-      if (res) {
-        this.listaSubCategorias = res.filtrarSubCat
-      }
-    },
-      err => console.log(err)
-    )
     this.paramRuta.params.subscribe(params => {
-      let id = params['id'];
-
-      this.consultaBackend.detalleProducto(id).subscribe(res => {
-        if (res) {
-          this.producto = res.prod
-        }
-        else { this.ruta.navigate['/listado'] }
-      },
-        error => console.log(error)
-      )
+      this.producto._id = params['id'];      
     })
-
-    this.consultaBackend.validarFav(this.usuario._id).subscribe(res => {
-      this.favButton = res.validarFav.listaFavoritos.includes(this.producto._id)
+    this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
+      if (res) {
+        this.producto = res.prod
+      }
+      else { this.ruta.navigate['/listado'] }
     },
-      err => console.log(err)
+      error => console.log(error)
     )
+
+    this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res=>{
+      this.favButton = res.findUser.listaFavoritos.includes(this.producto._id)
+      this.cartButton = res.findUser.listaCompras.includes(this.producto._id)
+    })
+    this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
+
   }
 
-  ngAfterContentInit() {
-
+  listarCategoria(categoria){
+    this.listaSubCategorias = []
+    this.consultaBackend.listarSubCategorias(categoria).subscribe(res=>{
+      this.listaSubCategorias = res.listaSubCat.subCategoria
+    })
+    return this.listaSubCategorias
   }
 
   editarProducto() {
@@ -140,7 +141,7 @@ export class DescripcionProductoComponent implements OnInit, AfterContentInit {
     });
   }
 
-  agregarFav() {
+  adminFavs() {
     this.usuario.listaFavoritos = this.producto._id
 
     if (!this.favButton) {
@@ -163,6 +164,18 @@ export class DescripcionProductoComponent implements OnInit, AfterContentInit {
         err => { console.log('No se pudo eliminar de favoritos ' + err) }
       )
     }
+  }
+
+  adminCarrito(){
+    this.usuario.listaCompras = this.producto._id
+
+    this.cartButton ? this.consultaBackend.borrarCart(this.usuario).subscribe(res=>{
+      this.cartButton = false
+      this.tituloCarrito = "Agregar al carrito de compras"
+    }): this.consultaBackend.agregaCart(this.usuario).subscribe(res=>{
+      this.cartButton = true
+      this.tituloCarrito = "Eliminar del carrito de compras"
+    })
   }
 
   eliminarProducto() {
@@ -204,12 +217,6 @@ export class DescripcionProductoComponent implements OnInit, AfterContentInit {
       }
       this.ruta.navigate(['detallesProducto/', this.producto._id])
     });
-  }
-
-  obtenerCategoria() {
-  }
-
-  obtenerSubCategoria() {
   }
 
   DocUpload(event) {

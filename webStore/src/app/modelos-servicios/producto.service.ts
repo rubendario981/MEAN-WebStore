@@ -22,8 +22,12 @@ export class ProductoService {
         return this._http.get(this.url + 'listarCategorias')
     }
 
-    listarSubCategorias(): Observable<any> {
-        return this._http.get(this.url + 'listarSubCategorias')
+    listarTags(): Observable<any> {
+        return this._http.get(this.url + 'listarTags')
+    }
+
+    listarSubCategorias(categoria): Observable<any> {
+        return this._http.get(this.url + 'listarSubCategorias/' + categoria )
     }
 
     identificaUsuario(idUsuario): Observable<any> {
@@ -68,12 +72,11 @@ export class ProductoService {
 
     agregaFav(usuario): Observable<any> {
         let params = JSON.stringify(usuario)
-        let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
-        return this._http.post(this.url + 'agregaFav/'+usuario._id, params, { headers: miCabecera })
+        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'agregaFav/'+usuario._id, params, { headers: cabecera })
     }
 
     borrarFav(usuario): Observable<any> {
-        console.log(usuario)
         let params = JSON.stringify(usuario)
         let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
         return this._http.post(this.url + 'borrarFav/'+usuario._id, params, {headers: cabecera})
@@ -82,6 +85,23 @@ export class ProductoService {
     borrarFavlistado(id): Observable<any> {
         let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
         return this._http.post(this.url + 'borrarTodoFav/'+id, {headers: cabecera})
+    }
+
+    agregaCart(usuario){
+        let params = JSON.stringify(usuario);
+        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'agregarCarrito/' + usuario._id, params, {headers: cabecera})
+    }
+
+    borrarCart(usuario){
+        let params = JSON.stringify(usuario);
+        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'borrarCarrito/' + usuario._id, params, {headers: cabecera})
+    }
+
+    vaciarCart(usuario){
+        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'vaciarCarrito/' + usuario._id, {headers: cabecera})
     }
 
     eliminarProducto(id): Observable<any> {

@@ -42,18 +42,18 @@ export class FormularioRegistroComponent implements OnInit {
     delete(this.usuario.password2)
     this.consultaBackend.registrarUsuario(this.usuario).subscribe(
       res => {
-        swal("Usuario creado", {
-          icon: "info",              
-          text: 'Se ha creado el usuario correctamente'
-        });
-        res.userCreated = this.usuario;
-        this._router.navigate(['/'])
+        // swal("Usuario creado", {
+        //   icon: "info",              
+        //   text: 'Se ha creado el usuario correctamente'
+        // });
+        console.log('bien registrado')
       },
       err => {
-        swal("Error al crear usuario", {
-          icon: "warning",
-          text: `Ya esta registrado el correo ${this.usuario.correo} o el nickName ${this.usuario.nickName}`
-        })
+        // swal("Error al crear usuario", {
+        //   icon: "warning",
+        //   text: `Ya esta registrado el correo ${this.usuario.correo} o el nickName ${this.usuario.nickName}`
+        // })
+        console.log('mal registrado')
       }
     )
   }

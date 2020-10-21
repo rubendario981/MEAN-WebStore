@@ -3,9 +3,11 @@ import { Router } from '@angular/router'
 import { modeloProducto } from 'src/app/modelos-servicios/modeloProducto';
 import { ProductoService } from 'src/app/modelos-servicios/producto.service';
 import { modeloUsuario } from 'src/app/modelos-servicios/modeloUsuario';
+import { modeloCategorias } from  '../../modelos-servicios/modeloCategorias';
 import { AuthService } from 'src/app/modelos-servicios/auth.service'
 import { variable } from '../../modelos-servicios/constantes'
 import swal from 'sweetalert'
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-crearProducto',
@@ -15,7 +17,7 @@ import swal from 'sweetalert'
 })
 export class CrearProductoComponent implements OnInit {
 
-  producto: modeloProducto = {
+  public producto: modeloProducto = {
     _id: '',
     nombre: '',
     marca: '',
@@ -38,6 +40,16 @@ export class CrearProductoComponent implements OnInit {
     password2: '',
     rol: '' 
   };
+
+  public nuevaCategoria: modeloCategorias={
+    categoria: '',
+    subCategoria: []
+  }
+  
+  public nuevaSubCategoria: modeloCategorias={
+    categoria: '',
+    subCategoria: ''
+  }
   
   listaCategorias: []
   listaSubCategorias: []
@@ -77,96 +89,93 @@ export class CrearProductoComponent implements OnInit {
   ngOnInit() {    
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
-      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(
-        res => {
-          if (res.findUser.rol != 'administrador') this._router.navigate(['listado'])
-        },
+      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
+        if (res.findUser.rol != 'administrador') this._router.navigate(['listado'])
+      },
         error => {
           console.log(error)
         }
       )
     }
 
-    this.consultaBackend.listarCategorias().subscribe(
-      res => this.listaCategorias = res.filtrarCat,
-      err => console.log(err)
-    )
-    this.consultaBackend.listarSubCategorias().subscribe(
-      res =>{
-        if(res){ 
-          this.listaSubCategorias = res.filtrarSubCat
-          this.listaSubCategorias.shift()
-        }
-      },
+    this.consultaBackend.listarCategorias().subscribe(res => {
+      this.listaCategorias = res.filtrarCat
+    },
       err => console.log(err)
     )
   }
 
-  crearCategoria() {
-    delete(this.producto._id)
-    delete(this.producto.nombre)
-    delete(this.producto.marca)
-    delete(this.producto.descripcion)
-    delete(this.producto.precio)
-    delete(this.producto.fecha)
-    delete(this.producto.imagen)
-    this.consultaBackend.crearCategoria(this.producto).subscribe(
-      res => {
-        if(res.mensaje == 'ok') {      
-          res.categoriaNueva = this.producto
-          this._router.navigate(['/crearProducto'])
-        }
-      },
+  listarSubCats(cat){
+    this.listaSubCategorias = []
+    this.consultaBackend.listarSubCategorias(cat).subscribe(res=>{
+      this.listaSubCategorias = res.listaSubCat.subCategoria
+    })
+    return this.listaSubCategorias
+  }
+
+  crearCategoria(categoria) {
+    this.nuevaCategoria.categoria = categoria
+    this.consultaBackend.crearCategoria(this.nuevaCategoria).subscribe(res => {
+      swal(`Categoria ${this.nuevaSubCategoria.categoria} creada satisfactoriamente`)
+      this.nuevaCategoria = {categoria: '', subCategoria: ''}
+    },
       err => {
-        console.log('No se pudo crear la categoria ') 
+        err.headers = 402 ? swal({ text: 'Ya existe la categoria' + this.nuevaCategoria.categoria, title: 'Error al crear categoria'}) :
         console.log(err)
+        this.nuevaCategoria = {categoria: '', subCategoria: ''}
       }
     )
   }
 
-  crearSubCategoria() {
-    delete(this.producto._id)
-    delete(this.producto.nombre)
-    delete(this.producto.marca)
-    delete(this.producto.descripcion)
-    delete(this.producto.precio)
-    delete(this.producto.fecha)
-    delete(this.producto.imagen)
-    this.consultaBackend.crearSubCategoria(this.producto).subscribe(
-      res =>{
-        if(res) res.subCategoriaNueva = this.producto
-      },
-      err => console.log(err)
+  crearSubCategoria(subCat) {
+    this.nuevaSubCategoria = subCat
+    this.consultaBackend.crearSubCategoria(this.nuevaSubCategoria).subscribe(res => {
+      swal('Sub categoria ' + this.nuevaSubCategoria.subCategoria + ' creada en ' + this.nuevaSubCategoria.categoria)
+      this.nuevaSubCategoria = { categoria: '', subCategoria: '' }
+    },
+      err => {
+        err.headers = 402 ? swal({ text: 'Ya existe la sub-categoria' + this.nuevaSubCategoria.subCategoria, title: 'Error al crear la subcategoria' }) :
+        console.log(err)
+        this.nuevaSubCategoria = { categoria: 0, subCategoria: '' }
+      }
     )
-
   }
 
-  obtenerCategoria(){
-    console.log(this.producto.categoria)
-  }
-
-  obtenerCategoria2(){
-    console.log(this.producto.categoria)
-  }
-
-  obtenerSubCategoria(){
-    console.log(this.producto.subCategoria)
-  }
-
-  crearProducto() {    
+  crearProducto() {
     this.consultaBackend.crearProducto(this.producto).subscribe(
       res => {
         swal("Producto creado", {
           icon: "info",              
           text: 'Se ha creado producto de manera exitosa'
         });
-        res.productoCreado = this.producto
+        this.producto = {
+          _id: '',
+          nombre: '',
+          marca: '',
+          categoria: '',
+          subCategoria: '',
+          descripcion: '',
+          precio: null,
+          fecha: null,
+          imagen: ''
+        }
       },
       err => {
         swal("No se pudo crear producto", {
           icon: "warning",              
           text: 'Error creando producto ' + err
         });
+        this.producto = {
+          _id: '',
+          nombre: '',
+          marca: '',
+          categoria: '',
+          subCategoria: '',
+          descripcion: '',
+          precio: null,
+          fecha: null,
+          imagen: ''
+        }
       }
     )
   }
@@ -175,8 +184,9 @@ export class CrearProductoComponent implements OnInit {
     this.producto.imagen = event.body.imagen
   }
 
-  cancela() {
-    this._router.navigate(['/'])
+  cancela() {    
+    this.nuevaCategoria = {categoria: '', subCategoria: []}
+    //this._router.navigate(['/'])
   }
 
 

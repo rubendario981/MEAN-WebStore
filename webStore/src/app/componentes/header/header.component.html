@@ -9,9 +9,8 @@
     <h2 class="title"><a [routerLink]="['/']">Colombia de todito </a></h2>
 
     <div *ngIf="userLogged" class="logos-header d-inline-flex">
-      <p>{{x}}</p>
       <div data-toggle="tooltip" data-placement="top" title="Ir a mi carrito de compras">
-        <a (click)="aviso()">
+        <a [routerLink]="['/carrito']">
           <i class="fa fa-cart-plus fa-xs"></i>
         </a>
       </div>

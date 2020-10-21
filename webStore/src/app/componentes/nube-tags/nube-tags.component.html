@@ -1,6 +1,6 @@
 <h5 class="text-center">Busca tambien ...</h5>
 <div class="nubeSubCats">
   <ul *ngFor="let subCats of arraySubCats">
-    <li><a [routerLink]="[parametros, subCats?.subCategoria]" class="badge">{{subCats?.subCategoria}}</a></li>    
+    <li><a [routerLink]="[parametros, subCats]" class="badge">{{subCats}}</a></li>    
   </ul>
 </div>

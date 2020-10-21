@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-9 my-2 my-md-4 mx-auto">
+      <div class="card">
+        <h3 class="text-center text-white bg-primary card-header">Carrito de compras</h3>
+        <table class="table table-striped table-responsive-md ">
+          <thead class="thead-dark">
+            <tr>
+              <th colspan="7">Descripcion</th>
+              <th colspan="3">Precio unitario</th>
+              <th colspan="1">Cantidad</th>
+              <th colspan="3">Sub-Total</th>
+              <th colspan="1">Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prod of carritoCompras">
+              <th colspan="7">{{prod.nombre}}</th>
+              <td colspan="3">{{prod.precio | currency}}</td>
+              <td colspan="1"><input type="number" [(ngModel)]="prod.cantidad" value="1" min="0" max="100" step="1"
+                  style="height: 1.2rem; font-size: 0.7rem;" class="w-50 ml-2 pr-0"
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" >
+              </td>
+              <td colspan="3" class="subt">{{prod.precio * prod.cantidad | currency }}</td>
+              <td colspan="1" data-toggle="tooltip" data-placement="top" title="Eliminar del carrito">
+                <button class="btn btn-danger btn-sm ml-3" (click)="eliminaCart(prod._id)"> X </button>
+              </td>
+            </tr>            
+          </tbody>
+          <tfoot>
+            <tr class="bg-dark text-white">
+              <th colspan="10" class="text-center">Total</th>
+              <td colspan="5" class="text-center">{{calTotal() | currency }}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="card-body">
+          <button class="btn btn-primary w-75 btn-block mx-auto" (click)="procesarPago()">Procesar pago </button>
+          <button class="btn btn-warning w-75 btn-block mx-auto" (click)="vaciarCart()">Borrar todo el listado</button>
+          <button class="btn btn-secondary w-75 btn-block mx-auto" [routerLink]="['/listado']">Volver al listado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

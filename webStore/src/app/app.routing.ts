@@ -12,6 +12,7 @@ import {DescripcionProductoComponent} from '../app/componentes/descripcion-produ
 import {FormularioRegistroComponent} from '../app/componentes/formulario-registro/formulario-registro.component';
 import {PerfilComponent} from '../app/componentes/perfil/perfil.component';
 import {ListaFavoritosComponent} from '../app/componentes/lista-favoritos/lista-favoritos.component';
+import {CarritoComprasComponent} from '../app/componentes/carrito-compras/carrito-compras.component';
 import { ValidarAuthGuard } from './validar-auth.guard';
 
 const misRutas: Routes=[
@@ -24,6 +25,7 @@ const misRutas: Routes=[
     {path: 'crearProducto', component: CrearProductoComponent, canActivate: [ValidarAuthGuard]},
     {path: 'detallesProducto/:id', component: DescripcionProductoComponent},
     {path: 'favoritos', component: ListaFavoritosComponent},
+    {path: 'carrito', component: CarritoComprasComponent},
     {path: '**', component: ErrorComponent}
 ];
 

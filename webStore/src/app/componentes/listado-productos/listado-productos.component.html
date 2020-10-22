@@ -8,22 +8,8 @@
       <p >Precio: <span class="text-muted"> <small> {{modeloProducto.precio | currency}} </small></span></p>
     </div>
     <a class="btn btn-primary w-75 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]" >Ver mas detalles...</a>
-    <!-- <button class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]">Ver detalles</button> -->
   </div> 
-  <!-- <app-nube-tags class="personalizadaNube"></app-nube-tags> -->
-  <!-- ALTERNATIVA CON BOOTSTRAP -->
-  <!-- <div class="row d-flex justify-content-around" *ngFor='let modeloProducto of producto'>
-    <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2">
-      <div class="card producto" style="width: 18rem;" >
-        <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
-        <div class="card-body">
-          <h5 class="card-title">{{modeloProducto.nombre}}</h5>
-          <p class="card-text">{{modeloProducto.descripcion}}</p>
-          <p>{{modeloProducto.precio}}</p>
-          <a href="#" class="btn btn-primary">Ver mas..</a>
-        </div>
-      </div>
-    </div>
-  </div> -->
 </main>
-<app-nube-tags class="personalizadaNube"></app-nube-tags>
+<div class="nubeListado">
+  <app-nube-tags></app-nube-tags>
+</div>

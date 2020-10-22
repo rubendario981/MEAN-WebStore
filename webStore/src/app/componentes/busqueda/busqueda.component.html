@@ -1,27 +1,45 @@
-<div class="sinEncontrados" *ngIf="arrayProductos?.length == 0">
-    <h2 class="text-center mt-4 mb-4">No se han encontrado productos</h2>
-    <div class="d-flex justify-content center">
-      <img src="../../../assets/img/undraw_Lighthouse_frb8.svg" alt="Sin articulos para mostrar" class="rounded mx-auto d-block w-50 mb-4">
-      <app-nube-tags 
-        class="w-25" [parametros]="parametro">
-      </app-nube-tags>
+<div class="container-md" *ngIf='arrayProductos?.length == 0'>
+  <h2 class="text-center mt-4 mb-4">No se han encontrado productos</h2>
+  <div class="row">
+    <div class="d-flex flex-column flex-md-row">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-6 mx-auto mb-4">
+        <img src="../../../assets/img/undraw_Lighthouse_frb8.svg" alt="Sin articulos para mostrar"
+          class="w-75 d-block mx-auto">
+      </div>
+      <div class="col-12 col-sm-10 col-md-5 col-lg-4 mx-auto sinProductos">
+        <app-nube-tags class="w-75" [parametros]="parametro">
+        </app-nube-tags>
+      </div>
     </div>
+  </div>
 </div>
 
-<div *ngIf='arrayProductos?.length > 0'>
+<!-- <div class="row">
+  <div class="card col-10 col-sm-6 col-md-4 col-lg-3">
+      <div class="flex-column" *ngFor='let modeloProducto of arrayProductos'>
+        <div class="card-img-top"><img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}></div>
+        <div class="card-body">
+          <h3 class="card-title text-center">{{modeloProducto.nombre}}</h3>
+          <h5 class="card-text"><strong>Precio: </strong><small class="text-muted">{{modeloProducto.precio}}</small></h5>
+          <button class="btn btn-primary btn-block btn-sm mx-auto m-4" [routerLink]="['/detallesProducto', modeloProducto._id]"> Ver mas detalles </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+<div class="busqueda" *ngIf='arrayProductos?.length > 0'>
   <h2 class="text-center mt-4 mb-4">Se han encontrado los siguientes productos</h2>
   <main class="listadoProductos">
     <div class="card producto" *ngFor='let modeloProducto of arrayProductos'>
       <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
       <div class="card-body">
         <h5 class="card-title">{{modeloProducto.nombre}}</h5>
-        <p class="text-muted"> <span><samll>{{modeloProducto.precio | currency}}</samll></span></p>
+        <p class="text-muted"> <span><small>{{modeloProducto.precio | currency}}</small></span></p>
       </div>
-      <a class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]">Ver mas detalles...</a>
+      <a class="btn btn-primary w-75 mt-n2 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]">Ver
+        mas detalles...</a>
     </div>
   </main>
-  <app-nube-tags 
-    class="d-flex flex-column w-75 mx-auto"
-    [parametros]="parametro"
-  ></app-nube-tags>
+  <app-nube-tags class="d-flex flex-column" [parametros]="parametro">
+  </app-nube-tags>
 </div>

@@ -1,49 +1,52 @@
-<div class="form-subscribe card border border-primary my-4">
-  <h5 class="card-header text-center bg-primary text-white p-2">Suscribete</h5>
-  <div class="card-body d-flex flex-direction-column">
-    <form name="regUser" #regUser="ngForm" (ngSubmit)="registrarUsuario()">
-      <div class="form-group">
-        <label class="mt-2 mb-n2">Nombres y apellidos</label>
-        <input type="text" class="form-control" name="nombres" #nombres='ngModel' [(ngModel)]="usuario.nombres"
-          placeholder="Ingresa tus nombres" required />
-        <small *ngIf="!nombres.valid && nombres.touched" class="text-danger">El campo es requerido</small>
+<div class="container">  
+  <div class="col-12 col-sm-10 col-md-7 col-lg-5 mx-auto my-4">
+    <div class="card border border-primary">
+      <h5 class="card-header text-center bg-primary text-white p-2">Suscribete</h5>
+      <div class="card-body">
+        <form name="regUser" #regUser="ngForm" (ngSubmit)="registrarUsuario()">
+          <div class="form-group">
+            <label class="mt-2 mb-n2">Nombres y apellidos</label>
+            <input type="text" class="form-control" name="nombres" #nombres='ngModel' [(ngModel)]="usuario.nombres"
+              placeholder="Ingresa tus nombres" required />
+            <small *ngIf="!nombres.valid && nombres.touched" class="text-danger">El campo es requerido</small>
+          </div>
+    
+          <div class="form-group">
+            <label class="mt-1 mb-n2">Correo electronico</label>
+            <input type="email" class="form-control" name="correo" #correo='ngModel' [(ngModel)]="usuario.correo" 
+              placeholder="Ingresa tu correo electronico" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required />
+            <small *ngIf="!correo.valid && correo.touched" class="text-danger">El campo es requerido</small>
+          </div>
+    
+          <div class="form-group">
+            <label class="mt-1 mb-n2">NickName <small class="text-muted">(no es obligatorio)</small>
+            </label>
+            <input type="text" name="nickName" class="form-control" #nickName='ngModel' [(ngModel)]="usuario.nickName"
+              placeholder="Ingresa un nick" />
+          </div>
+    
+          <div class="form-group">
+            <label class="mt-1 mb-n2">Ingresa la contraseña</label>
+            <input type="password" name="clave" class="form-control" #clave='ngModel' [(ngModel)]="usuario.password"
+              placeholder="Ingresa la contraseña" required />
+            <small *ngIf="!clave.valid && clave.touched" class="text-danger">El campo es requerido</small>
+          </div>
+    
+          <div class="form-group">
+            <label class="mt-1 mb-n2">Repetir contraseña</label>
+            <input type="password" name="clave2" class="w-100 rounded border border-gray pl-2 py-1" #clave2='ngModel' [(ngModel)]="usuario.password2"
+              placeholder="Repite la contraseña" required />
+            <small *ngIf="!clave2.valid && clave2.touched" class="text-danger">El campo es requerido</small>
+          </div>
+    
+          <div *ngIf="conincidePass()" class="text-danger">Las contraseñas no coinciden</div>
+    
+          <div class="cont-btns d-flex justify-content-around my-4">
+            <button class="btn btn-success" type="submit" [disabled]="!regUser.valid || conincidePass()"> Registrarse </button>
+            <button class="btn btn-danger" (click)="cancela()"> Cancelar </button>
+          </div>
+        </form>
       </div>
-
-      <div class="form-group">
-        <label class="mt-1 mb-n2">Correo electronico</label>
-        <input type="email" class="form-control" name="correo" #correo='ngModel' [(ngModel)]="usuario.correo" 
-          placeholder="Ingresa tu correo electronico" required />
-        <small *ngIf="!correo.valid && correo.touched" class="text-danger">El campo es requerido</small>
-      </div>
-
-      <div class="form-group">
-        <label class="mt-1 mb-n2">NickName <span class="text-muted text-small">(no es obligatorio)</span>
-        </label>
-        <input type="text" name="nickName" class="form-control" #nickName='ngModel' [(ngModel)]="usuario.nickName"
-          placeholder="Ingresa un nick" />
-      </div>
-
-      <div class="form-group">
-        <label class="mt-1 mb-n2">Ingresa la contraseña</label>
-        <input type="password" name="clave" class="form-control" #clave='ngModel' [(ngModel)]="usuario.password"
-          placeholder="Ingresa la contraseña" required />
-        <small *ngIf="!clave.valid && clave.touched" class="text-danger">El campo es requerido</small>
-      </div>
-
-      <div class="form-group">
-        <label class="mt-1 mb-n2">Repetir contraseña</label>
-        <input type="password" name="clave2" class="w-100" #clave2='ngModel' [(ngModel)]="usuario.password2"
-          placeholder="Repite la contraseña" required />
-        <small *ngIf="!clave2.valid && clave2.touched" class="text-danger">El campo es requerido</small>
-      </div>
-
-      <div *ngIf="conincidePass()" class="text-danger">Las contraseñas no coinciden</div>
-
-      <div class="cont-btns d-flex justify-content-around">
-        <button class="btn btn-success" type="submit" [disabled]="!regUser.valid || conincidePass()"> Registrarse
-        </button>
-        <button class="btn btn-danger" (click)="cancela()"> Cancelar </button>
-      </div>
-    </form>
+    </div>    
   </div>
 </div>

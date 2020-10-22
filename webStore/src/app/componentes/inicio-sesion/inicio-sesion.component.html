@@ -2,10 +2,15 @@
   <div class="card d-flex">
     <h4 class="card-header text-center bg-primary text-white">Modulo para inicio de sesion</h4>
     <form class="card-body" #login="ngForm" (ngSubmit)="ingresar()">
-      <label for="" class="mb-0">Correo electronico </label>
-      <input type="text" name="correo" placeholder="Ingresa tu correo electronico " #correo="ngModel" [(ngModel)]="usuario.correo"/>
-      <label for="" class="mt-4 mb-0">Contraseña</label>
-      <input type="password" name="password" id="" placeholder="Ingresa tu contraseña" #password="ngModel" [(ngModel)]="usuario.password" />
+      <div class="form-group input-group-sm">
+        <label class="mt-1 mb-0">Correo electronico </label>
+        <input class="form-control" type="text" name="correo" placeholder="Ingresa tu correo electronico " #correo="ngModel" [(ngModel)]="usuario.correo"/>        
+      </div>
+      
+      <div class="form-group input-group-sm">
+        <label class="mt-1 mb-0">Contraseña</label>
+        <input class="form-control" type="password" name="password" placeholder="Ingresa tu contraseña" #password="ngModel" [(ngModel)]="usuario.password" />
+      </div>
       <div class="grupoBotones">
         <button class="btn btn-primary" type="submit">Ingresar</button>
         <button class="btn btn-danger" (click)="cancela()">Cancelar</button> 

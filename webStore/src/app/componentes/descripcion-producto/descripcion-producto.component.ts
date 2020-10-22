@@ -85,36 +85,37 @@ export class DescripcionProductoComponent implements OnInit {
   ngOnInit(): void {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
-      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(
-        res => {
-          if (res.findUser.rol == 'administrador') this.admin = true
-        },
-        error => {
-          console.log(error)
+      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
+        if (res.findUser.rol == 'administrador') this.admin = true
+      },
+        error => { console.log(error)
         }
       )
+
+      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res=>{
+        this.favButton = res.findUser.listaFavoritos.includes(this.producto._id)
+        this.cartButton = res.findUser.listaCompras.includes(this.producto._id)
+      })
     }
 
-    this.consultaBackend.listarCategorias().subscribe(
-      res => this.listaCategorias = res.filtrarCat,
+    this.consultaBackend.listarCategorias().subscribe(res => {
+      this.listaCategorias = res.filtrarCat
+    },
       err => console.log(err)
     )
+
     this.paramRuta.params.subscribe(params => {
       this.producto._id = params['id'];      
     })
-    this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
-      if (res) {
-        this.producto = res.prod
-      }
-      else { this.ruta.navigate['/listado'] }
-    },
-      error => console.log(error)
-    )
 
-    this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res=>{
-      this.favButton = res.findUser.listaFavoritos.includes(this.producto._id)
-      this.cartButton = res.findUser.listaCompras.includes(this.producto._id)
+    this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
+      this.producto = res.prod      
+    },
+    error => {
+      console.log(error)
+      this.ruta.navigate['/listado']
     })
+
     this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
 
   }
@@ -142,6 +143,18 @@ export class DescripcionProductoComponent implements OnInit {
   }
 
   adminFavs() {
+    if(!this.auth.usuarioLogueado()){
+      swal({
+        title: 'Es necesario registrarse en la pagina',
+        text: 'Para administrar tus favoritos o el carrito de comprar, por favor registrate en la pagina',
+        icon: 'info',
+        buttons: [true, true]        
+      }).then((registrarUsuario)=>{
+        registrarUsuario ? this.ruta.navigate(['registro']): this.ruta.navigate(['listado'])
+      })
+      return
+    }
+
     this.usuario.listaFavoritos = this.producto._id
 
     if (!this.favButton) {
@@ -167,6 +180,18 @@ export class DescripcionProductoComponent implements OnInit {
   }
 
   adminCarrito(){
+    if(!this.auth.usuarioLogueado()){
+      swal({
+        title: 'Es necesario registrarse en la pagina',
+        text: 'Para administrar tus favoritos o el carrito de comprar, por favor registrate en la pagina',
+        icon: 'info',
+        buttons: [true, true]        
+      }).then((registrarUsuario)=>{
+        registrarUsuario ? this.ruta.navigate(['registro']): this.ruta.navigate(['listado'])
+      })
+      return
+    }
+    
     this.usuario.listaCompras = this.producto._id
 
     this.cartButton ? this.consultaBackend.borrarCart(this.usuario).subscribe(res=>{
@@ -185,23 +210,21 @@ export class DescripcionProductoComponent implements OnInit {
       icon: "warning",
       buttons: [true, true],
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        this.consultaBackend.eliminarProducto(this.producto._id).subscribe(
-          res => {
-            swal("El producto ha sido eliminado", {
-              icon: "success",
-              buttons: {
-                ok: {
-                  text: "Enterado",
-                  value: "aceptar",
-                }
-              },
-            })
-              .then((value) => {
-                if (value === "aceptar") this.ruta.navigate(['listado'])
-              });
-          },
+    }).then((eliminarProducto) => {
+      if (eliminarProducto) {
+        this.consultaBackend.eliminarProducto(this.producto._id).subscribe(res => {
+          swal("El producto ha sido eliminado", {
+            icon: "success",
+            buttons: {
+              ok: {
+                text: "Enterado",
+                value: "aceptar",
+              }
+            },
+          }).then((value) => {
+            if (value === "aceptar") this.ruta.navigate(['listado'])
+          });
+        },
           error => {
             swal("No se pudo eliminar el producto", {
               icon: "info",

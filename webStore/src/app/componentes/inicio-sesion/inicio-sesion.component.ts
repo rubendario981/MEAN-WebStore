@@ -23,34 +23,25 @@ export class InicioSesionComponent implements OnInit {
   }
 
   ingresar(){ 
-    this.consultaBackend.inicioSesion(this.usuario).subscribe(
-      res=>{
+    this.consultaBackend.inicioSesion(this.usuario).subscribe(res=>{
+      if(res.mensaje == 'ok') {
         swal("Bienvenido", {
+          text: `Bienvenido ${this.usuario.correo}`,
           icon: "info",              
-          text: `Bienvenido ${this.usuario.correo}`
-        });
-        localStorage.setItem('token', res.token)
-        this._router.navigate(['/'])
-      },
+          });
+          localStorage.setItem('token', res.token)
+          this._router.navigate(['/perfil'])
+      }
+    },
       error=>{
-        swal("Error al ingresar", {
-          icon: "warning",              
-          text: 'No se ha podido identificar al usuario, por favor intenta de nuevo ' + error
-        });
+        swal("Error al ingresar", 'Credenciales invalidad, intenta de nuevo ' + error.statusText, "warning");
+        this.usuario = {correo: '', password: ''}
       }
     )
   }
 
-  aviso(){
-    swal("Aviso", {
-      icon: "info",              
-      text: `Muy pronto tendremos la funcionalidad en esta pagina `
-    });
-    this._router.navigate(['/listado'])
-  }
-
   cancela(){
-    this._router.navigate(['/listadoProductos'])
+    this._router.navigate(['/listado'])
   }
 
 }

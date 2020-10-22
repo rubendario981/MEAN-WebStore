@@ -51,11 +51,11 @@ export class HeaderComponent implements OnInit, DoCheck {
           console.log(error)
         }
       )
+      
+      this.cBend.validarFav(this.usuario._id).subscribe(res=>{
+        this.cantFav = res.validarFav.listaFavoritos.length
+      })
     }
-
-    this.cBend.validarFav(this.usuario._id).subscribe(res=>{
-      this.cantFav = res.validarFav.listaFavoritos.length
-    })
   }
 
   ngDoCheck() {

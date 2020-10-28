@@ -9,6 +9,8 @@ var EsquemaProducto = new Schema({
     categoria: String,
     subCategoria: String,
     precio: Number,
+    precioPromo: Number,
+    tiempoPromo: Date,
     fecha: {type: Date, default: Date.now},
     imagen: String
 }, {versionKey: false, timestamps: true});

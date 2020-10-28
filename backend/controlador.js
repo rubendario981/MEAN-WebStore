@@ -108,6 +108,8 @@ var controlador = {
         prod.subCategoria = params.subCategoria;
         prod.precio = params.precio;
         prod.imagen = params.imagen;
+        prod.precioPromo = params.precioPromo
+        prod.tiempoPromo = params.tiempoPromo
 
         const productCreated = await prod.save()
         if (!productCreated) res.status(404).send({ mensaje: 'No se pudo crear el producto' })
@@ -137,27 +139,50 @@ var controlador = {
     listarCategorias: async (req, res) => {        
         const filtrarCat = []
         const objCat = {}
-        const listaCat = await Categorias.find({}, { "categoria": 1, "_id": 0 })
+        const listaCat = await Producto.find({}, { categoria: 1, _id: 0 })
         if (!listaCat) return res.status(404).send({ mensaje: 'No hay listado de categorias ' })
         listaCat.forEach(el => !(el in objCat) && (objCat[el] = true) && filtrarCat.push(el))
         return res.send({mensaje: 'ok', filtrarCat})
-
+    },
+    
+    /************************************** */
+    listarCategoriasNuevas: async (req, res) => {        
+        const listaCat = await Categorias.find({}, { categoria: 1, _id: 0 })
+        if (!listaCat) return res.status(404).send({ mensaje: 'No hay listado de categorias ' })
+        return res.send({mensaje: 'ok', listaCat})
     },
 
     /********************************** */
     listarTags: async (req, res) => {
-        const listaTags = await Categorias.find({}, { "subCategoria": 1, "_id": 0 })
+        const listado = [];
+        const objLista = {}
+        const listaTags = await Producto.find({}, { subCategoria: 1, _id: 0 })
         if (!listaTags) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
+        listaTags.forEach(el => !(el in objLista) && (objLista[el] = true) && listado.push(el));
         
-        return res.send({mensaje: 'ok', listaTags})
+        return res.send({mensaje: 'ok', listado})
     },
 
-    /*********************************** */
+    /************************************ */
     listarSubCategorias: async (req, res) => {        
         const listaSubCat = await Categorias.findOne({categoria: req.params.cat}, { subCategoria: 1, _id: 0 })
         if (!listaSubCat) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
         
         return res.send({mensaje: 'ok', listaSubCat})
+    },
+
+    /************************************ */
+    eliminarCategoria: async (req, res) => {
+        const params = req.body
+        const categoriaVacia = await Producto.find({categoria: req.params.cat})
+        if(categoriaVacia.length == 0) {
+            const eliminaCat = await Categorias.findOneAndDelete({categoria: req.params.cat})
+            if(!eliminaCat) return res.status(400).send({mensaje:'No se pudo eliminar categoria'})
+            res.send({mensaje: 'categoria eliminada' })
+        }
+        else{
+            res.send({mensaje: 'ok', longitud: categoriaVacia.length})
+        }        
     },
 
     /********************************** */

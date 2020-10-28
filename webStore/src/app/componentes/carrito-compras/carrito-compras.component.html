@@ -15,13 +15,19 @@
           </thead>
           <tbody>
             <tr *ngFor="let prod of carritoCompras">
-              <th colspan="7">{{prod.nombre}}</th>
-              <td colspan="3">{{prod.precio | currency}}</td>
-              <td colspan="1"><input type="number" [(ngModel)]="prod.cantidad" value="1" min="0" max="100" step="1"
-                  style="height: 1.2rem; font-size: 0.7rem;" class="w-50 ml-2 pr-0"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" >
+              <th colspan="7">{{prod.nombre}} 
+                <small class="font-weigth-normal text-muted" *ngIf="(prod.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate')">
+                  (Precio promocional)
+                </small></th>
+
+              <td colspan="3" *ngIf="(prod.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate')">{{prod.precioPromo | currency}}</td>
+              <td colspan="3" *ngIf="!prod.tiempoPromo ||((prod.tiempoPromo | date: 'shortDate') < (fecha | date: 'shortDate'))">{{prod.precio | currency}}</td>
+
+              <td colspan="1"><input type="number" value="0" [(ngModel)]="prod.cantidad" min="0" max="100" step="1"
+                  style="height: 1.2rem; font-size: 0.7rem;" class="w-50 ml-2 pr-0" onkeypress="return event.charCode >= 48 && event.charCode <= 57" >
               </td>
-              <td colspan="3" class="subt">{{prod.precio * prod.cantidad | currency }}</td>
+              <td colspan="3" *ngIf="(prod.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate')">{{prod.precioPromo * prod.cantidad | currency }}</td>
+              <td colspan="3" *ngIf="!prod.tiempoPromo || ((prod.tiempoPromo | date: 'shortDate') < (fecha | date: 'shortDate'))">{{prod.precio * prod.cantidad | currency }}</td>
               <td colspan="1" data-toggle="tooltip" data-placement="top" title="Eliminar del carrito">
                 <button class="btn btn-danger btn-sm ml-3" (click)="eliminaCart(prod._id)"> X </button>
               </td>

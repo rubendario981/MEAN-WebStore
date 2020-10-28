@@ -30,7 +30,7 @@ export class InicioSesionComponent implements OnInit {
           icon: "info",              
           });
           localStorage.setItem('token', res.token)
-          this._router.navigate(['/perfil'])
+          this._router.navigate(['listado'])
       }
     },
       error=>{

@@ -22,6 +22,10 @@ export class ProductoService {
         return this._http.get(this.url + 'listarCategorias')
     }
 
+    listarCategoriasNuevas(): Observable<any> {
+        return this._http.get(this.url + 'listarCategoriasNuevas')
+    }
+
     listarTags(): Observable<any> {
         return this._http.get(this.url + 'listarTags')
     }
@@ -64,6 +68,10 @@ export class ProductoService {
         let params = JSON.stringify(producto)
         let miCabecera = new HttpHeaders().set('Content-Type', 'application/json')
         return this._http.put(this.url + 'actualizaProducto/' + producto._id, params, { headers: miCabecera })
+    }
+
+    eliminarCategoria(categoria): Observable<any> {
+        return this._http.delete(this.url + 'eliminarCategoria/' + categoria)
     }
 
     validarFav(idUsuario): Observable<any>{

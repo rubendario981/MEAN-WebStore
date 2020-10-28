@@ -15,17 +15,7 @@ import swal from 'sweetalert';
 })
 export class DescripcionProductoComponent implements OnInit {
 
-  public producto: modeloProducto = {
-    _id: '',
-    nombre: '',
-    marca: '',
-    categoria: '',
-    subCategoria: '',
-    imagen: '',
-    descripcion: '',
-    precio: null,
-    fecha: null
-  };
+  public producto: modeloProducto
 
   public usuario: modeloUsuario = {
     _id: '',
@@ -39,14 +29,16 @@ export class DescripcionProductoComponent implements OnInit {
     rol: ''
   };
 
-  url: String
-  listaCategorias: []
-  listaSubCategorias: []
-  admin: boolean
-  parametro: string
-  favButton: boolean
-  cartButton: boolean
-  tituloCarrito: String
+  public url: String
+  public listaCategorias: []
+  public listaSubCategorias: []
+  public admin: boolean
+  public parametro: string
+  public favButton: boolean
+  public cartButton: boolean
+  public tituloCarrito: String
+  public fecha: Date
+  public fechaPromo: any
 
   constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router, private auth: AuthService) {
     this.url = variable.url
@@ -55,6 +47,8 @@ export class DescripcionProductoComponent implements OnInit {
     this.favButton = false
     this.cartButton = false
     this.tituloCarrito = 'Agregar al carrito de compras'
+    this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')      
+    this.fecha = new Date()  
   }
 
   afuConfig = {
@@ -82,7 +76,7 @@ export class DescripcionProductoComponent implements OnInit {
     }
   };
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
       this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
@@ -109,15 +103,15 @@ export class DescripcionProductoComponent implements OnInit {
     })
 
     this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
-      this.producto = res.prod      
+      this.producto = res.prod
     },
     error => {
       console.log(error)
       this.ruta.navigate['/listado']
     })
-
-    this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
-
+    
+    this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"    
+    
   }
 
   listarCategoria(categoria){
@@ -129,17 +123,19 @@ export class DescripcionProductoComponent implements OnInit {
   }
 
   editarProducto() {
-    this.consultaBackend.editarProducto(this.producto).subscribe(
-      res => {
-        if (res.actualizaProducto) {
-          this.producto = res.actualizaProducto
-        }
+    if(this.producto.precioPromo > this.producto.precio){
+      swal('Error para establecer promocion', 'El precio de la promocion debe ser menor al precio original', 'error')
+    }
+    else{
+      this.fechaPromo = new Date()
+      this.fechaPromo.setDate(this.fecha.getDate() + parseInt(this.producto.tiempoPromo)) 
+      this.producto.tiempoPromo = this.fechaPromo
+      this.consultaBackend.editarProducto(this.producto).subscribe(res => {
+        swal("Proceso exitoso", "El producto ha sido actualizado", "success");      
       },
-      error => alert('No se pudo editar producto' + error)
-    )
-    swal("El producto ha sido actualizado", {
-      icon: "success",
-    });
+        error => swal('Proceso fallido', 'No se pudo editar producto' + error , 'warning')
+      )
+    }
   }
 
   adminFavs() {
@@ -232,6 +228,10 @@ export class DescripcionProductoComponent implements OnInit {
             });
           }
         )
+        //una vez eliminado el producto verificar si la categoria quedo vacia para proceder a eliminar
+        this.consultaBackend.eliminarCategoria(this.producto.categoria).subscribe(res=>{
+          console.log(res)
+        })
       } else {
         swal({
           title: "Cancelado proceso de eliminacion",

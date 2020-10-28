@@ -22,7 +22,7 @@ export class NubeTagsComponent implements OnInit {
   ngOnInit(): void {
     let nubePalabras: String
     this.consultaBackend.listarTags().subscribe(res=>{
-      res.listaTags.forEach(element => {
+      res.listado.forEach(element => {
         nubePalabras += ',' + (Object.values(element))
       });
       this.arraySubCats = nubePalabras.split(",")

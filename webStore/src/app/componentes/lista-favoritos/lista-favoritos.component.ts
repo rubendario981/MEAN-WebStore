@@ -14,23 +14,11 @@ import swal from 'sweetalert'
 })
 export class ListaFavoritosComponent implements OnInit {
 
-  parametro: String;
+  public parametro: String;
 
-  idProdFavs: []
+  public idProdFavs: []
 
-  prodFavoritos: any
-
-  public producto: modeloProducto = {
-    _id: '',
-    nombre: '',
-    marca: '',
-    categoria: '',
-    subCategoria: '',
-    imagen: '',
-    descripcion: '',
-    precio: null,
-    fecha: null
-  };
+  public prodFavoritos: any
 
   public usuario: modeloUsuario = {
     _id: '',
@@ -48,8 +36,9 @@ export class ListaFavoritosComponent implements OnInit {
     this.parametro = '../busqueda/'
     this.prodFavoritos = []
   }
-
+  
   ngOnInit() {
+    this.prodFavoritos = []
     if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
     this.usuario._id = this.auth.identificaUsuario().split('"')[3];
 
@@ -77,11 +66,11 @@ export class ListaFavoritosComponent implements OnInit {
   eliminaFav(idProd) {
     this.usuario.listaFavoritos = idProd
     this.consultaBackEnd.borrarFav(this.usuario).subscribe(res => {
-      this.usuario = res.borraFav
-      location.reload()
+      this.usuario = res.borraFav;
     },
-      err => { console.log(err) }
+    err => { console.log(err) }
     )
+    this.ngOnInit()
   }
 
   borrarFavs() {
@@ -131,8 +120,7 @@ export class ListaFavoritosComponent implements OnInit {
       this.consultaBackEnd.borrarFav(this.usuario).subscribe(res=>{
         this.usuario = res.borraFav
       })
-      location.reload()
     })
-
+    this.ngOnInit()
   }
 }

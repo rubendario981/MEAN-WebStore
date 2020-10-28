@@ -17,17 +17,7 @@ import { ThrowStmt } from '@angular/compiler';
 })
 export class CrearProductoComponent implements OnInit {
 
-  public producto: modeloProducto = {
-    _id: '',
-    nombre: '',
-    marca: '',
-    categoria: '',
-    subCategoria: '',
-    descripcion: '',
-    precio: null,
-    fecha: null,
-    imagen: ''
-  };
+  public producto: modeloProducto
   
   public usuario: modeloUsuario ={    
     _id: '',
@@ -46,10 +36,7 @@ export class CrearProductoComponent implements OnInit {
     subCategoria: []
   }
   
-  public nuevaSubCategoria: modeloCategorias={
-    categoria: '',
-    subCategoria: ''
-  }
+  public nuevaSubCategoria: modeloCategorias
   
   listaCategorias: []
   listaSubCategorias: []
@@ -58,6 +45,8 @@ export class CrearProductoComponent implements OnInit {
 
   constructor (private _router: Router,  private consultaBackend: ProductoService, private auth: AuthService) {
     this.url = variable.url    
+    this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')
+    this.nuevaSubCategoria = new modeloCategorias('', '')
   }
 
   afuConfig = {
@@ -98,8 +87,8 @@ export class CrearProductoComponent implements OnInit {
       )
     }
 
-    this.consultaBackend.listarCategorias().subscribe(res => {
-      this.listaCategorias = res.filtrarCat
+    this.consultaBackend.listarCategoriasNuevas().subscribe(res => {
+      this.listaCategorias = res.listaCat
     },
       err => console.log(err)
     )
@@ -124,7 +113,8 @@ export class CrearProductoComponent implements OnInit {
         console.log(err)
         this.nuevaCategoria = {categoria: '', subCategoria: ''}
       }
-    )
+    )    
+    this.ngOnInit()
   }
 
   crearSubCategoria(subCat) {
@@ -142,42 +132,14 @@ export class CrearProductoComponent implements OnInit {
   }
 
   crearProducto() {
-    this.consultaBackend.crearProducto(this.producto).subscribe(
-      res => {
-        swal("Producto creado", {
-          icon: "info",              
-          text: 'Se ha creado producto de manera exitosa'
-        });
-        this.producto = {
-          _id: '',
-          nombre: '',
-          marca: '',
-          categoria: '',
-          subCategoria: '',
-          descripcion: '',
-          precio: null,
-          fecha: null,
-          imagen: ''
-        }
+    this.consultaBackend.crearProducto(this.producto).subscribe(res => {
+      swal("Producto creado", 'Se ha creado producto de manera exitosa', "info");
       },
       err => {
-        swal("No se pudo crear producto", {
-          icon: "warning",              
-          text: 'Error creando producto ' + err
-        });
-        this.producto = {
-          _id: '',
-          nombre: '',
-          marca: '',
-          categoria: '',
-          subCategoria: '',
-          descripcion: '',
-          precio: null,
-          fecha: null,
-          imagen: ''
-        }
+        swal("No se pudo crear producto", 'Error creando producto ' + err, "warning");
       }
-    )
+    )    
+    document.getElementsByTagName('form')[1].reset()
   }
 
   DocUpload(event){
@@ -186,7 +148,6 @@ export class CrearProductoComponent implements OnInit {
 
   cancela() {    
     this.nuevaCategoria = {categoria: '', subCategoria: []}
-    //this._router.navigate(['/'])
   }
 
 

@@ -5,6 +5,7 @@ import { modeloProducto } from '../../modelos-servicios/modeloProducto';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert'
+import { number } from '@ng-validators/ng-validators';
 
 @Component({
   selector: 'app-carrito-compras',
@@ -14,17 +15,7 @@ import swal from 'sweetalert'
 })
 export class CarritoComprasComponent implements OnInit {
 
-  public producto: modeloProducto = {
-    _id: '',
-    nombre: '',
-    marca: '',
-    categoria: '',
-    subCategoria: '',
-    imagen: '',
-    descripcion: '',
-    precio: null,
-    fecha: null
-  };
+  public producto: modeloProducto[]
 
   public usuario: modeloUsuario = {
     _id: '',
@@ -38,15 +29,18 @@ export class CarritoComprasComponent implements OnInit {
     rol: ''
   };
 
-  carritoCompras: any
+  public carritoCompras: any
+  public fecha: Date
 
   constructor(private consultaBackEnd: ProductoService, private auth: AuthService, private ruta: Router) {
     this.carritoCompras = []
+    this.fecha = new Date()
   }
-
+  
   ngOnInit() {
     let objCat = {}
     let arrCart = []
+    this.carritoCompras = []
     if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
     this.usuario._id = this.auth.identificaUsuario().split('"')[3];
 
@@ -54,12 +48,11 @@ export class CarritoComprasComponent implements OnInit {
       res.findUser.listaCompras.forEach(idProd => !(idProd in objCat) && (objCat[idProd] = true) && arrCart.push(idProd))
       arrCart.forEach(idProd => {
         this.consultaBackEnd.detalleProducto(idProd).subscribe(res=>{
-          Object.defineProperty(res, 'cantidad', { value: 0 })
+          Object.defineProperty(res.prod, 'cantidad', { value: 0, writable: true})
           this.carritoCompras.push(res.prod)
         })
       });
     })
-    this.calTotal()
   }
 
   procesarPago(){
@@ -69,7 +62,12 @@ export class CarritoComprasComponent implements OnInit {
   calTotal(){
     let total = 0
     this.carritoCompras.forEach(prod => {
-      total += prod.precio * prod.cantidad
+      if(prod.tiempoPromo >= this.fecha.toISOString()){
+        total += prod.precioPromo * prod.cantidad
+      }
+      else{
+        total += prod.precio * prod.cantidad
+      }
     });
     return total
   }
@@ -93,7 +91,7 @@ export class CarritoComprasComponent implements OnInit {
             }
           },
         })
-        location.reload()
+        this.ngOnInit()
       }, error =>{
         swal("No se pudo eliminar producto del carrito", {
           icon: "info",

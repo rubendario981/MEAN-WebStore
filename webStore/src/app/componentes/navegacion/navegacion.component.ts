@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
-//import { modeloCat } from '../../modelos-servicios/modeloCategoria';
+import { modeloCategorias } from '../../modelos-servicios/modeloCategorias';
 import { variable } from '../../modelos-servicios/constantes';
 
 @Component({
@@ -11,28 +11,25 @@ import { variable } from '../../modelos-servicios/constantes';
 })
 export class NavegacionComponent implements OnInit {
 
-  url = variable.url;
-  misCategorias: [];
-  constructor(
-    private _rutas: ProductoService
-    
-    ) {
+  public url: string;
+  public categorias: any;
+  public subCategorias: any
+
+  constructor(private consultaBackEnd: ProductoService) {
+    this.url = variable.url
+    this.categorias = []
+    this.subCategorias = []
   }
 
   ngOnInit(): void {
-    this._rutas.listarCategorias().subscribe(
-      res =>{
-        if(res.mensaje == 'ok'){
-          this.misCategorias = res.filtrarCat;  
-        }
-        else{
-          console.log('Problemas con el servidor')
-        }
-      },
-      err=>{
+    this.consultaBackEnd.listarCategorias().subscribe(res => {
+      this.categorias = res.filtrarCat;
+    },
+      err => {
         console.log(err);
       }
     )
   }
+
 
 }

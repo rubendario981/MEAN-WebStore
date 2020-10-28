@@ -13,13 +13,15 @@ import swal from 'sweetalert'
 })
 export class BusquedaComponent implements OnInit {
   
-  arrayProductos: modeloProducto []
-  url: String
-  parametro: string
+  public arrayProductos: modeloProducto [];
+  public url: String;
+  public parametro: string;
+  public fecha: Date;
 
   constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router) {
     this.url = variable.url;
-    this.parametro = '../'
+    this.parametro = '../';
+    this.fecha = new Date();
   }
 
   ngOnInit() {    

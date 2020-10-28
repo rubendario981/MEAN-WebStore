@@ -17,12 +17,12 @@
       <div data-toggle="tooltip" data-placement="top" title="En tus favoritos hay {{cantFav}} articulos">
         <a [routerLink]="['/favoritos']">
           <i *ngIf="cantFav == 0" class="far fa-heart fa-xs"></i> 
-          <i *ngIf="cantFav > 0" class="fa fa-heart fa-xs"></i> 
+          <i *ngIf="cantFav >= 1" class="fa fa-heart fa-xs"></i> 
           <span *ngIf="cantFav > 0" ><sup class="badge badge-pill badge-info ml-1" style="font-size: 0.7rem;">{{cantFav}}</sup></span>
         </a>
       </div>
       <div data-toggle="tooltip" data-placement="top" title="Salir de la pagina">
-        <a (click)="auth.salida()">
+        <a (click)="auth.salida()" role="button">
           <i class="fas fa-sign-out-alt fa-xs"></i>
         </a>
       </div>

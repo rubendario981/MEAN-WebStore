@@ -13,24 +13,19 @@ export class ListadoProductosComponent implements OnInit {
 
   public producto: modeloProducto[];
   public url: String;
+  public fecha: Date;
 
   constructor(private consultaBackend: ProductoService) { 
     this.url = variable.url;
+    this.fecha = new Date()
   }
 
   ngOnInit(): void {
-    this.consultaBackend.listarArticulos().subscribe(
-      res =>{
-        if(res.mensaje == 'ok'){
-          this.producto = res.listaProductos;
-        }
-        else{
-          console.log('Problemas con el servidor')
-        }
-      },
-      err=>{
-        console.log(err);
-      }
-    )
+    this.consultaBackend.listarArticulos().subscribe(res =>{
+      this.producto = res.listaProductos;
+    },
+    err=>{
+      console.log(err);
+    })
   }
 }

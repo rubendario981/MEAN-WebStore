@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit, DoCheck {
   public cantFav: number
 
   constructor(private ruta: Router, private auth: AuthService, private cBend: ProductoService) {
-    this.cantFav = 0
   }
 
   ngOnInit(): void {

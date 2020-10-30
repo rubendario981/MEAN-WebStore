@@ -35,6 +35,7 @@ export class CarritoComprasComponent implements OnInit {
   constructor(private consultaBackEnd: ProductoService, private auth: AuthService, private ruta: Router) {
     this.carritoCompras = []
     this.fecha = new Date()
+    
   }
   
   ngOnInit() {
@@ -136,6 +137,10 @@ export class CarritoComprasComponent implements OnInit {
           text: "No se ha eliminado el producto"
         });
     })
+  }
+
+  aviso(){
+    swal('Implementacion futura', 'Muy pronto se podran realizar los pagos en linea de forma rapida y segura', 'info')
   }
 
 }

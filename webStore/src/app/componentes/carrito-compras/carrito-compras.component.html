@@ -50,7 +50,7 @@
         </table>
 
         <div class="card-body">
-          <button class="btn btn-primary w-75 btn-block mx-auto" type="button" data-toggle="modal"
+          <button class="btn btn-primary w-75 btn-block mx-auto" type="button" (click)="aviso()" data-toggle="modal"
             data-target="#procesarPago">Procesar pago </button>
           <button class="btn btn-warning w-75 btn-block mx-auto" (click)="vaciarCart()">Borrar todo el listado</button>
           <button class="btn btn-secondary w-75 btn-block mx-auto" [routerLink]="['/listado']">Volver al
@@ -78,16 +78,16 @@
           <div>
             <div class="form-group">
               <label for="email">E-mail</label>
-              <input class="form-control" id="email" name="email" type="text" value="test@test.com">
+              <input disabled class="form-control" id="email" name="email" type="text" value="test@test.com">
             </div>
             <div class="input-group">
               <div class="form-group pl-0 pr-1 col-5">
                 <label for="docType">Tipo de documento</label>
-                <select class="form-control" id="docType" name="docType" data-checkout="docType" type="text"></select>
+                <select disabled class="form-control" id="docType" name="docType" data-checkout="docType" type="text"></select>
               </div>
               <div class="form-group px-0 col-7">
                 <label for="docNumber">No. de documento</label>
-                <input class="form-control" id="docNumber" name="docNumber" data-checkout="docNumber" type="text" />
+                <input disabled class="form-control" id="docNumber" name="docNumber" data-checkout="docNumber" type="text" />
               </div>              
             </div>
           </div>
@@ -96,16 +96,16 @@
             <div class="input-group">
               <div class="form-group px-0 col-7">
                 <label for="cardholderName">Titular de la tarjeta</label>
-                <input class="form-control" id="cardholderName" data-checkout="cardholderName" type="text">
+                <input disabled class="form-control" id="cardholderName" data-checkout="cardholderName" type="text">
               </div>
               <div class="form-group pl-1 pr-0 col-5">
                 <label for="">Fecha de vencimiento</label>
                 <div class="input-group">
-                  <input class="form-control" type="text" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth"
+                  <input disabled class="form-control" type="text" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth"
                     onselectstart="return false" onpaste="return false" oncopy="return false" oncut="return false"
                     ondrag="return false" ondrop="return false" autocomplete=off>
                   <span class="date-separator">/</span>
-                  <input class="form-control"  type="text" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear"
+                  <input disabled class="form-control"  type="text" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear"
                     onselectstart="return false" onpaste="return false" oncopy="return false" oncut="return false"
                     ondrag="return false" ondrop="return false" autocomplete=off>
                 </div>
@@ -115,13 +115,13 @@
             <div class="input-group">
               <div class="form-group px-0 col-7">
                 <label for="cardNumber">Número de la tarjeta</label>
-                <input class="form-control" type="text" id="cardNumber" data-checkout="cardNumber"
+                <input disabled class="form-control" type="text" id="cardNumber" data-checkout="cardNumber"
                 onselectstart="return false" onpaste="return false" oncopy="return false" oncut="return false"
                 ondrag="return false" ondrop="return false" autocomplete=off>
               </div>
               <div class="form-group pl-1 pr-0 col-5">
                 <label for="securityCode">Código de seguridad</label>
-                <input class="form-control" id="securityCode" data-checkout="securityCode" type="text"
+                <input disabled class="form-control" id="securityCode" data-checkout="securityCode" type="text"
                 onselectstart="return false" onpaste="return false" oncopy="return false" oncut="return false"
                 ondrag="return false" ondrop="return false" autocomplete=off>                
               </div>
@@ -129,12 +129,12 @@
 
             <div class="input-group">	
               <div class="form-group pl-0 pr-1 col-9" id="issuerInput">
-                <label for="issuer">Banco emisor</label>
-                <select class="form-control" id="issuer" name="issuer" data-checkout="issuer"></select>
+                <label disabled for="issuer">Banco emisor</label>
+                <select disabled class="form-control" id="issuer" name="issuer" data-checkout="issuer"></select>
               </div>
               <div class="form-group px-0 col-3">
                 <label for="installments">Cuotas</label>
-                <select class="form-control" type="text" id="installments" name="installments"></select>
+                <select disabled class="form-control" type="text" id="installments" name="installments"></select>
               </div>
             </div>
           </div>

@@ -27,7 +27,7 @@
             </table>
         
         <div class="card-body">
-          <button class="btn btn-primary w-75 btn-block mx-auto">Ir al carrito de compras</button>
+          <button class="btn btn-primary w-75 btn-block mx-auto" [routerLink]="['/../carrito']">Ir al carrito de compras</button>
           <button class="btn btn-warning w-75 btn-block mx-auto" (click)="borrarFavs()">Borrar todo el listado</button>
           <button class="btn btn-secondary w-75 btn-block mx-auto" [routerLink]="['/listado']">Volver al listado</button>
         </div>

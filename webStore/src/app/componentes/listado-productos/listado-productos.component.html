@@ -1,21 +1,23 @@
-<h4 class="text-center tituloListado">Nuestro catalogo de productos</h4>
+<h2 class="text-center tituloListado">Nuestro catalogo de productos</h2>
 <main class="listadoProductos">  
   <!-- Esta es modelado con display grid -->
   <div class="card producto" *ngFor='let modeloProducto of producto'>
-    <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
+    <img *ngIf="!modeloProducto.imagen" src="../../../assets/img/no-imagen.jpg" class="card-img-top" alt={{modeloProducto.nombre}}>
+    <img *ngIf="modeloProducto.imagen" src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
     <div class="card-body">
-      <h4 class="card-title font-weight-bolder">{{modeloProducto.nombre}}</h4>
+      <h5 class="card-title">{{modeloProducto.nombre}}</h5>
 
       <div *ngIf="(modeloProducto.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate'); else sinPromo">
-        <h5 class="card-text mb-2 font-weight-bolder"> Precio: <small> <del> {{modeloProducto.precio | currency}} </del> </small> </h5>
-        <h5 class="card-text mb-1 font-weight-bolder"> Promocion: <small> {{modeloProducto.precioPromo | currency}} </small> </h5>
+        <h6 class="card-text mb-2 font-weight-bolder"> Precio: <small> <del> {{modeloProducto.precio | currency}} </del> </small> </h6>
+        <h6 class="card-text mb-1 font-weight-bolder"> Promocion: <small> {{modeloProducto.precioPromo | currency}} </small> </h6>
       </div>
       <ng-template #sinPromo>
-        <h5 class="card-text mb-1 font-weight-bolder"> Precio: <small> {{modeloProducto.precio | currency}} </small> </h5>        
+        <h6 class="card-text mb-1 font-weight-bolder"> Precio: <small> {{modeloProducto.precio | currency}} </small> </h6>        
       </ng-template>      
-
     </div>
-    <a class="btn btn-primary w-75 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]" >Ver mas detalles...</a>
+
+    <button class="btn btn-primary px-4 mb-4 mx-auto" [routerLink]="['/detallesProducto', modeloProducto._id]" >Ver mas detalles...</button>
+  
   </div> 
 </main>
 <div class="nubeListado">

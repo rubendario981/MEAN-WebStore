@@ -37,6 +37,7 @@ export class DescripcionProductoComponent implements OnInit {
   public favButton: boolean
   public cartButton: boolean
   public tituloCarrito: String
+  public tituloFavorito: String
   public fecha: Date
   public fechaPromo: any
 
@@ -47,6 +48,7 @@ export class DescripcionProductoComponent implements OnInit {
     this.favButton = false
     this.cartButton = false
     this.tituloCarrito = 'Agregar al carrito de compras'
+    this.tituloFavorito = 'Agregar al carrito de compras'
     this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')      
     this.fecha = new Date()  
   }
@@ -110,7 +112,8 @@ export class DescripcionProductoComponent implements OnInit {
       this.ruta.navigate['/listado']
     })
     
-    this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"    
+    this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
+    this.favButton ? this.tituloFavorito = "Eliminar de mis favoritos" : this.tituloFavorito = "Añadir a mis favoritos"
     
   }
 
@@ -155,20 +158,18 @@ export class DescripcionProductoComponent implements OnInit {
 
     if (!this.favButton) {
       this.consultaBackend.agregaFav(this.usuario).subscribe(res => {
-        if (res) {
-          this.usuario = res.listaFav
-          this.favButton = true
-        }
+        this.usuario = res.listaFav
+        this.favButton = true     
+        this.tituloFavorito = 'Eliminar de mis favoritos'  
       },
         error => { swal("No se agrego el producto a favoritos, por favor contactar al administrador", { icon: 'info', text: error }) }
       )
     } 
     else {
       this.consultaBackend.borrarFav(this.usuario).subscribe(res => {
-        if (res) {
-          this.usuario = res.borraFav
-          this.favButton = false
-        }
+        this.usuario = res.borraFav
+        this.favButton = false
+        this.tituloFavorito = 'Agregar a mis favoritos'
       },
         err => { console.log('No se pudo eliminar de favoritos ' + err) }
       )

@@ -2,7 +2,7 @@
   <div class="header-grid">
     <div class="logo">
       <a [routerLink]="['/']">
-        <img src="../../../assets/img/logotienda.png" alt="logo tienda">
+        <img src="../../../assets/img/logotienda.png" width="100" height="auto" alt="logo tienda">
       </a>
     </div>
 
@@ -10,47 +10,53 @@
 
     <div *ngIf="userLogged" class="logos-header d-inline-flex">
       <div data-toggle="tooltip" data-placement="top" title="Ir a mi carrito de compras">
-        <a [routerLink]="['/carrito']">
+        <label for="lbl3"></label>
+        <a id="lbl3" [routerLink]="['/carrito']">
           <i class="fa fa-cart-plus fa-xs"></i>
         </a>
       </div>
       <div data-toggle="tooltip" data-placement="top" title="En tus favoritos hay {{cantFav}} articulos">
-        <a [routerLink]="['/favoritos']">
+        <label for="lbl4"></label>
+        <a id="lbl4" [routerLink]="['/favoritos']">
           <i *ngIf="cantFav == 0" class="far fa-heart fa-xs"></i> 
           <i *ngIf="cantFav >= 1" class="fa fa-heart fa-xs"></i> 
           <span *ngIf="cantFav > 0" ><sup class="badge badge-pill badge-info ml-1" style="font-size: 0.7rem;">{{cantFav}}</sup></span>
         </a>
       </div>
       <div data-toggle="tooltip" data-placement="top" title="Salir de la pagina">
-        <a (click)="auth.salida()" role="button">
+        <label for="lbl5"></label>
+        <a id="lbl5" (click)="auth.salida()" role="button">
           <i class="fas fa-sign-out-alt fa-xs"></i>
         </a>
       </div>
-      <div data-toggle="tooltip" data-placement="top" title="Identidad usuario">
-        <a [routerLink]="['/perfil/', nombreUsuario]">
+      <div id="identidad" data-toggle="tooltip" data-placement="top" title="Identidad usuario">
+        <label for="lbl6"></label>
+        <a id="lbl6" [routerLink]="['/perfil/', nombreUsuario]">
           <p class="text-center">Estas identificado como: <br> <span class="text-muted">{{nombreUsuario}}</span></p>
         </a>
       </div>
     </div>
 
-    <div *ngIf="!userLogged" class="logos-header d-inline-flex d-flex justify-content-end">
-      <div class="mr-4" data-toggle="tooltip" data-placement="top" title="Registrate en nuestra pagina">
-        <a [routerLink]="['/registro']">
+    <div *ngIf="!userLogged" class="logos-header d-inline-flex justify-content-end">
+      <div class="mx-4 text-center " data-toggle="tooltip" data-placement="top" title="Registrate en nuestra pagina">
+        <a id="registro" [routerLink]="['/registro']">
           <i class="fa fa-user-plus fa-xs"></i>
         </a>
+        <label for="registro" class="d-block"><small>Registro</small></label>
       </div>
-      <div class="ml-4" data-toggle="tooltip" data-placement="top" title="Inicio session">
-        <a [routerLink]="['/inicioSesion']">
+      <div class="mx-1 text-center" data-toggle="tooltip" data-placement="top" title="Inicio session">
+        <a id="inicioSession" [routerLink]="['/inicioSesion']">
           <i class="fa fa-key fa-xs"></i>
         </a>
+        <label for="inicioSession" class="d-block" ><small>Inicio sesion</small></label>
       </div>
     </div>
 
     <div class="form-search">
       <form class="form-inline flex-nowrap">
-        <input class="form-control" type="search" placeholder="Ingresa tu busqueda..." name="busqueda"
+        <input class="form-control" type="search" placeholder="Ingresa tu busqueda..." name="busqueda" id="busqueda"
           [(ngModel)]="busqueda" />
-        <button class="btn btn-outline-secondary pt-0" type="submit" (click)='buscar()'>
+        <button class="btn btn-outline-secondary pt-0" type="submit" (click)='buscar()' aria-label="busqueda">
           <i class="fa fa-search"></i>
         </button>
       </form>

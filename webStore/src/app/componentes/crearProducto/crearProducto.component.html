@@ -3,8 +3,8 @@
     <h4 class="card-header bg-primary text-center text-white">Crear Categoria</h4>
     <div class="card-body">
       <div class="form-group">
-        <label >Nombre categoria nueva</label>
-        <input class="form-control" type="text" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaCategoria.categoria"
+        <label for="lbl">Nombre categoria nueva </label>
+        <input id="lbl" class="form-control" type="text" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaCategoria.categoria"
         placeholder="Ingresa nueva categoria" />
       </div>
       
@@ -20,16 +20,16 @@
     <h4 class="card-header bg-primary text-center text-white">Crear SubCategoria</h4>
     <div class="card-body">
       <div class="form-group">
-        <label >Selecciona la Categoria principal</label>
-        <select class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaSubCategoria.categoria">
+        <label for="lbl1" >Selecciona la Categoria principal</label>
+        <select id="lbl1" class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaSubCategoria.categoria">
           <option value="0">Elige una opcion </option>
           <option *ngFor="let cat of listaCategorias">{{cat.categoria}}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label class="mt-2">Nombre SubCategoria nueva</label>
-        <input class="form-control" type="text" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="nuevaSubCategoria.subCategoria"
+        <label for="lb2" class="mt-2">Nombre SubCategoria nueva</label>
+        <input id="lbl2" class="form-control" type="text" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="nuevaSubCategoria.subCategoria"
         placeholder="Nueva subCategoria" required />
       </div>
 
@@ -48,44 +48,44 @@
         <div class="row d-flex">
           <div class="col-12 col-sm-6 d-flex flex-column">
             <div class="form-group">
-              <label >Nombre producto</label>
-              <input class="form-control" type="text" name="nombre" #nombre='ngModel' [(ngModel)]="producto.nombre"
+              <label for="lbl3" >Nombre producto</label>
+              <input id="lbl3" class="form-control" type="text" name="nombre" #nombre='ngModel' [(ngModel)]="producto.nombre"
                 placeholder="Ingresa nombre del producto" required />
               <small *ngIf="!nombre.valid && nombre.touched" class="text-danger">El campo es requerido</small>
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Marca del producto</label>
-              <input class="form-control" type="text" name="marca" #marca='ngModel' [(ngModel)]="producto.marca"
+              <label for="lbl4" class="mt-2">Marca del producto</label>
+              <input id="lbl4" class="form-control" type="text" name="marca" #marca='ngModel' [(ngModel)]="producto.marca"
                 placeholder="Ingresa nombre del producto" required />
               <small *ngIf="!marca.valid && marca.touched" class="text-danger">El campo es requerido</small>
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Precio producto</label>
-              <input class="form-control" type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
+              <label for="lb5" class="mt-2">Precio producto</label>
+              <input id="lbl5" class="form-control" type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
                 onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                 placeholder="Ingresa precio del producto" required />
               <small *ngIf="!precio.valid && precio.touched" class="text-danger">El campo es requerido</small>
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Precio promocion <small class="text-muted">(No requerido)</small></label>
-              <input class="form-control" type="text" name="precioPromo" #precioPromo='ngModel' [(ngModel)]="producto.precioPromo"
+              <label for="lbl6" class="mt-2">Precio promocion <small class="text-muted">(No requerido)</small></label>
+              <input id="lbl6" class="form-control" type="text" name="precioPromo" #precioPromo='ngModel' [(ngModel)]="producto.precioPromo"
                 onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                 placeholder="Debe ser menor al precio original" required />
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Tiempo promocion <small class="text-muted">(No requerido)</small></label>
-              <input class="form-control" type="text" name="tiempoPromo" #tiempoPromo='ngModel' [(ngModel)]="producto.tiempoPromo"
+              <label for="lbl7" class="mt-2">Tiempo promocion <small class="text-muted">(No requerido)</small></label>
+              <input id="lbl7" class="form-control" type="text" name="tiempoPromo" #tiempoPromo='ngModel' [(ngModel)]="producto.tiempoPromo"
                 onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                 placeholder="Ingresa tiempo promocion valida" required />
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Descripcion producto</label>
-              <textarea class="form-control" name="descripcion" #descripcion='ngModel' rows="4" [(ngModel)]="producto.descripcion"
+              <label for="lbl8" class="mt-2">Descripcion producto</label>
+              <textarea id="lbl8" class="form-control" name="descripcion" #descripcion='ngModel' rows="4" [(ngModel)]="producto.descripcion"
                 placeholder="Ingresa la descripcion del producto"></textarea>
               <small *ngIf="!descripcion.valid && descripcion.touched" class="text-danger">El campo es requerido</small>
             </div>
@@ -93,8 +93,8 @@
 
           <div class="col-12 col-sm-6 d-flex flex-column">
             <div class="form-group">
-              <label >Selecciona la Categoria</label>
-              <select class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria"
+              <label for="lbl9" >Selecciona la Categoria</label>
+              <select id="lbl9" class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria"
                 (change)="listarSubCats(producto.categoria)" required>
                 <option value="0">Elige una opcion </option>
                 <option *ngFor="let cat of listaCategorias"> {{cat.categoria}} </option>
@@ -103,8 +103,8 @@
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Selecciona la SubCategoria</label>
-              <select class="form-control" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria" required>
+              <label for="lbl10" class="mt-2">Selecciona la SubCategoria</label>
+              <select id="lbl10" class="form-control" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria" required>
                 <option value="0">Elige una opcion </option>
                 <option *ngFor="let subCat of listaSubCategorias">{{subCat}}</option>
               </select>
@@ -112,8 +112,8 @@
             </div>
 
             <div class="form-group">
-              <label class="mt-2">Sube la imagen del producto</label>
-              <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
+              <label for="lbl11" class="mt-2">Sube la imagen del producto</label>
+              <angular-file-uploader id="lbl11" [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
               </angular-file-uploader>
               <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg" class="img-thumbnail w-75 mt-2 mx-auto d-block"
                 alt={{producto?.nombre}} />

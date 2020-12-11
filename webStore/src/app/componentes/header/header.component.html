@@ -8,7 +8,7 @@
 
     <h2 class="title"><a [routerLink]="['/']">Colombia de todito </a></h2>
 
-    <div *ngIf="userLogged" class="logos-header d-inline-flex">
+    <div *ngIf="userLogged" class="logos-header d-inline-flex justify-content-around">
       <div data-toggle="tooltip" data-placement="top" title="Ir a mi carrito de compras">
         <label for="lbl3"></label>
         <a id="lbl3" [routerLink]="['/carrito']">
@@ -29,10 +29,10 @@
           <i class="fas fa-sign-out-alt fa-xs"></i>
         </a>
       </div>
-      <div id="identidad" data-toggle="tooltip" data-placement="top" title="Identidad usuario">
+      <div data-toggle="tooltip" data-placement="top" title="Estas identificado como {{nombreUsuario}}">
         <label for="lbl6"></label>
         <a id="lbl6" [routerLink]="['/perfil/', nombreUsuario]">
-          <p class="text-center">Estas identificado como: <br> <span class="text-muted">{{nombreUsuario}}</span></p>
+          <i class="fas fa-user fa-xs"></i><span class="text-muted text-capitalize font-weight-light ml-3">{{nombreUsuario}}</span>
         </a>
       </div>
     </div>

@@ -1,9 +1,9 @@
-<h2 class="text-center tituloListado">Nuestro catalogo de productos</h2>
+<h2 class="text-center tituloListado">Nuestro catalogo de productos variados</h2>
 <main class="listadoProductos">  
   <!-- Esta es modelado con display grid -->
   <div class="card producto" *ngFor='let modeloProducto of producto'>
     <img *ngIf="!modeloProducto.imagen" src="../../../assets/img/no-imagen.jpg" class="card-img-top" alt={{modeloProducto.nombre}}>
-    <img *ngIf="modeloProducto.imagen" src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top" alt={{modeloProducto.nombre}}>
+    <img *ngIf="modeloProducto.imagen" src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top pt-1" alt={{modeloProducto.nombre}}>
     <div class="card-body">
       <h5 class="card-title">{{modeloProducto.nombre}}</h5>
 

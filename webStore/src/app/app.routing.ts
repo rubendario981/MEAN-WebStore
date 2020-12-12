@@ -30,4 +30,4 @@ const misRutas: Routes=[
 ];
 
 export const appRoutingProviders: any[] = [];
-export const routing: ModuleWithProviders<any> = RouterModule.forRoot(misRutas);
+export const routing: ModuleWithProviders<any> = RouterModule.forRoot(misRutas, { relativeLinkResolution: 'legacy' });

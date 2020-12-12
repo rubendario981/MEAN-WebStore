@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NubeTagsComponent } from './nube-tags.component';
 
@@ -6,7 +6,7 @@ describe('NubeTagsComponent', () => {
   let component: NubeTagsComponent;
   let fixture: ComponentFixture<NubeTagsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NubeTagsComponent ]
     })

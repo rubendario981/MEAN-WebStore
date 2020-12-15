@@ -19,6 +19,7 @@ import { FormularioRegistroComponent } from './componentes/formulario-registro/f
 import { InicioComponent } from './componentes/inicio/inicio.component';
 import { ValidarAuthGuard } from './validar-auth.guard';
 import { ValidaTokenService } from './modelos-servicios/valida-token.service';
+import { ComunicandoComponentesService } from './modelos-servicios/ComunicandoComponentes.service';
 import { PerfilComponent } from './componentes/perfil/perfil.component';
 import { ListaFavoritosComponent } from './componentes/lista-favoritos/lista-favoritos.component';
 import { CarritoComprasComponent } from './componentes/carrito-compras/carrito-compras.component';
@@ -51,6 +52,7 @@ import { CarritoComprasComponent } from './componentes/carrito-compras/carrito-c
   providers: [
     appRoutingProviders, 
     ProductoService, 
+    ComunicandoComponentesService,
     ValidarAuthGuard,
     { provide: HTTP_INTERCEPTORS, 
       useClass: ValidaTokenService,

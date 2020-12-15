@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnChanges, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -6,6 +6,7 @@ import { modeloProducto } from '../../modelos-servicios/modeloProducto';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert';
+import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-descripcion-producto',
@@ -13,7 +14,7 @@ import swal from 'sweetalert';
   styleUrls: ['./descripcion-producto.component.css'],
   providers: [ProductoService, AuthService]
 })
-export class DescripcionProductoComponent implements OnInit {
+export class DescripcionProductoComponent implements OnInit, DoCheck, OnChanges {
 
   public producto: modeloProducto
 
@@ -40,17 +41,22 @@ export class DescripcionProductoComponent implements OnInit {
   public tituloFavorito: String
   public fecha: Date
   public fechaPromo: any
+  public cantFavoritos: number
 
-  constructor(private consultaBackend: ProductoService, private paramRuta: ActivatedRoute, private ruta: Router, private auth: AuthService) {
-    this.url = variable.url
-    this.admin = false
-    this.parametro = '../../busqueda/'
-    this.favButton = false
-    this.cartButton = false
-    this.tituloCarrito = 'Agregar al carrito de compras'
-    this.tituloFavorito = 'Agregar al carrito de compras'
-    this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')      
-    this.fecha = new Date()  
+  constructor(private consultaBackend: ProductoService, 
+    private paramRuta: ActivatedRoute, 
+    private ruta: Router, 
+    private comComp: ComunicandoComponentesService,
+    private auth: AuthService) {
+      this.url = variable.url
+      this.admin = false
+      this.parametro = '../../busqueda/'
+      this.favButton = false
+      this.cartButton = false
+      this.tituloCarrito = 'Agregar al carrito de compras'
+      this.tituloFavorito = 'Agregar al carrito de compras'
+      this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')      
+      this.fecha = new Date()  
   }
 
   afuConfig = {
@@ -78,20 +84,24 @@ export class DescripcionProductoComponent implements OnInit {
     }
   };
 
+  ngOnChanges(){
+    
+  }
+
   ngOnInit() {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
       this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
-        if (res.findUser.rol == 'administrador') this.admin = true
-      },
-        error => { console.log(error)
-        }
-      )
-
-      this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res=>{
+        this.cantFavoritos = res.findUser.listaFavoritos.length
+        this.comComp.recibiendoFavoritos = res.findUser.listaFavoritos.length
         this.favButton = res.findUser.listaFavoritos.includes(this.producto._id)
         this.cartButton = res.findUser.listaCompras.includes(this.producto._id)
-      })
+        if (res.findUser.rol == 'administrador') this.admin = true
+      },
+        error => {
+          console.log(error)
+        }
+      )
     }
 
     this.consultaBackend.listarCategorias().subscribe(res => {
@@ -115,6 +125,9 @@ export class DescripcionProductoComponent implements OnInit {
     this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
     this.favButton ? this.tituloFavorito = "Eliminar de mis favoritos" : this.tituloFavorito = "Añadir a mis favoritos"
     
+  }
+  ngDoCheck(){
+    this.comComp.recibiendoFavoritos = this.usuario.listaFavoritos.length
   }
 
   listarCategoria(categoria){
@@ -154,7 +167,7 @@ export class DescripcionProductoComponent implements OnInit {
       return
     }
 
-    this.usuario.listaFavoritos = this.producto._id
+    this.usuario.listaFavoritos = ''
 
     if (!this.favButton) {
       this.consultaBackend.agregaFav(this.usuario).subscribe(res => {
@@ -162,8 +175,9 @@ export class DescripcionProductoComponent implements OnInit {
         this.favButton = true     
         this.tituloFavorito = 'Eliminar de mis favoritos'  
       },
-        error => { swal("No se agrego el producto a favoritos, por favor contactar al administrador", { icon: 'info', text: error }) }
+      error => { swal("No se agrego el producto a favoritos, por favor contactar al administrador", { icon: 'info', text: error }) }
       )
+      this.cantFavoritos ++
     } 
     else {
       this.consultaBackend.borrarFav(this.usuario).subscribe(res => {
@@ -171,8 +185,9 @@ export class DescripcionProductoComponent implements OnInit {
         this.favButton = false
         this.tituloFavorito = 'Agregar a mis favoritos'
       },
-        err => { console.log('No se pudo eliminar de favoritos ' + err) }
+      err => { console.log('No se pudo eliminar de favoritos ' + err) }
       )
+      this.cantFavoritos --
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck, Input, AfterContentInit, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, DoCheck, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import { ProductoService } from '../../modelos-servicios/producto.service';
@@ -12,7 +12,7 @@ import { ComunicandoComponentesService } from 'src/app/modelos-servicios/Comunic
   styleUrls: ['./header.component.css'],
   providers: [AuthService, ProductoService]
 })
-export class HeaderComponent implements OnInit, DoCheck, AfterContentInit {
+export class HeaderComponent implements OnInit, DoCheck {
   public busqueda: String;
   public userLogged: boolean;
   
@@ -31,25 +31,18 @@ export class HeaderComponent implements OnInit, DoCheck, AfterContentInit {
   public nombreUsuario: String;
 
   @Input() cantFav: number
+  @Input() numCarrito: number
 
   constructor(private ruta: Router, 
     private auth: AuthService, 
-    public comComp: ComunicandoComponentesService,
     private cBend: ProductoService) {
-  }
-
-  llamadoServicio(){
-  }
-  
-  ngAfterContentInit(){
-    //console.log('Llamado al servicio desde header ' + this.comComp.recibiendoFavoritos)
-
   }
   
   ngOnInit(): void {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
-      this.cBend.identificaUsuario(this.usuario._id).subscribe(res => {
+      this.cBend.identificaUsuario(this.usuario._id).subscribe(res => {        
+        this.numCarrito = res.findUser.listaCompras.length
         this.usuario.nombres = res.findUser.nickName
         this.nombreUsuario = res.findUser.nickName
         if (!this.nombreUsuario) {
@@ -61,17 +54,14 @@ export class HeaderComponent implements OnInit, DoCheck, AfterContentInit {
         }
       )     
       
-      // this.cBend.validarFav(this.usuario._id).subscribe(res=>{
-      //   this.cantFav = res.validarFav.listaFavoritos.length
-      // })
+      this.cBend.validarFav(this.usuario._id).subscribe(res=>{
+        this.cantFav = res.validarFav.listaFavoritos.length
+      })
     }
   }
 
   ngDoCheck() {
     this.userLogged = this.auth.usuarioLogueado();
-    // this.cantFav = this.comComp.recibiendoFavoritos
-    // console.log('recibiendo desde servicio' + this.cantFav)
-    this.llamadoServicio()
   }
 
   aviso() {

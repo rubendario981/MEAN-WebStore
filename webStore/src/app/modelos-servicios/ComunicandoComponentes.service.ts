@@ -6,6 +6,7 @@ import { Injectable} from '@angular/core';
 export class ComunicandoComponentesService {
 
   recibiendoFavoritos: number
+  recibiendoNumCarrito: number
   
   constructor() {}
 

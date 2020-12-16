@@ -8,12 +8,16 @@ import { ComunicandoComponentesService } from './modelos-servicios/ComunicandoCo
 })
 export class AppComponent implements DoCheck {
   numFavs: number
+  numCart: number
 
   constructor(private comComponent: ComunicandoComponentesService){}
 
   ngDoCheck(){
     if(this.comComponent.recibiendoFavoritos){
       this.numFavs = this.comComponent.recibiendoFavoritos
+    }
+    if(this.comComponent.recibiendoNumCarrito){
+      this.numCart = this.comComponent.recibiendoNumCarrito
     }
   }
 }

@@ -13,6 +13,7 @@
         <label for="lbl3"></label>
         <a id="lbl3" [routerLink]="['/carrito']">
           <i class="fa fa-cart-plus fa-xs"></i>
+          <span *ngIf="numCarrito > 0" ><sup class="badge badge-pill badge-info ml-1" style="font-size: 0.7rem;">{{numCarrito}}</sup></span>
         </a>
       </div>
       <div data-toggle="tooltip" data-placement="top" title="En tus favoritos hay {{cantFav}} articulos">
@@ -38,15 +39,15 @@
     </div>
 
     <div *ngIf="!userLogged" class="logos-header d-inline-flex justify-content-end">
-      <div class="mx-4 text-center " data-toggle="tooltip" data-placement="top" title="Registrate en nuestra pagina">
-        <a id="registro" [routerLink]="['/registro']">
-          <i class="fa fa-user-plus fa-xs"></i>
+      <div class="d-inline-flex" data-toggle="tooltip" data-placement="top" title="Registrate en nuestra pagina">
+        <a [routerLink]="['/registro']">
+          <i class="fa fa-user-plus fa-xs mr-2"></i>
         </a>
         <label for="registro" class="d-block"><small>Registro</small></label>
       </div>
-      <div class="mx-1 text-center" data-toggle="tooltip" data-placement="top" title="Inicio session">
-        <a id="inicioSession" [routerLink]="['/inicioSesion']">
-          <i class="fa fa-key fa-xs"></i>
+      <div class="d-inline-flex ml-4" data-toggle="tooltip" data-placement="top" title="Inicio session">
+        <a [routerLink]="['/inicioSesion']">
+          <i class="fa fa-key fa-xs mr-2"></i>
         </a>
         <label for="inicioSession" class="d-block" ><small>Inicio sesion</small></label>
       </div>

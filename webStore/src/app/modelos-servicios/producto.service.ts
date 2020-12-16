@@ -80,8 +80,8 @@ export class ProductoService {
 
     agregaFav(usuario): Observable<any> {
         let params = JSON.stringify(usuario)
-        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
-        return this._http.post(this.url + 'agregaFav/'+usuario._id, params, { headers: cabecera })
+        let headers = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'agregaFav/'+usuario._id, params, { headers })
     }
 
     borrarFav(usuario): Observable<any> {
@@ -97,8 +97,8 @@ export class ProductoService {
 
     agregaCart(usuario){
         let params = JSON.stringify(usuario);
-        let cabecera = new HttpHeaders().set('Content-Type', 'application/json')
-        return this._http.post(this.url + 'agregarCarrito/' + usuario._id, params, {headers: cabecera})
+        let headers = new HttpHeaders().set('Content-Type', 'application/json')
+        return this._http.post(this.url + 'agregarCarrito/' + usuario._id, params, {headers})
     }
 
     borrarCart(usuario){

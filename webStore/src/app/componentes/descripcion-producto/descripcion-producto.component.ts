@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -41,8 +41,6 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   public tituloFavorito: String
   public fecha: Date
   public fechaPromo: any
-  public cantFavoritos: number
-  public cantCarrito: number
 
   constructor(private consultaBackend: ProductoService, 
     private paramRuta: ActivatedRoute, 
@@ -85,18 +83,13 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     }
   };
 
-  ngOnChanges(){
-    
-  }
-
   ngOnInit() {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
       this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
-        this.cantFavoritos = res.findUser.listaFavoritos.length
-        this.comComp.recibiendoFavoritos = res.findUser.listaFavoritos.length
-        this.cantCarrito = res.findUser.listaCompras.length
-        this.comComp.recibiendoNumCarrito = res.findUser.listaCompras.length
+        this.usuario = res.findUser
+        this.comComp.mensajeroFavs(res.findUser.listaFavoritos.length)
+        this.comComp.mensajeroCarrito(res.findUser.listaCompras.length)
         this.favButton = res.findUser.listaFavoritos.includes(this.producto._id)
         this.cartButton = res.findUser.listaCompras.includes(this.producto._id)
         if (res.findUser.rol == 'administrador') this.admin = true
@@ -130,8 +123,12 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     
   }
   ngDoCheck(){
-    this.comComp.recibiendoFavoritos = this.usuario.listaFavoritos.length
-    this.comComp.recibiendoNumCarrito = this.cantCarrito
+    if(this.comComp.enviandoFavs() >= 0 && Array.isArray(this.usuario.listaFavoritos)){
+      this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
+    }
+    if(this.comComp.enviandoCantCarrito() >= 0 && Array.isArray(this.usuario.listaCompras)){
+      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
+    }
   }
 
   listarCategoria(categoria){
@@ -143,6 +140,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   }
 
   editarProducto() {
+    //funcion de proceso administracion pagina
     if(this.producto.precioPromo > this.producto.precio){
       swal('Error para establecer promocion', 'El precio de la promocion debe ser menor al precio original', 'error')
     }
@@ -168,24 +166,25 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
       }).then((registrarUsuario)=>{
         registrarUsuario ? this.ruta.navigate(['registro']): this.ruta.navigate(['listado'])
       })
-      return
+      return false
     }
+    return true
   }
 
   adminFavs() {
-    this.validarUsuario()
+    console.log(this.validarUsuario())
+    if(!this.validarUsuario()) return this.ruta.navigate(['/'])
     //se establece esta variable para poder insertar el id del producto a la lista de favoritos
     this.usuario.listaFavoritos = this.producto._id
-
+    
     if (!this.favButton) {
       this.consultaBackend.agregaFav(this.usuario).subscribe(res => {
         this.usuario = res.listaFav
         this.favButton = true     
         this.tituloFavorito = 'Eliminar de mis favoritos'  
       },
-      error => { swal("No se agrego el producto a favoritos, por favor contactar al administrador", { icon: 'info', text: error }) }
+      err => { swal("No se agrego el producto a favoritos, por favor contactar al administrador", { icon: 'info', text: err }) }
       )
-      this.cantFavoritos ++
     } 
     else {
       this.consultaBackend.borrarFav(this.usuario).subscribe(res => {
@@ -195,25 +194,27 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
       },
       err => { swal("No se pudo eliminar el producto de tus favoritos, por favor contactar al administrador", { icon: 'info', text: err }) }
       )
-      this.cantFavoritos --
     }
   }
   
   adminCarrito(){
-    this.validarUsuario()
+    if(!this.validarUsuario()) return this.ruta.navigate(['/'])
     
     this.usuario.listaCompras = this.producto._id
     
     !this.cartButton ? (this.consultaBackend.agregaCart(this.usuario).subscribe(res => {
+      this.usuario = res.addCart
       this.cartButton = true
       this.tituloCarrito = "Eliminar del carrito de compras"
-    }), this.cantCarrito ++): (this.consultaBackend.borrarCart(this.usuario).subscribe(res=>{
+    })): (this.consultaBackend.borrarCart(this.usuario).subscribe(res=>{
+      this.usuario = res.delCart
       this.cartButton = false
       this.tituloCarrito = "Agregar al carrito de compras"
-    }), this.cantCarrito --)
+    }))
   }
 
   eliminarProducto() {
+    //funcion de proceso administracion pagina
     swal({
       title: "Proceso de eliminacion del producto",
       text: "Confirma que desea eliminar el producto? ",
@@ -244,7 +245,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
         )
         //una vez eliminado el producto verificar si la categoria quedo vacia para proceder a eliminar
         this.consultaBackend.eliminarCategoria(this.producto.categoria).subscribe(res=>{
-          console.log(res)
+          console.log(`Se ha eleminado la categria si queda vacia la categoria ${res}`)
         })
       } else {
         swal({

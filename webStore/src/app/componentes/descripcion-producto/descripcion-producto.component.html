@@ -1,19 +1,22 @@
 <div class="detalleProducto">
-  <img *ngIf="producto.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="img-thumbnail" alt={{producto.nombre}}>
+  <img *ngIf="producto.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="img-thumbnail"
+    alt={{producto.nombre}}>
   <div class="card">
     <div class="card-body">
       <h3 class="nombreProducto mb-4 font-weight-bolder">{{producto.nombre}}</h3>
       <h4 class="card-text mb-2"> Marca: <small> {{producto.marca}} </small> </h4>
-      
+
       <div *ngIf="(producto.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate'); else sinPromo">
-        <h4 class="card-text mb-2 font-weight-bolder"> Precio: <small> <del> {{producto.precio | currency}} </del> </small> </h4>
-        <h4 class="card-text mb-2 font-weight-bolder"> Promocion: <small> {{producto.precioPromo | currency}} </small> </h4>
+        <h4 class="card-text mb-2 font-weight-bolder"> Precio: <small> <del> {{producto.precio | currency}} </del>
+          </small> </h4>
+        <h4 class="card-text mb-2 font-weight-bolder"> Promocion: <small> {{producto.precioPromo | currency}} </small>
+        </h4>
       </div>
 
       <ng-template #sinPromo>
-        <h4 class="card-text mb-2"> Precio: <small> {{producto.precio | currency}} </small> </h4>        
-      </ng-template>      
-      
+        <h4 class="card-text mb-2"> Precio: <small> {{producto.precio | currency}} </small> </h4>
+      </ng-template>
+
       <h4 class="card-text mb-2"> Descripcion: <small> {{producto.descripcion}} </small> </h4>
       <div class="d-flex flex-column flex-sm-row justify-content-between mt-1 mt-md-2">
         <div>
@@ -30,33 +33,38 @@
               </svg>
             </span>
           </button>
-          <small *ngIf="cartButton" class="d-block text-center">Esta en tu carrito compras</small>
-          <small *ngIf="!cartButton" class="d-block text-center">Enviar al carrito</small>
+          <small *ngIf="cartButton" class="d-block text-center">{{tituloCarrito}}</small>
+          <small *ngIf="!cartButton" class="d-block text-center">{{tituloCarrito}}</small>
         </div>
 
         <div>
-          <button id="favButton" type="button" class="btn btn-transparent btn-block" (click)="adminFavs()" data-toggle="tooltip"
+          <button type="button" class="btn btn-transparent btn-block" (click)="adminFavs()" data-toggle="tooltip"
             data-placement="top" title="{{tituloFavorito}}" [style.color]="favButton ? 'yellow' : 'black'">
             <span *ngIf="favButton"><i class="fas fa-star"></i></span>
             <span *ngIf="!favButton"><i class="far fa-star"></i></span>
           </button>
-          <small *ngIf="favButton" class="d-block text-center">En lista de tus favoritos</small>
-          <small *ngIf="!favButton" class="d-block text-center">Marcar como favorito</small>
+          <small *ngIf="favButton" class="d-block text-center">{{tituloFavorito}}</small>
+          <small *ngIf="!favButton" class="d-block text-center">{{tituloFavorito}}</small>
         </div>
 
       </div>
-      
-      <div *ngIf="admin" class="d-flex justify-content-around border p-2">
-        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editarProducto">Editar</button>
-        <button type="button" class="btn btn-danger btn-sm" (click)='eliminarProducto()'>Eliminar</button>
+
+      <div *ngIf="admin" class="card">
+        <div class="card-header text-center mb-2 py-2 text-white bg-success w-100">Administracion de productos</div>
+        <div class="d-flex justify-content-around my-2">
+          <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+            data-target="#editarProducto">Editar</button>
+          <button type="button" class="btn btn-danger btn-sm" (click)='eliminarProducto()'>Eliminar</button>
+
+        </div>
       </div>
-      
+
     </div>
   </div>
   <app-nube-tags [parametros]="parametro"></app-nube-tags>
 </div>
 
-<!-- Ventana emergente para actualizar producto --> 
+<!-- Ventana emergente para actualizar producto -->
 <div class="modal fade" id="editarProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
@@ -71,77 +79,81 @@
           <div class="row d-flex">
             <div class="col-6 d-flex flex-column mb-3">
               <div class="form-group input-sm">
-                <label >Nombre producto</label>
+                <label>Nombre producto</label>
                 <input class="form-control" type="text" name="nombre" #nombre='ngModel' [(ngModel)]="producto.nombre"
                   placeholder="Ingresa nombre del producto" required />
               </div>
-  
+
               <div class="form-group">
                 <label class="mt-2">Marca del producto</label>
                 <input class="form-control" type="text" name="marca" #marca='ngModel' [(ngModel)]="producto.marca"
                   placeholder="Ingresa nombre del producto" required />
               </div>
-  
+
               <div class="form-group">
                 <label class="mt-2">Precio producto</label>
                 <input class="form-control" type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
                   onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                   placeholder="Ingresa precio del producto" required />
               </div>
-  
+
               <div class="form-group">
                 <label class="mt-2">Precio promocion <small class="text-muted">(No requerido)</small></label>
-                <input class="form-control" type="text" name="precioPromo" #precioPromo='ngModel' [(ngModel)]="producto.precioPromo"
-                  onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Debe ser menor al precio original" />
+                <input class="form-control" type="text" name="precioPromo" #precioPromo='ngModel'
+                  [(ngModel)]="producto.precioPromo" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                  placeholder="Debe ser menor al precio original" />
               </div>
-  
+
               <div class="form-group">
                 <label class="mt-2">Tiempo promocion <small class="text-muted">(No requerido)</small></label>
-                <input class="form-control" type="text" name="tiempoPromo" #tiempoPromo='ngModel' [(ngModel)]="producto.tiempoPromo"
-                  onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Ingresa tiempo promocion valida" />
+                <input class="form-control" type="text" name="tiempoPromo" #tiempoPromo='ngModel'
+                  [(ngModel)]="producto.tiempoPromo" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                  placeholder="Ingresa tiempo promocion valida" />
               </div>
-  
+
               <div class="form-group">
                 <label class="">Descripcion producto</label>
-                <textarea class="form-control" name="descripcion" #descripcion='ngModel' rows="4" [(ngModel)]="producto.descripcion"
-                  placeholder="Ingresa la descripcion del producto"></textarea>
-              </div>            
+                <textarea class="form-control" name="descripcion" #descripcion='ngModel' rows="4"
+                  [(ngModel)]="producto.descripcion" placeholder="Ingresa la descripcion del producto"></textarea>
+              </div>
             </div>
 
             <div class="col-6 d-flex flex-column mb-3">
               <div class="form-group">
-                <label >Selecciona la Categoria</label>
-                <select (change)='listarCategoria(producto.categoria)' class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria">
+                <label>Selecciona la Categoria</label>
+                <select (change)='listarCategoria(producto.categoria)' class="form-control" name="categoria"
+                  #categoria='ngModel' [(ngModel)]="producto.categoria">
                   <option value="0">Elige una opcion </option>
                   <option *ngFor="let cat of listaCategorias"> {{cat.categoria}} </option>
                 </select>
               </div>
-  
+
               <div class="form-group">
                 <label class="mt-3">Selecciona la SubCategoria</label>
-                <select class="form-control" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria" required>
+                <select class="form-control" name="subCategoria" #subCategoria='ngModel'
+                  [(ngModel)]="producto.subCategoria" required>
                   <option value="0">Elige una opcion </option>
                   <option *ngFor="let subCat of listaSubCategorias">{{subCat}}</option>
                 </select>
               </div>
-  
+
               <div class="form-group">
                 <label class="mt-2">Sube la imagen del producto</label>
                 <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
                 </angular-file-uploader>
-                <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg" class="img-thumbnail w-75 mt-2 mx-auto d-block"
-                  alt={{producto?.nombre}} />
+                <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg"
+                  class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto?.nombre}} />
                 <img *ngIf="producto?.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}"
-                  class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto.nombre}}/>
+                  class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto.nombre}} />
               </div>
             </div>
-          </div>  
+          </div>
         </form>
       </div>
 
-      <div class="modal-footer d-flex justify-content-around">        
+      <div class="modal-footer d-flex justify-content-around">
         <button class="btn btn-primary" type="submit" (click)='editarProducto()'>Actualizar producto</button>
-        <button type="button" class="btn btn-secondary" (click)="ngOnInit()" data-dismiss="modal">Close</button>        
+        <button type="button" class="btn btn-secondary" (click)="ngOnInit()" data-dismiss="modal">Close</button>
       </div>
 
     </div>

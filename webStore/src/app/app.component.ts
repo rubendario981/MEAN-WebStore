@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, DoCheck, OnChanges, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ComunicandoComponentesService } from './modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
@@ -6,18 +6,24 @@ import { ComunicandoComponentesService } from './modelos-servicios/ComunicandoCo
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements DoCheck {
+export class AppComponent implements OnInit, DoCheck {
   numFavs: number
   numCart: number
 
   constructor(private comComponent: ComunicandoComponentesService){}
 
+  ngOnInit(){
+  }
+  
   ngDoCheck(){
-    if(this.comComponent.recibiendoFavoritos){
-      this.numFavs = this.comComponent.recibiendoFavoritos
+    //validando cambios en la cantidad de favoritos
+    if(this.comComponent.enviandoFavs()){
+      this.numFavs = this.comComponent.enviandoFavs()
     }
-    if(this.comComponent.recibiendoNumCarrito){
-      this.numCart = this.comComponent.recibiendoNumCarrito
+    //validando cambios en la cantidad del carrito 
+    if(this.comComponent.enviandoCantCarrito()){
+      this.numCart = this.comComponent.enviandoCantCarrito()
     }
   }
+
 }

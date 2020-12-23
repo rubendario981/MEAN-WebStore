@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductoService } from '../../modelos-servicios/producto.service';
-import { modeloProducto } from '../../modelos-servicios/modeloProducto';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert'
+import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-lista-favoritos',
@@ -12,12 +12,10 @@ import swal from 'sweetalert'
   styleUrls: ['./lista-favoritos.component.css'],
   providers: [ProductoService, AuthService]
 })
-export class ListaFavoritosComponent implements OnInit {
+export class ListaFavoritosComponent implements OnInit, DoCheck {
 
   public parametro: String;
-
-  public idProdFavs: []
-
+  
   public prodFavoritos: any
 
   public usuario: modeloUsuario = {
@@ -32,35 +30,51 @@ export class ListaFavoritosComponent implements OnInit {
     rol: ''
   };
 
-  constructor(private consultaBackEnd: ProductoService, private auth: AuthService, private ruta: Router) {
-    this.parametro = '../busqueda/'
-    this.prodFavoritos = []
+  constructor(private consultaBackEnd: ProductoService, 
+    private auth: AuthService, 
+    private comComp: ComunicandoComponentesService,
+    private ruta: Router) {
+      this.parametro = '../busqueda/'
+      this.prodFavoritos = []
   }
   
   ngOnInit() {
-    this.prodFavoritos = []
     if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
     this.usuario._id = this.auth.identificaUsuario().split('"')[3];
 
-    this.consultaBackEnd.validarFav(this.usuario._id).subscribe(res => {
-      if (res.validarFav.listaFavoritos.length < 1) {
+    this.loadAmountFavsCart()
+  }
+
+  loadAmountFavsCart(){    
+    this.prodFavoritos = []
+    this.consultaBackEnd.identificaUsuario(this.usuario._id).subscribe(res=>{
+      this.usuario = res.findUser
+      this.comComp.mensajeroFavs(res.findUser.listaFavoritos.length)
+      this.comComp.mensajeroCarrito(res.findUser.listaCompras.length)
+      
+      if (res.findUser.listaFavoritos.length < 1) {
         swal({
-          title: "Carrito de compras vacio",
+          title: "Lista de productos favoritos vacio",
           text: 'Navega por la pagina para agregar tus productos favoritos a la lista',
           icon: 'info'
         })
-        this.ruta.navigate(['listado'])
+        return this.ruta.navigate(['listado'])
       }
-      this.idProdFavs = res.validarFav.listaFavoritos
-      this.usuario.listaFavoritos = this.idProdFavs
       this.usuario.listaFavoritos.forEach(idProd => {
         this.consultaBackEnd.detalleProducto(idProd).subscribe(res => {
           this.prodFavoritos.push(res.prod)
         })
       });
-    },
-      err => { console.log('No se pudo identifica favoritos' + err) }
-    )
+    })    
+  }
+
+  ngDoCheck(){
+    if(this.comComp.enviandoFavs() >= 0 && Array.isArray(this.usuario.listaFavoritos)){
+      this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
+    }
+    if(this.comComp.enviandoCantCarrito() >= 0 && Array.isArray(this.usuario.listaCompras)){      
+      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
+    }
   }
 
   eliminaFav(idProd) {
@@ -70,9 +84,9 @@ export class ListaFavoritosComponent implements OnInit {
     },
     err => { console.log(err) }
     )
-    this.ngOnInit()
+    this.loadAmountFavsCart()
   }
-
+  
   borrarFavs() {
     swal({
       title: "Eliminacion del listado de favoritos",
@@ -83,6 +97,7 @@ export class ListaFavoritosComponent implements OnInit {
     }).then((willDelete) => {
       if (willDelete) {
         this.consultaBackEnd.borrarFavlistado(this.usuario._id).subscribe(res => {
+          this.usuario = res.borraListaFav
           swal("Haz eliminado todos tus favoritos", {
             icon: "success",
             buttons: {
@@ -94,6 +109,7 @@ export class ListaFavoritosComponent implements OnInit {
           }).then((value) => {
             if (value === "aceptar") this.ruta.navigate(['listado'])
           });
+          this.loadAmountFavsCart()
         },
           error => {
             swal("No se pudo eliminar el lsitado de favoritos", {
@@ -108,19 +124,20 @@ export class ListaFavoritosComponent implements OnInit {
           text: "No se ha eliminado el producto"
         });
       }
-      this.ruta.navigate(['favoritos'])
     });
   }
 
   enviarCarrito(idProd){
-    this.usuario.listaCompras = idProd
-
-    this.consultaBackEnd.agregaCart(this.usuario).subscribe(res=>{
-      this.usuario.listaFavoritos = idProd
-      this.consultaBackEnd.borrarFav(this.usuario).subscribe(res=>{
-        this.usuario = res.borraFav
-      })
+    this.usuario.listaFavoritos = idProd    
+    this.consultaBackEnd.borrarFav(this.usuario).subscribe(res=>{
+      this.usuario = res.borraFav
     })
-    this.ngOnInit()
+
+    this.usuario.listaCompras = idProd
+    this.consultaBackEnd.agregaCart(this.usuario).subscribe(res=>{
+      this.usuario = res.addCart
+      console.log(this.usuario.listaCompras.length)
+    })
+    this.loadAmountFavsCart()
   }
 }

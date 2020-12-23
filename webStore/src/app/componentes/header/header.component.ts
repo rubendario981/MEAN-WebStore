@@ -1,10 +1,8 @@
-import { Component, OnInit, DoCheck, Input } from '@angular/core';
+import { Component, OnInit, DoCheck, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
-import swal from 'sweetalert'
-import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +10,7 @@ import { ComunicandoComponentesService } from 'src/app/modelos-servicios/Comunic
   styleUrls: ['./header.component.css'],
   providers: [AuthService, ProductoService]
 })
-export class HeaderComponent implements OnInit, DoCheck {
+export class HeaderComponent implements OnInit, DoCheck, OnChanges {
   public busqueda: String;
   public userLogged: boolean;
   
@@ -38,38 +36,38 @@ export class HeaderComponent implements OnInit, DoCheck {
     private cBend: ProductoService) {
   }
   
+  ngOnChanges(sc: SimpleChanges){
+    console.log(sc)
+  }
+
   ngOnInit(): void {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
-      this.cBend.identificaUsuario(this.usuario._id).subscribe(res => {        
-        this.numCarrito = res.findUser.listaCompras.length
-        this.usuario.nombres = res.findUser.nickName
-        this.nombreUsuario = res.findUser.nickName
-        if (!this.nombreUsuario) {
-          this.nombreUsuario = res.findUser.nombres
-        }
-      },
-        error => {
-          console.log(error)
-        }
-      )     
-      
-      this.cBend.validarFav(this.usuario._id).subscribe(res=>{
-        this.cantFav = res.validarFav.listaFavoritos.length
-      })
+      this.validateAmountFavCart()
+      // this.cBend.validarFav(this.usuario._id).subscribe(res=>{
+      //   this.cantFav = res.validarFav.listaFavoritos.length
+      // })
     }
+  }
+
+  validateAmountFavCart(){
+    this.cBend.identificaUsuario(this.usuario._id).subscribe(res => {        
+      this.numCarrito = res.findUser.listaCompras.length
+      this.cantFav = res.findUser.listaFavoritos.length
+      this.usuario.nombres = res.findUser.nickName
+      this.nombreUsuario = res.findUser.nickName
+      if (!this.nombreUsuario) {
+        this.nombreUsuario = res.findUser.nombres
+      }
+    },
+      error => {
+        console.log(error)
+      }
+    )
   }
 
   ngDoCheck() {
     this.userLogged = this.auth.usuarioLogueado();
-  }
-
-  aviso() {
-    swal('Aviso', {
-      icon: 'info',
-      text: 'Muy pronto se implementara esta funcionalidad'
-    })
-    this.ruta.navigate(['/listado'])
   }
 
   buscar() {

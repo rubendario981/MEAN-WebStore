@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloProducto } from '../../modelos-servicios/modeloProducto';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert'
-import { number } from '@ng-validators/ng-validators';
+import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-carrito-compras',
   templateUrl: './carrito-compras.component.html',
   styleUrls: ['./carrito-compras.component.css'],
-  providers: [ProductoService]
+  providers: [ProductoService, AuthService]
 })
-export class CarritoComprasComponent implements OnInit {
+export class CarritoComprasComponent implements OnInit, DoCheck {
 
   public producto: modeloProducto[]
 
@@ -32,20 +32,29 @@ export class CarritoComprasComponent implements OnInit {
   public carritoCompras: any
   public fecha: Date
 
-  constructor(private consultaBackEnd: ProductoService, private auth: AuthService, private ruta: Router) {
-    this.carritoCompras = []
-    this.fecha = new Date()
-    
+  constructor(private consultaBackEnd: ProductoService, private comComp: ComunicandoComponentesService,
+    private auth: AuthService, private ruta: Router) {
+      this.fecha = new Date()    
   }
   
   ngOnInit() {
+    if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
+    this.usuario._id = this.auth.identificaUsuario().split('"')[3];
     let objCat = {}
     let arrCart = []
     this.carritoCompras = []
-    if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
-    this.usuario._id = this.auth.identificaUsuario().split('"')[3];
 
     this.consultaBackEnd.identificaUsuario(this.usuario._id).subscribe(res => {
+      this.usuario = res.findUser
+      if (this.usuario.listaCompras.length < 1) {
+        swal({
+          title: "Carrito de compras vacio",
+          text: 'Navega por la pagina para agregar tus productos favoritos a la lista',
+          icon: 'info'
+        })
+        return this.ruta.navigate(['listado'])
+      }
+      this.comComp.mensajeroCarrito(res.findUser.listaCompras.length)
       res.findUser.listaCompras.forEach(idProd => !(idProd in objCat) && (objCat[idProd] = true) && arrCart.push(idProd))
       arrCart.forEach(idProd => {
         this.consultaBackEnd.detalleProducto(idProd).subscribe(res=>{
@@ -55,9 +64,11 @@ export class CarritoComprasComponent implements OnInit {
       });
     })
   }
-
-  procesarPago(){
-    console.log('metodo para procesar pago pendiente')
+  
+  ngDoCheck(){
+    if(this.comComp.enviandoCantCarrito() >= 0 && Array.isArray(this.usuario.listaCompras)){
+      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
+    }
   }
 
   calTotal(){
@@ -83,6 +94,7 @@ export class CarritoComprasComponent implements OnInit {
       dangerMode: true,
     }).then((eliminaCarrito) => {
       eliminaCarrito ? this.consultaBackEnd.borrarCart(this.usuario).subscribe(res => {
+        this.usuario = res.delCart
         swal("Producto eliminado", {
           icon: "success",
           buttons: {
@@ -115,6 +127,7 @@ export class CarritoComprasComponent implements OnInit {
       dangerMode: true,
     }).then((vaciarCarrito) => {
       vaciarCarrito ? this.consultaBackEnd.vaciarCart(this.usuario).subscribe(res => {
+        this.usuario = res.emptyCart
         swal("Haz eliminado todos los productos del carrito de compras", {
           icon: "success",
           buttons: {

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
+<nav class="navbar navbar-expand-md navbar-light bg-light">
   <a class="navbar-brand d-sm-none" href="#">Categorias</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,8 +6,15 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <li class="categoria" *ngFor="let cat of categorias"> 
-      <a [routerLink]="['/busqueda', cat.categoria]">{{cat.categoria}} </a> </li>
+    <ul class="list-group list-group-horizontal-md menu mx-auto">
+      <li class="list-group-item list-group-item-action list-group-item-info" *ngFor="let cat of categorias">
+        <a class="text-decoration-none stretched-link px-4" [routerLink]="['busqueda/', cat.categoria]">{{cat.categoria}}</a>
+        <ul class="list-group list-group-flush subMenu w-100">
+          <li class="list-group-item list-group-item-action list-group-item-secondary" *ngFor="let subCat of cat.subCategoria">
+            <a class="text-decoration-none ml-2 stretched-link" [routerLink]="['busqueda/', subCat]">{{subCat}}</a>
+          </li>
+        </ul>
+      </li>
+    </ul>  
   </div>
 </nav>
-

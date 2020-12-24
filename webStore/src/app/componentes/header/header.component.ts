@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit, DoCheck, OnChanges {
   }
   
   ngOnChanges(sc: SimpleChanges){
-    console.log(sc)
+    // console.log(sc)
   }
 
   ngOnInit(): void {

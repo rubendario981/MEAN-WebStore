@@ -13,23 +13,15 @@ export class NavegacionComponent implements OnInit {
 
   public url: string;
   public categorias: any;
-  public subCategorias: any
 
   constructor(private consultaBackEnd: ProductoService) {
     this.url = variable.url
     this.categorias = []
-    this.subCategorias = []
   }
 
   ngOnInit(): void {
     this.consultaBackEnd.listarCategorias().subscribe(res => {
-      this.categorias = res.filtrarCat;
-    },
-      err => {
-        console.log(err);
-      }
-    )
+      this.categorias = res.listCategories;      
+    })
   }
-
-
 }

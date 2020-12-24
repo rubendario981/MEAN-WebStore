@@ -11,7 +11,7 @@ var cat;
 var prod, token, usu;
 
 var controlador = {
-    /***************************** 331 lineas en total */
+    /***************************** */
     registroUsuario: async (req, res, next) => {
         var params = req.body;
         usu = new Usuario();
@@ -137,12 +137,9 @@ var controlador = {
 
     /************************************** */
     listarCategorias: async (req, res) => {        
-        const filtrarCat = []
-        const objCat = {}
-        const listaCat = await Producto.find({}, { categoria: 1, _id: 0 })
-        if (!listaCat) return res.status(404).send({ mensaje: 'No hay listado de categorias ' })
-        listaCat.forEach(el => !(el in objCat) && (objCat[el] = true) && filtrarCat.push(el))
-        return res.send({mensaje: 'ok', filtrarCat})
+        const listCategories = await Categorias.find({}, {categoria: 1, subCategoria: 1})
+        !listCategories ? res.status(404).send({mensaje: 'No hay listado de categorias'}):
+        res.status(200).send({mensaje: 'ok', listCategories})
     },
     
     /************************************** */
@@ -200,7 +197,7 @@ var controlador = {
         var params = req.body
         var idUsuario = req.params.idUsuario
         
-        const listaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaFavoritos": params.listaFavoritos}}, {new: true})        
+        const listaFav = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaFavoritos": params.listaFavoritos}}, {new: true})
         res.send({mensaje: 'ok', listaFav})        
     },
 
@@ -225,9 +222,12 @@ var controlador = {
     agregarCarrito: async (req, res) => {
         var params = req.body
         var idUsuario = req.params.idUsuario
-        
-        const addCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaCompras": params.listaCompras}}, {new: true})        
-        return res.send({mensaje: 'ok', addCart})        
+
+        const listaCompras = await Usuario.findById({_id: idUsuario}, {_id: 0, listaCompras: 1})
+        if(!Object.values(listaCompras.listaCompras).includes(params.listaCompras)){
+            const addCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {$push:{"listaCompras": params.listaCompras}}, {new: true})        
+            return res.send({mensaje: 'ok', addCart})
+        }
     },
 
     /********************************** */
@@ -243,8 +243,8 @@ var controlador = {
     vaciarCarrito: async (req, res) => {
         var idUsuario = req.params.idUsuario
         
-        const addCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaCompras: []}, {new: true})        
-        return res.send({mensaje: 'ok', addCart})        
+        const emptyCart = await Usuario.findOneAndUpdate({_id: idUsuario}, {listaCompras: []}, {new: true})        
+        return res.send({mensaje: 'ok', emptyCart})        
     },
 
     /********************************* */

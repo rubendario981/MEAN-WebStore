@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
-import { modeloCategorias } from '../../modelos-servicios/modeloCategorias';
 import { variable } from '../../modelos-servicios/constantes';
+import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-navegacion',
@@ -9,19 +9,29 @@ import { variable } from '../../modelos-servicios/constantes';
   styleUrls: ['./navegacion.component.css'],
   providers: [ProductoService]
 })
-export class NavegacionComponent implements OnInit {
+export class NavegacionComponent implements OnInit, DoCheck, AfterViewInit {
 
   public url: string;
   public categorias: any;
 
-  constructor(private consultaBackEnd: ProductoService) {
+  constructor(private consultaBackEnd: ProductoService, private comComp: ComunicandoComponentesService) {
     this.url = variable.url
     this.categorias = []
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngDoCheck(){
+    if(this.comComp.sendCategories()){
+      this.categorias = this.comComp.sendCategories()
+    }
+  }
+
+  ngAfterViewInit(){
     this.consultaBackEnd.listarCategorias().subscribe(res => {
-      this.categorias = res.listCategories;      
+      this.comComp.receivedCategories(res.listCategories);      
     })
   }
 }

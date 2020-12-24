@@ -7,6 +7,15 @@ export class ComunicandoComponentesService {
 
   cantidadFavoritos: number
   cantidadCarrito: number
+  categorias: any
+
+  receivedCategories(categorias){
+    return this.categorias = categorias
+  }
+
+  sendCategories(){
+    return this.categorias
+  }
   
   mensajeroFavs(numFavs: number){
     return this.cantidadFavoritos = numFavs

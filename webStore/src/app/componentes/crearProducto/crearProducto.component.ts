@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { modeloProducto } from 'src/app/modelos-servicios/modeloProducto';
 import { ProductoService } from 'src/app/modelos-servicios/producto.service';
@@ -7,7 +7,7 @@ import { modeloCategorias } from  '../../modelos-servicios/modeloCategorias';
 import { AuthService } from 'src/app/modelos-servicios/auth.service'
 import { variable } from '../../modelos-servicios/constantes'
 import swal from 'sweetalert'
-import { ThrowStmt } from '@angular/compiler';
+import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-crearProducto',
@@ -15,7 +15,7 @@ import { ThrowStmt } from '@angular/compiler';
   styleUrls: ['./crearProducto.component.css'],
   providers: [ProductoService]
 })
-export class CrearProductoComponent implements OnInit {
+export class CrearProductoComponent implements OnInit, DoCheck {
 
   public producto: modeloProducto
   
@@ -43,10 +43,11 @@ export class CrearProductoComponent implements OnInit {
 
   url: String
 
-  constructor (private _router: Router,  private consultaBackend: ProductoService, private auth: AuthService) {
-    this.url = variable.url    
-    this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')
-    this.nuevaSubCategoria = new modeloCategorias('', '')
+  constructor (private _router: Router, private consultaBackend: ProductoService, 
+    private auth: AuthService, private comComp: ComunicandoComponentesService) {
+      this.url = variable.url    
+      this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')
+      this.nuevaSubCategoria = new modeloCategorias('', '')
   }
 
   afuConfig = {
@@ -74,24 +75,30 @@ export class CrearProductoComponent implements OnInit {
     }
   };
 
-
   ngOnInit() {    
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
       this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
         if (res.findUser.rol != 'administrador') this._router.navigate(['listado'])
-      },
-        error => {
-          console.log(error)
-        }
+      }, 
+      error => swal({title: 'Usuario no identificado', text: error})   
       )
     }
 
-    this.consultaBackend.listarCategoriasNuevas().subscribe(res => {
-      this.listaCategorias = res.listaCat
-    },
-      err => console.log(err)
-    )
+    this.listarCategorias()
+  }
+
+  ngDoCheck(){
+    if(this.comComp.sendCategories()){
+      this.comComp.sendCategories()
+      this.listaCategorias = this.comComp.sendCategories()
+    }
+  }
+
+  listarCategorias(){
+    this.consultaBackend.listarCategorias().subscribe(res => {
+      this.comComp.receivedCategories(res.listCategories)
+    })
   }
 
   listarSubCats(cat){
@@ -105,30 +112,23 @@ export class CrearProductoComponent implements OnInit {
   crearCategoria(categoria) {
     this.nuevaCategoria.categoria = categoria
     this.consultaBackend.crearCategoria(this.nuevaCategoria).subscribe(res => {
-      swal(`Categoria ${this.nuevaSubCategoria.categoria} creada satisfactoriamente`)
-      this.nuevaCategoria = {categoria: '', subCategoria: ''}
+      swal('Exito en operacion ', `Categoria ${categoria} creada satisfactoriamente`)
     },
-      err => {
-        err.headers = 402 ? swal({ text: 'Ya existe la categoria' + this.nuevaCategoria.categoria, title: 'Error al crear categoria'}) :
-        console.log(err)
-        this.nuevaCategoria = {categoria: '', subCategoria: ''}
-      }
-    )    
-    this.ngOnInit()
+    err => swal({ text: 'Ya existe la categoria ' + categoria, title: 'Error al crear categoria ' + err}))
+    this.nuevaCategoria = {categoria: '', subCategoria: ''}
+    this.listarCategorias()
   }
 
   crearSubCategoria(subCat) {
     this.nuevaSubCategoria = subCat
     this.consultaBackend.crearSubCategoria(this.nuevaSubCategoria).subscribe(res => {
-      swal('Sub categoria ' + this.nuevaSubCategoria.subCategoria + ' creada en ' + this.nuevaSubCategoria.categoria)
-      this.nuevaSubCategoria = { categoria: '', subCategoria: '' }
+      swal('Sub categoria ' + subCat.subCategoria + ' creada en ' + subCat.categoria)
     },
-      err => {
-        err.headers = 402 ? swal({ text: 'Ya existe la sub-categoria' + this.nuevaSubCategoria.subCategoria, title: 'Error al crear la subcategoria' }) :
-        console.log(err)
-        this.nuevaSubCategoria = { categoria: 0, subCategoria: '' }
-      }
-    )
+    err => {
+      err.headers = 402 ? swal({ text: 'Ya existe la sub-categoria' + this.nuevaSubCategoria.subCategoria, title: 'Error al crear la subcategoria' }) :
+      console.log('Manage errors: ' + err)
+    })
+    this.nuevaSubCategoria = { categoria: 0, subCategoria: '' }
   }
 
   crearProducto() {

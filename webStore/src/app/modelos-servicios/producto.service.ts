@@ -22,10 +22,6 @@ export class ProductoService {
         return this._http.get(this.url + 'listarCategorias')
     }
 
-    listarCategoriasNuevas(): Observable<any> {
-        return this._http.get(this.url + 'listarCategoriasNuevas')
-    }
-
     listarTags(): Observable<any> {
         return this._http.get(this.url + 'listarTags')
     }

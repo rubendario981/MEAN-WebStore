@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -7,6 +7,8 @@ import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 import swal from 'sweetalert';
+import { Variable } from '@angular/compiler/src/render3/r3_ast';
+import { date } from '@ng-validators/ng-validators';
 
 @Component({
   selector: 'app-descripcion-producto',
@@ -16,7 +18,7 @@ import swal from 'sweetalert';
 })
 export class DescripcionProductoComponent implements OnInit, DoCheck {
 
-  public producto: modeloProducto
+  public producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '') 
 
   public usuario: modeloUsuario = {
     _id: '',
@@ -30,32 +32,23 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     rol: ''
   };
 
-  public url: String
+  public url = variable.url
   public listaCategorias: []
   public listaSubCategorias: []
-  public admin: boolean
-  public parametro: string
-  public favButton: boolean
-  public cartButton: boolean
-  public tituloCarrito: String
-  public tituloFavorito: String
-  public fecha: Date
+  public admin = false
+  public parametro = '../../busqueda/'
+  public favButton = false
+  public cartButton = false
+  public tituloFavorito  = 'Agregar a mis favoritos'
+  public tituloCarrito = 'Agregar al carrito de compras'
+  public fecha = new Date()
   public fechaPromo: any
 
   constructor(private consultaBackend: ProductoService, 
     private paramRuta: ActivatedRoute, 
     private ruta: Router, 
     private comComp: ComunicandoComponentesService,
-    private auth: AuthService) {
-      this.url = variable.url
-      this.admin = false
-      this.parametro = '../../busqueda/'
-      this.favButton = false
-      this.cartButton = false
-      this.tituloCarrito = 'Agregar al carrito de compras'
-      this.tituloFavorito = 'Agregar al carrito de compras'
-      this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')      
-      this.fecha = new Date()  
+    private auth: AuthService) {   
   }
 
   afuConfig = {
@@ -101,7 +94,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     }
 
     this.consultaBackend.listarCategorias().subscribe(res => {
-      this.listaCategorias = res.filtrarCat
+      this.listaCategorias = res.listCategories
     },
       err => console.log(err)
     )
@@ -122,13 +115,8 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     this.favButton ? this.tituloFavorito = "Eliminar de mis favoritos" : this.tituloFavorito = "Añadir a mis favoritos"
     
   }
-  ngDoCheck(){
-    if(this.comComp.enviandoFavs() >= 0 && Array.isArray(this.usuario.listaFavoritos)){
-      this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
-    }
-    if(this.comComp.enviandoCantCarrito() >= 0 && Array.isArray(this.usuario.listaCompras)){
-      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
-    }
+
+  ngDoCheck(){    
   }
 
   listarCategoria(categoria){
@@ -146,8 +134,10 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     }
     else{
       this.fechaPromo = new Date()
-      this.fechaPromo.setDate(this.fecha.getDate() + parseInt(this.producto.tiempoPromo)) 
-      this.producto.tiempoPromo = this.fechaPromo
+      if(this.producto.tiempoPromo){
+        this.fechaPromo.setDate(this.fecha.getDate() + parseInt(this.producto.tiempoPromo)) 
+        this.producto.tiempoPromo = this.fechaPromo
+      }
       this.consultaBackend.editarProducto(this.producto).subscribe(res => {
         swal("Proceso exitoso", "El producto ha sido actualizado", "success");      
       },
@@ -172,7 +162,6 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   }
 
   adminFavs() {
-    console.log(this.validarUsuario())
     if(!this.validarUsuario()) return this.ruta.navigate(['/'])
     //se establece esta variable para poder insertar el id del producto a la lista de favoritos
     this.usuario.listaFavoritos = this.producto._id
@@ -180,6 +169,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     if (!this.favButton) {
       this.consultaBackend.agregaFav(this.usuario).subscribe(res => {
         this.usuario = res.listaFav
+        this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
         this.favButton = true     
         this.tituloFavorito = 'Eliminar de mis favoritos'  
       },
@@ -189,6 +179,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     else {
       this.consultaBackend.borrarFav(this.usuario).subscribe(res => {
         this.usuario = res.borraFav
+        this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
         this.favButton = false
         this.tituloFavorito = 'Agregar a mis favoritos'
       },
@@ -204,10 +195,12 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     
     !this.cartButton ? (this.consultaBackend.agregaCart(this.usuario).subscribe(res => {
       this.usuario = res.addCart
+      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
       this.cartButton = true
       this.tituloCarrito = "Eliminar del carrito de compras"
     })): (this.consultaBackend.borrarCart(this.usuario).subscribe(res=>{
       this.usuario = res.delCart
+      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
       this.cartButton = false
       this.tituloCarrito = "Agregar al carrito de compras"
     }))

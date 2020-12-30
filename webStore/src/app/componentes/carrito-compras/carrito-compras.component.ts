@@ -34,16 +34,19 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
 
   constructor(private consultaBackEnd: ProductoService, private comComp: ComunicandoComponentesService,
     private auth: AuthService, private ruta: Router) {
-      this.fecha = new Date()    
+    this.fecha = new Date()
+    this.carritoCompras = []
   }
-  
+
   ngOnInit() {
     if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
     this.usuario._id = this.auth.identificaUsuario().split('"')[3];
-    let objCat = {}
-    let arrCart = []
-    this.carritoCompras = []
 
+    this.loadProductsCart()
+  }
+
+  loadProductsCart() {
+    this.carritoCompras = []
     this.consultaBackEnd.identificaUsuario(this.usuario._id).subscribe(res => {
       this.usuario = res.findUser
       if (this.usuario.listaCompras.length < 1) {
@@ -54,37 +57,34 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
         })
         return this.ruta.navigate(['listado'])
       }
-      this.comComp.mensajeroCarrito(res.findUser.listaCompras.length)
-      res.findUser.listaCompras.forEach(idProd => !(idProd in objCat) && (objCat[idProd] = true) && arrCart.push(idProd))
-      arrCart.forEach(idProd => {
-        this.consultaBackEnd.detalleProducto(idProd).subscribe(res=>{
-          Object.defineProperty(res.prod, 'cantidad', { value: 0, writable: true})
+      this.usuario.listaCompras.forEach(idProd => {
+        this.consultaBackEnd.detalleProducto(idProd).subscribe(res => {
+          Object.defineProperty(res.prod, 'cantidad', { value: 0, writable: true })
           this.carritoCompras.push(res.prod)
+          this.comComp.mensajeroCarrito(this.carritoCompras.length)
         })
       });
     })
   }
   
-  ngDoCheck(){
-    if(this.comComp.enviandoCantCarrito() >= 0 && Array.isArray(this.usuario.listaCompras)){
-      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
-    }
+  ngDoCheck() {
+    this.comComp.mensajeroCarrito(this.carritoCompras.length)
   }
 
-  calTotal(){
+  calTotal() {
     let total = 0
     this.carritoCompras.forEach(prod => {
-      if(prod.tiempoPromo >= this.fecha.toISOString()){
+      if (prod.tiempoPromo >= this.fecha.toISOString()) {
         total += prod.precioPromo * prod.cantidad
       }
-      else{
+      else {
         total += prod.precio * prod.cantidad
       }
     });
     return total
   }
 
-  eliminaCart(idProd){
+  eliminaCart(idProd) {
     this.usuario.listaCompras = idProd
     swal({
       title: 'Eliminar del carrito de compras',
@@ -94,7 +94,7 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
       dangerMode: true,
     }).then((eliminaCarrito) => {
       eliminaCarrito ? this.consultaBackEnd.borrarCart(this.usuario).subscribe(res => {
-        this.usuario = res.delCart
+        this.loadProductsCart()
         swal("Producto eliminado", {
           icon: "success",
           buttons: {
@@ -104,11 +104,10 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
             }
           },
         })
-        this.ngOnInit()
-      }, error =>{
+      }, error => {
         swal("No se pudo eliminar producto del carrito", {
           icon: "info",
-          text: 'Consulta con el admnistrador' +error
+          text: 'Consulta con el admnistrador' + error
         });
       }) :
         swal({
@@ -127,7 +126,6 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
       dangerMode: true,
     }).then((vaciarCarrito) => {
       vaciarCarrito ? this.consultaBackEnd.vaciarCart(this.usuario).subscribe(res => {
-        this.usuario = res.emptyCart
         swal("Haz eliminado todos los productos del carrito de compras", {
           icon: "success",
           buttons: {
@@ -139,7 +137,8 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
         }).then((value) => {
           if (value === "aceptar") this.ruta.navigate(['listado'])
         });
-      }, error =>{
+        this.loadProductsCart()
+      }, error => {
         swal("No se pudieron eliminar los productos del carrito de comprasa", {
           icon: "info",
           text: 'Consulta con el administrador ' + error
@@ -152,7 +151,7 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
     })
   }
 
-  aviso(){
+  aviso() {
     swal('Implementacion futura', 'Muy pronto se podran realizar los pagos en linea de forma rapida y segura', 'info')
   }
 

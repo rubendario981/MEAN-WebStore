@@ -66,7 +66,7 @@
 
 <!-- Ventana emergente para actualizar producto -->
 <div class="modal fade" id="editarProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <h5 class="modal-title text-white" id="exampleModalLabel">Ingresa los nuevos datos</h5>
@@ -123,7 +123,7 @@
                 <label>Selecciona la Categoria</label>
                 <select (change)='listarCategoria(producto.categoria)' class="form-control" name="categoria"
                   #categoria='ngModel' [(ngModel)]="producto.categoria">
-                  <option value="0">Elige una opcion </option>
+                  <option value="0" disabled>Elige una opcion </option>
                   <option *ngFor="let cat of listaCategorias"> {{cat.categoria}} </option>
                 </select>
               </div>
@@ -132,7 +132,7 @@
                 <label class="mt-3">Selecciona la SubCategoria</label>
                 <select class="form-control" name="subCategoria" #subCategoria='ngModel'
                   [(ngModel)]="producto.subCategoria" required>
-                  <option value="0">Elige una opcion </option>
+                  <option value="0" disabled>Elige una opcion </option>
                   <option *ngFor="let subCat of listaSubCategorias">{{subCat}}</option>
                 </select>
               </div>

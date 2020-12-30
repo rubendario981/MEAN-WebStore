@@ -7,23 +7,20 @@ import { ComunicandoComponentesService } from './modelos-servicios/ComunicandoCo
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, DoCheck {
-  numFavs: number
-  numCart: number
+  // numFavs: number
+  // numCart: number
 
   constructor(private comComponent: ComunicandoComponentesService){}
 
   ngOnInit(){
   }
   
-  ngDoCheck(){
-    //validando cambios en la cantidad de favoritos
-    if(this.comComponent.enviandoFavs()){
-      this.numFavs = this.comComponent.enviandoFavs()
-    }
-    //validando cambios en la cantidad del carrito 
-    if(this.comComponent.enviandoCantCarrito()){
-      this.numCart = this.comComponent.enviandoCantCarrito()
-    }
+  ngDoCheck(){    
   }
+  
+  // ngAfterContentChecked(){
+    // this.numFavs = this.comComponent.enviandoFavs()
+    // this.numCart = this.comComponent.enviandoCantCarrito()
+  // }
 
 }

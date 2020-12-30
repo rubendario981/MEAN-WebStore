@@ -6,6 +6,7 @@
           <table class="table table-striped table-responsive">
               <thead class="thead-dark">
                 <tr>
+                  <th class="col-1">No</th>
                   <th class="col-5">Descripcion</th>
                   <th class="col-2">Precio</th>
                   <th class="col-2">Enviar a carrito</th>
@@ -13,7 +14,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let prod of prodFavoritos">
+                <tr *ngFor="let prod of prodFavoritos; let i = index">
+                  <th>{{ i + 1 }}</th>
                   <th>{{prod.nombre}}</th>
                   <td>{{prod.precio | currency}}</td>
                   <td data-toggle="tooltip" data-placement="top" title="Enviar al carrito de compras">

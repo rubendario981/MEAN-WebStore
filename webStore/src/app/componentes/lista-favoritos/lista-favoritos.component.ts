@@ -18,6 +18,8 @@ export class ListaFavoritosComponent implements OnInit, DoCheck {
   
   public prodFavoritos: any
 
+  prodFirebase: any;
+
   public usuario: modeloUsuario = {
     _id: '',
     listaCompras: [],
@@ -36,6 +38,7 @@ export class ListaFavoritosComponent implements OnInit, DoCheck {
     private ruta: Router) {
       this.parametro = '../busqueda/'
       this.prodFavoritos = []
+      this.prodFirebase = []
   }
   
   ngOnInit() {
@@ -49,10 +52,10 @@ export class ListaFavoritosComponent implements OnInit, DoCheck {
     this.prodFavoritos = []
     this.consultaBackEnd.identificaUsuario(this.usuario._id).subscribe(res=>{
       this.usuario = res.findUser
-      this.comComp.mensajeroFavs(res.findUser.listaFavoritos.length)
-      this.comComp.mensajeroCarrito(res.findUser.listaCompras.length)
+      this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
+      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
       
-      if (res.findUser.listaFavoritos.length < 1) {
+      if (this.usuario.listaFavoritos.length < 1) {
         swal({
           title: "Lista de productos favoritos vacio",
           text: 'Navega por la pagina para agregar tus productos favoritos a la lista',
@@ -68,14 +71,7 @@ export class ListaFavoritosComponent implements OnInit, DoCheck {
     })    
   }
 
-  ngDoCheck(){
-    if(this.comComp.enviandoFavs() >= 0 && Array.isArray(this.usuario.listaFavoritos)){
-      this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
-    }
-    if(this.comComp.enviandoCantCarrito() >= 0 && Array.isArray(this.usuario.listaCompras)){      
-      this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
-    }
-  }
+  ngDoCheck(){}
 
   eliminaFav(idProd) {
     this.usuario.listaFavoritos = idProd
@@ -136,8 +132,9 @@ export class ListaFavoritosComponent implements OnInit, DoCheck {
     this.usuario.listaCompras = idProd
     this.consultaBackEnd.agregaCart(this.usuario).subscribe(res=>{
       this.usuario = res.addCart
-      console.log(this.usuario.listaCompras.length)
+      this.comComp.mensajeroFavs(this.usuario.listaCompras.length)
     })
     this.loadAmountFavsCart()
   }
+
 }

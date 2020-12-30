@@ -8,19 +8,19 @@
 
     <h2 class="title"><a [routerLink]="['/']">Colombia de todito </a></h2>
     <div *ngIf="userLogged" class="logos-header d-inline-flex justify-content-around">
-      <div data-toggle="tooltip" data-placement="top" title="Ir a mi carrito de compras">
+      <div data-toggle="tooltip" data-placement="top" title="Ir a mi carrito de compras con {{numCarrito}} productos">
         <label for="lbl3"></label>
-        <a id="lbl3" [routerLink]="['/carrito']">
-          <i class="fa fa-cart-plus fa-xs"></i>
-          <span *ngIf="numCarrito > 0" ><sup class="badge badge-pill badge-info ml-1" style="font-size: 0.7rem;">{{numCarrito}}</sup></span>
+        <a id="lbl3" [routerLink]="['/carrito']" class="text-decoration-none">
+          <i class="fas fa-cart-plus fa-xs"></i>
+          <span class="ml-1"><sup style="font-size: small;" >{{numCarrito}}</sup></span>
         </a>
       </div>
+
       <div data-toggle="tooltip" data-placement="top" title="En tus favoritos hay {{cantFav}} articulos">
         <label for="lbl4"></label>
-        <a id="lbl4" [routerLink]="['/favoritos']">
-          <i *ngIf="cantFav == 0" class="far fa-heart fa-xs"></i> 
-          <i *ngIf="cantFav >= 1" class="fa fa-heart fa-xs"></i> 
-          <span *ngIf="cantFav > 0" ><sup class="badge badge-pill badge-info ml-1" style="font-size: 0.7rem;">{{cantFav}}</sup></span>
+        <a id="lbl4" [routerLink]="['/favoritos']" class="text-decoration-none">
+          <i class="far fa-heart fa-xs"></i>
+          <span class="ml-1"><sup style="font-size: small;">{{cantFav}}</sup></span>
         </a>
       </div>
       <div data-toggle="tooltip" data-placement="top" title="Salir de la pagina">

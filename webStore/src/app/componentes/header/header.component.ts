@@ -1,8 +1,9 @@
-import { Component, OnInit, DoCheck, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
+import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
   styleUrls: ['./header.component.css'],
   providers: [AuthService, ProductoService]
 })
-export class HeaderComponent implements OnInit, DoCheck, OnChanges {
+export class HeaderComponent implements OnInit, DoCheck {
   public busqueda: String;
   public userLogged: boolean;
   
@@ -27,47 +28,32 @@ export class HeaderComponent implements OnInit, DoCheck, OnChanges {
   };
   
   public nombreUsuario: String;
-
-  @Input() cantFav: number
-  @Input() numCarrito: number
-
-  constructor(private ruta: Router, 
-    private auth: AuthService, 
-    private cBend: ProductoService) {
-  }
   
-  ngOnChanges(sc: SimpleChanges){
-    // console.log(sc)
-  }
+  cantFav: number
+  numCarrito: number
 
+  constructor(private ruta: Router, private auth: AuthService, private cBend: ProductoService, private comComp: ComunicandoComponentesService) {}
+  
   ngOnInit(): void {
     if (this.auth.identificaUsuario()) {
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
       this.validateAmountFavCart()
-      // this.cBend.validarFav(this.usuario._id).subscribe(res=>{
-      //   this.cantFav = res.validarFav.listaFavoritos.length
-      // })
     }
   }
 
   validateAmountFavCart(){
     this.cBend.identificaUsuario(this.usuario._id).subscribe(res => {        
-      this.numCarrito = res.findUser.listaCompras.length
-      this.cantFav = res.findUser.listaFavoritos.length
-      this.usuario.nombres = res.findUser.nickName
-      this.nombreUsuario = res.findUser.nickName
-      if (!this.nombreUsuario) {
-        this.nombreUsuario = res.findUser.nombres
-      }
-    },
-      error => {
-        console.log(error)
-      }
-    )
+      this.usuario = res.findUser
+      this.cantFav = this.comComp.mensajeroFavs(this.usuario.listaFavoritos.length)
+      this.numCarrito = this.comComp.mensajeroCarrito(this.usuario.listaCompras.length)
+      this.usuario.nickName ? this.nombreUsuario = this.usuario.nickName : this.nombreUsuario = this.usuario.nombres
+    }, error => console.log(error))
   }
-
+  
   ngDoCheck() {
     this.userLogged = this.auth.usuarioLogueado();
+    this.cantFav = this.comComp.enviandoFavs()
+    this.numCarrito = this.comComp.enviandoCantCarrito()
   }
 
   buscar() {

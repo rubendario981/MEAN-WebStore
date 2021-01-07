@@ -150,7 +150,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     if(!this.auth.usuarioLogueado()){
       swal({
         title: 'Es necesario registrarse en la pagina',
-        text: 'Para administrar tus favoritos o el carrito de comprar, por favor registrate en la pagina',
+        text: 'Para administrar tus favoritos o el carrito de comprar, por favor registrate en la pagina \n Desea regristrase?',
         icon: 'info',
         buttons: [true, true]        
       }).then((registrarUsuario)=>{

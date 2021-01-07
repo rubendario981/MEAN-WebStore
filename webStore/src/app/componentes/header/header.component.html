@@ -2,7 +2,8 @@
   <div class="header-grid">
     <div class="logo">
       <a [routerLink]="['/']">
-        <img src="../../../assets/img/logotienda.png" width="100" height="auto" alt="logo tienda">
+        <!-- <img src="../../../assets/img/logotienda.png" width="100" height="auto" alt="logo tienda"> -->
+        <i class="fas fa-gem fa-3x" style="color: #007bff;"></i>
       </a>
     </div>
 
@@ -41,25 +42,24 @@
       <div class="d-inline-flex" data-toggle="tooltip" data-placement="top" title="Registrate en nuestra pagina">
         <a [routerLink]="['/registro']">
           <i class="fa fa-user-plus fa-xs mr-2"></i>
+          <label for="registro"><small>Registro</small></label>
         </a>
-        <label for="registro" class="d-block"><small>Registro</small></label>
       </div>
       <div class="d-inline-flex ml-4" data-toggle="tooltip" data-placement="top" title="Inicio session">
         <a [routerLink]="['/inicioSesion']">
           <i class="fa fa-key fa-xs mr-2"></i>
+          <label for="inicioSession"><small>Inicio sesion</small></label>
         </a>
-        <label for="inicioSession" class="d-block" ><small>Inicio sesion</small></label>
       </div>
     </div>
 
     <div class="form-search">
-      <form class="form-inline flex-nowrap">
-        <input class="form-control" type="search" placeholder="Ingresa tu busqueda..." name="busqueda" id="busqueda"
-          [(ngModel)]="busqueda" />
-        <button class="btn btn-outline-secondary pt-0" type="submit" (click)='buscar()' aria-label="busqueda">
-          <i class="fa fa-search"></i>
-        </button>
-      </form>
+      <div class="input-group input-group-sm mb-3">
+        <input type="text" class="form-control" placeholder="Ingresa tu busqueda" [(ngModel)]='busqueda'>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary btn-sm" type="button" (click)='buscar()'> <i class="fa fa-search fa-xs"></i></button>
+        </div>
+      </div>
     </div>
   </div>
 </header>

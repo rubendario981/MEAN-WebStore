@@ -1,17 +1,17 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light">
-  <a class="navbar-brand d-sm-none" href="#">Categorias</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
+  <a class="navbar-brand d-md-none" href="#">Categorias</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuCategorias"
+    aria-controls="menuCategorias" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="list-group list-group-horizontal-md menu mx-auto">
-      <li class="list-group-item list-group-item-action list-group-item-info w-50" *ngFor="let cat of categorias">
-        <a class="text-decoration-none stretched-link px-4" [routerLink]="['busqueda/', cat.categoria]">{{cat.categoria}}</a>
+  <div class="collapse navbar-collapse" id="menuCategorias">
+    <ul class="navbar-nav menu">  
+      <li class="nav-item" *ngFor="let cat of categorias">
+        <a class="nav-link px-lg-2" [routerLink]="['busqueda/', cat.categoria]">{{cat.categoria}}</a>
         <ul class="list-group list-group-flush subMenu">
-          <li class="list-group-item list-group-item-action list-group-item-secondary" *ngFor="let subCat of cat.subCategoria">
-            <a class="text-decoration-none ml-2 stretched-link" [routerLink]="['busqueda/', subCat]">{{subCat}}</a>
+          <li class="list-group-item list-group-item-action list-group-item-primary" *ngFor="let subCat of cat.subCategoria">
+            <a class="text-decoration-none text-nowrap ml-2 stretched-link pr-4" [routerLink]="['busqueda/', subCat]">{{subCat}}</a>
           </li>
         </ul>
       </li>

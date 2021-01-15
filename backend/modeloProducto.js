@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var EsquemaProducto = new Schema({
+var EsquemaProducto = Schema({
     nombre: String,
     marca: String,
     descripcion: String,
@@ -13,6 +13,6 @@ var EsquemaProducto = new Schema({
     tiempoPromo: Date,
     fecha: {type: Date, default: Date.now},
     imagen: String
-}, {versionKey: false, timestamps: true});
+}, {versionKey: false});
 
 module.exports = mongoose.model('Producto', EsquemaProducto);

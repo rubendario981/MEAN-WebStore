@@ -7,6 +7,7 @@ var bcrypt = require('bcrypt');
 var JWT = require('jsonwebtoken')
 var fs = require('fs');
 const { resolve } = require('path');
+const { type } = require('os');
 var cat;
 var prod, token, usu;
 
@@ -76,7 +77,6 @@ var controlador = {
     crearCategoria: async (req, res) => {
         cat = new Categorias()
         cat.categoria = req.body.categoria
-        console.log(req.body.categoria)
         
         const findCat = await Categorias.findOne({ categoria: req.body.categoria })
         if (findCat) return res.status(402).send({ mensaje: 'ya existe la categoria ' })
@@ -114,12 +114,10 @@ var controlador = {
         const productCreated = await prod.save()
         if (!productCreated) res.status(404).send({ mensaje: 'No se pudo crear el producto' })
         return res.send({ mensaje: 'ok', productCreated })
-
     },
 
     /* **************************** */
     listarProductos: async (req, res) => {
-
         const listaProductos = await Producto.find({}).sort({ fecha: -1 })
         if (!listaProductos) return res.status(404).send({ mensaje: 'De momento no se pueden listar productos' })
         res.send({ mensaje: 'ok', listaProductos })
@@ -135,20 +133,6 @@ var controlador = {
         })
     },
 
-    /************************************** */
-    listarCategorias: async (req, res) => {        
-        const listCategories = await Categorias.find({}, {categoria: 1, subCategoria: 1})
-        !listCategories ? res.status(404).send({mensaje: 'No hay listado de categorias'}):
-        res.status(200).send({mensaje: 'ok', listCategories})
-    },
-    
-    /************************************** */
-    listarCategoriasNuevas: async (req, res) => {        
-        const listaCat = await Categorias.find({}, { categoria: 1, _id: 0 })
-        if (!listaCat) return res.status(404).send({ mensaje: 'No hay listado de categorias ' })
-        return res.send({mensaje: 'ok', listaCat})
-    },
-
     /********************************** */
     listarTags: async (req, res) => {
         const listado = [];
@@ -160,31 +144,66 @@ var controlador = {
         return res.send({mensaje: 'ok', listado})
     },
 
+    /************************************** */
+    listarCategorias: async (req, res) => {        
+        const listCategories = await Categorias.find({}, {categoria: 1, subCategoria: 1})
+        !listCategories ? res.status(404).send({mensaje: 'No hay listado de categorias'}):
+        res.status(200).send({mensaje: 'ok', listCategories})
+    },
+
     /************************************ */
     listarSubCategorias: async (req, res) => {        
-        const listaSubCat = await Categorias.findOne({categoria: req.params.cat}, { subCategoria: 1, _id: 0 })
+        const listaSubCat = await Categorias.findOne({categoria: req.params.cat}, { subCategoria: 1})
         if (!listaSubCat) return res.status(404).send({ mensaje: 'No hay listado de SubCategorias ' })
         
         return res.send({mensaje: 'ok', listaSubCat})
     },
+    
+    /************************************ */
+    restoreCategories: async(req, res)=>{
+        const findCategories = await Producto.find({}, {_id: 0, categoria: 1})
+        
+        const arrCategories = []
+        findCategories.forEach(el => {
+            if(!arrCategories.includes(el.categoria)) arrCategories.push(el.categoria) 
+        });
+
+        arrCategories.forEach(async el => {
+            const findCategory = await Categorias.findOne({categoria: el})
+            if(!findCategory){
+                Categorias.insertMany({categoria: el}) 
+            } 
+        });
+
+        arrCategories.forEach(async el => {
+            const arrSubCats = []
+            const findSubCategories = await Producto.find({categoria: el}, {subCategoria: 1, _id: 0})
+            findSubCategories.forEach(async el => {
+                if(!arrSubCats.includes(el.subCategoria)) arrSubCats.push(el.subCategoria)  
+            });
+            console.log(el, arrSubCats)
+            Categorias.findOneAndUpdate({categoria: el}, {subCategoria: arrSubCats}).exec((err, res)=>err? console.log(err + '*-*'): console.log(res + '-.-'))
+        }); 
+    },
 
     /************************************ */
     eliminarCategoria: async (req, res) => {
-        const params = req.body
-        const categoriaVacia = await Producto.find({categoria: req.params.cat})
-        if(categoriaVacia.length == 0) {
-            const eliminaCat = await Categorias.findOneAndDelete({categoria: req.params.cat})
-            if(!eliminaCat) return res.status(400).send({mensaje:'No se pudo eliminar categoria'})
-            res.send({mensaje: 'categoria eliminada' })
-        }
-        else{
-            res.send({mensaje: 'ok', longitud: categoriaVacia.length})
-        }        
+        const deleteCat = await Categorias.findOneAndDelete({_id: req.params.cat})
+        return deleteCat ? res.status(200).send({mensaje: 'ok'}):
+        res.status(404).send({mensaje: 'No se pudo eliminar la categoria'})        
+    },
+    
+    /************************************ */
+    eliminarSubCategoria: async (req, res) => {
+        const findCategory = Categorias.findOne({_id: req.params.idCat})
+
+        const deleteSubCat = await Categorias.findOneAndUpdate({id: findCategory._id}, {$pull:{'subCategoria': req.params.subCat}})
+        return deleteSubCat ? res.status(200).send({mensaje: 'ok'}):
+        res.status(404).send({mensaje: 'No se pudo eliminar la subcategoria \n' + req.params.subCat, error})        
     },
 
     /********************************** */
     validaFav: async (req, res) => {
-        var params = req.body
         var idUsuario = req.params.id        
 
         const validarFav = await Usuario.findById({_id: idUsuario}, {listaFavoritos: 1, _id:0})
@@ -274,11 +293,11 @@ var controlador = {
     actualizarProducto: (req, res) => {
         var params = req.body
         var idProducto = req.params.id;
-        Producto.findOneAndUpdate({_id: idProducto }, params, { new: true }).exec((err, actualizado)=>{
+        Producto.findOneAndUpdate({_id: idProducto }, params, { new: true }, (err, actualizado)=>{
             if(err) return res.status(500).send({mensaje:'error', err})
             if(!actualizado) return res.status(404).send({mensaje:'No actualizado'})
             return res.send({mensaje: 'ok', actualizado})
-        })       
+        })
     },
 
     /* **************************** */
@@ -316,43 +335,50 @@ var controlador = {
     /*************************************** */
     subirImagen: async (req, res) => {
         var idProd = req.params.id;
-
         prod = new Producto();
 
         if (req.files.file0.type == null) {
-            res.status(400).send({
-                mensaje: 'Imagen no subida'
-            })
+            return res.status(400).send({mensaje: 'Imagen no subida'})
         }
 
         var rutaArchivo = req.files.file0.path;
         var ext = rutaArchivo.split('.')[1];
         var nomArchivo = rutaArchivo.split('\\')[1]
 
-        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) res.status(400).send({ mensaje: 'solo imagenes' })
+        if (!(ext == 'jpg' || ext == 'jpeg' || ext == 'gif' || ext == 'png' || ext == 'svg')) return res.status(400).send({ mensaje: 'solo imagenes' })
 
         if (idProd) {
             try {
                 const uploadImage = await Producto.findOneAndUpdate({ _id: idProd }, { imagen: nomArchivo }, { new: true })
                 if (!uploadImage) return res.status(500).send({ mensaje: 'No se encontro el producto'})
-                return res.status(200).send({ mensaje: 'imagen subida', imagen: uploadImage })
+                return res.status(200).send({ mensaje: 'Imagen actualizada', imagen: uploadImage })
                 
             } catch (error) {
-                return res.status(500).send({mensaje: 'No valido el parametro'})
-            }
-            
-        }
-        else {
+                return res.status(500).send({mensaje: 'No fue posible', error})
+            }            
+        }else {
             return res.status(200).send({
-                mensaje: 'producto actualizado',
+                mensaje: 'Imagen subida',
                 imagen: nomArchivo
             })
         }
-
     },
-
+    
     /************************** */
+    deleteImage: (req, res)=>{
+        const rutaImagen = `imgProductos/${req.params.nombreArchivo}`
 
+        fs.stat(rutaImagen, (err, stat)=>{err ?(
+            res.status(404).send({mensaje: 'No existe imagen', err})):(
+                fs.unlink(rutaImagen, (noDelete, deleted)=>{ noDelete ? (
+                    res.status(204).send({mensaje: 'No se pudo borrar', noDelete})):(
+                        res.status(200).send({mensaje: 'Imagen eliminada', deleted})
+                    )}
+                )
+            )
+        })
+    }
+    /************************** */
 };
 
 module.exports = controlador;

@@ -24,7 +24,6 @@ router.get('/identificarUsuario/:id', controlador.identificarUsuario);
 router.delete('/eliminarUsuario/:id', controlador.eliminarUsuario);
 router.get('/listarProductos', controlador.listarProductos);
 router.get('/listarCategorias', controlador.listarCategorias);
-router.get('/listarCategoriasNuevas', controlador.listarCategoriasNuevas);
 router.get('/listarSubCategorias/:cat', controlador.listarSubCategorias);
 router.get('/listarTags', controlador.listarTags);
 router.get('/mostrarImagen/:imagen?', controlador.mostrarImagen);
@@ -34,6 +33,8 @@ router.get('/detalleProducto/:id?', controlador.detalleProducto);
 router.get('/buscar/:id', controlador.buscar);
 router.put('/actualizaProducto/:id', controlador.actualizarProducto);
 router.delete('/eliminarCategoria/:cat', controlador.eliminarCategoria);
+router.delete('/eliminarSubCategoria/:idCat/:subCat', controlador.eliminarSubCategoria);
+router.get('/restoreCategories', controlador.restoreCategories);
 router.delete('/eliminarProducto/:id', validarToken, controlador.eliminarProducto);
 
 //ruta para buscar en la base de datos por palabra
@@ -41,5 +42,6 @@ router.get('/busqueda/:var', controlador.busqueda);
 
 //ruta para subir una imagen
 router.post('/subirImagen/:id?', cargaArchivos, controlador.subirImagen)
+router.delete('/deleteImagen/:nombreArchivo', cargaArchivos, controlador.deleteImage)
 
 module.exports = router;

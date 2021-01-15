@@ -29,8 +29,8 @@
 
 <div class="busqueda" *ngIf='arrayProductos?.length > 0'>
   <h2 class="text-center font-weight-bolder mt-4 mb-4">Se han encontrado los siguientes productos</h2>
-  <main class="listadoProductos">
-    <div class="card producto" *ngFor='let producto of arrayProductos'>
+  <main class="productos">
+    <div class="card" *ngFor='let producto of arrayProductos'>
       <img src="{{url + 'mostrarImagen/' + producto.imagen}}" class="card-img-top" alt={{producto.nombre}}>
       <div class="card-body">
         <h4 class="card-title font-weight-bolder text-center">{{producto.nombre}}</h4>

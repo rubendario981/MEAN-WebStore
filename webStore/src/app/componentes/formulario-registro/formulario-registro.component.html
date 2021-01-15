@@ -1,47 +1,54 @@
 <div class="container">  
-  <div class="col-12 col-sm-10 col-md-7 col-lg-5 mx-auto my-4">
+  <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto my-4">
     <div class="card border border-primary">
       <h5 class="card-header text-center bg-primary text-white p-2">Suscribete</h5>
       <div class="card-body">
-        <form name="regUser" #regUser="ngForm" (ngSubmit)="registrarUsuario()">
+        <form [formGroup]='formRegistro' (ngSubmit)="registrarUsuario()">
           <div class="form-group">
-            <label for="lbl" class="mt-2 mb-n2">Nombres y apellidos</label>
-            <input id="lbl" type="text" class="form-control" name="nombres" #nombres='ngModel' [(ngModel)]="usuario.nombres"
-              placeholder="Ingresa tus nombres" required />
-            <small *ngIf="!nombres.valid && nombres.touched" class="text-danger">El campo es requerido</small>
+            <label for="datosUsuario">Nombres y apellidos</label>
+            <input type="text" name="datosUsuario" class="form-control" formControlName="nombres" placeholder="Ingresa tus nombres" (keypress)='soloLetras($event)'> 
+            <div *ngIf="formRegistro.get('nombres').errors && formRegistro.get('nombres').touched">
+              <small *ngIf="formRegistro.get('nombres').hasError('required')" class="text-danger">El campo es requerido</small>                 
+              <small *ngIf="formRegistro.get('nombres').hasError('minlength')" class="text-danger">Debe tener minimo 6 caracteres</small>                    
+              <small *ngIf="formRegistro.get('nombres').hasError('maxlength')" class="text-danger">Maximo 18 caracteres</small>
+            </div>
           </div>
-    
+
           <div class="form-group">
-            <label for="lbl2"  class="mt-1 mb-n2">Correo electronico</label>
-            <input id="lbl2" type="email" class="form-control" name="correo" #correo='ngModel' [(ngModel)]="usuario.correo" 
-              placeholder="Ingresa tu correo electronico" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required />
-            <small *ngIf="!correo.valid && correo.touched" class="text-danger">El campo es requerido</small>
+            <label for="email">Correo electronico</label>
+            <input type="email" name="email" class="form-control" formControlName="correo" placeholder="Ingresa tu correo electronico">
+            <div *ngIf="formRegistro.get('correo').errors && formRegistro.get('correo').touched">
+              <small *ngIf="formRegistro.get('correo').hasError('required')" class="text-danger">Ingresa tu direccion correo</small>
+              <small *ngIf="formRegistro.get('correo').hasError('pattern')" class="text-danger">Formato de correo no valido</small>
+            </div>
           </div>
-    
+
           <div class="form-group">
-            <label for="lbl3" class="mt-1 mb-n2">NickName <small class="text-muted">(no es obligatorio)</small></label>
-            <input id="lbl3" type="text" name="nickName" class="form-control" #nickName='ngModel' [(ngModel)]="usuario.nickName"
-              placeholder="Ingresa un nick" />
+            <label for="nickName">NickName <small class="text-muted">No requerido</small> </label> 
+            <input type="text" name="nickName" class="form-control" formControlName="nickName" placeholder="Elige un alias">
+            <small *ngIf="formRegistro.get('nickName').hasError('minlength')" class="text-danger">No requerido, pero si se desea minimo 6 caracteres</small>            
           </div>
-    
+          
           <div class="form-group">
-            <label for="lbl4" class="mt-1 mb-n2">Ingresa la contraseña</label>
-            <input id="lbl4" type="password" name="clave" class="form-control" #clave='ngModel' [(ngModel)]="usuario.password"
-              placeholder="Ingresa la contraseña" required />
-            <small *ngIf="!clave.valid && clave.touched" class="text-danger">El campo es requerido</small>
+            <label for="password">Ingresa la contraseña</label>
+            <input type="password" name="password" class="form-control" formControlName="password" placeholder="Contraseña">
+            <div *ngIf="formRegistro.get('password').errors && formRegistro.get('password').touched">
+              <small *ngIf="formRegistro.get('password').hasError('required')" class="text-danger">El campo de contraseña es requerido</small>
+              <small *ngIf="formRegistro.get('password').hasError('minlength')" class="text-danger">Minimo 6 caracteres</small>
+            </div>            
           </div>
-    
+
           <div class="form-group">
-            <label for="lbl5" class="mt-1 mb-n2">Repetir contraseña</label>
-            <input id="lbl5" type="password" name="clave2" class="w-100 rounded border border-gray pl-2 py-1" #clave2='ngModel' [(ngModel)]="usuario.password2"
-              placeholder="Repite la contraseña" required />
-            <small *ngIf="!clave2.valid && clave2.touched" class="text-danger">El campo es requerido</small>
-          </div>    
-          <div *ngIf="conincidePass()" class="text-danger">Las contraseñas no coinciden</div>
-    
-          <div class="cont-btns d-flex justify-content-around my-4">
-            <button class="btn btn-success" type="submit" [disabled]="!regUser.valid || conincidePass()"> Registrarse </button>
-            <button class="btn btn-danger" (click)="cancela()"> Cancelar </button>
+            <label for="password2">Ingresa de nuevo la contraseña</label>
+            <input type="password" name="password2" class="form-control" formControlName="password2" placeholder="Repite la contraseña">
+            <small *ngIf="formRegistro.get('password').hasError('required') && formRegistro.get('password2').touched" class="text-danger">Repite la contraseña</small>            
+            <small *ngIf="!validaPass(formRegistro.get('password').value, formRegistro.get('password2').value) && formRegistro.get('password2').touched" class="text-danger">Las contraseñas no coinciden</small>
+          </div>
+          
+          <div class="d-flex flex-column flex-md-row justify-content-around">
+            <button type="submit" class="btn btn-success btn-sm mb-2" [disabled]="!formRegistro.valid || !validaPass(formRegistro.get('password').value, formRegistro.get('password2').value)">Enviar formulario</button>
+            <button type="reset" class="btn btn-danger btn-sm mb-2">Borrar formulario</button>
+            <button type="button" class="btn btn-info btn-sm mb-2" [routerLink]="['/']">Ir al inicio</button>
           </div>
         </form>
       </div>

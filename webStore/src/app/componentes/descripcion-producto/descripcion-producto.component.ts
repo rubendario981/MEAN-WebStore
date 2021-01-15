@@ -7,8 +7,6 @@ import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 import swal from 'sweetalert';
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
-import { date } from '@ng-validators/ng-validators';
 
 @Component({
   selector: 'app-descripcion-producto',
@@ -41,7 +39,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   public cartButton = false
   public tituloFavorito  = 'Agregar a mis favoritos'
   public tituloCarrito = 'Agregar al carrito de compras'
-  public fecha = new Date()
+  public fecha = new Date().toISOString().slice(0, 10)
   public fechaPromo: any
 
   constructor(private consultaBackend: ProductoService, 
@@ -130,20 +128,14 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   editarProducto() {
     //funcion de proceso administracion pagina
     if(this.producto.precioPromo > this.producto.precio){
-      swal('Error para establecer promocion', 'El precio de la promocion debe ser menor al precio original', 'error')
+      return swal({title: 'Error para establecer promocion', text:'El precio de la promocion debe ser menor al precio original', timer: 2500, icon: 'warning'})
     }
-    else{
-      this.fechaPromo = new Date()
-      if(this.producto.tiempoPromo){
-        this.fechaPromo.setDate(this.fecha.getDate() + parseInt(this.producto.tiempoPromo)) 
-        this.producto.tiempoPromo = this.fechaPromo
-      }
-      this.consultaBackend.editarProducto(this.producto).subscribe(res => {
-        swal("Proceso exitoso", "El producto ha sido actualizado", "success");      
-      },
-        error => swal('Proceso fallido', 'No se pudo editar producto' + error , 'warning')
-      )
+    if(!this.producto.nombre || !this.producto.marca || !this.producto.categoria|| !this.producto.precio|| !this.producto.categoria|| !this.producto.descripcion){
+      return swal({title: 'No se puede editar el producto', text:'Validar campos requeridos', timer: 5000, icon: 'info'})
     }
+    this.consultaBackend.editarProducto(this.producto).subscribe(res => {
+      swal({title:"Proceso exitoso", text:"El producto ha sido actualizado" + res.mensaje, icon:"success", timer: 2000});      
+    }, error => swal('Proceso fallido', 'No se pudo editar producto' + error , 'warning'))
   }
 
   validarUsuario(){
@@ -214,44 +206,45 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
       icon: "warning",
       buttons: [true, true],
       dangerMode: true,
-    }).then((eliminarProducto) => {
-      if (eliminarProducto) {
+    }).then((value) => {
+      if (value) {
         this.consultaBackend.eliminarProducto(this.producto._id).subscribe(res => {
           swal("El producto ha sido eliminado", {
             icon: "success",
-            buttons: {
-              ok: {
-                text: "Enterado",
-                value: "aceptar",
-              }
-            },
-          }).then((value) => {
-            if (value === "aceptar") this.ruta.navigate(['listado'])
-          });
+            timer: 3000,
+            text: res.mensaje
+          }).then(() => {this.ruta.navigate(['listado'])});
         },
           error => {
-            swal("No se pudo eliminar el producto", {
-              icon: "info",
-              text: error
-            });
+            swal("No se pudo eliminar el producto", { icon: "info", text: error});
           }
         )
-        //una vez eliminado el producto verificar si la categoria quedo vacia para proceder a eliminar
-        this.consultaBackend.eliminarCategoria(this.producto.categoria).subscribe(res=>{
-          console.log(`Se ha eleminado la categria si queda vacia la categoria ${res}`)
-        })
       } else {
         swal({
           title: "Cancelado proceso de eliminacion",
-          text: "No se ha eliminado el producto"
+          text: "No se ha eliminado el producto",
+          timer: 1200
         });
       }
-      this.ruta.navigate(['detallesProducto/', this.producto._id])
     });
   }
 
   DocUpload(event) {
     this.producto.imagen = event.body.imagen
+  }
+
+  deleteImage(e){
+    swal({title: 'Eliminacion de imagen', 
+    text: 'Proceso de eliminacion de imagen, no se podra recuperar la imagen, desea continuar?', 
+    buttons: [true, true],
+    icon: 'warning',
+    closeOnClickOutside: true,
+    closeOnEsc: true,
+    dangerMode: true}).then((value)=>{
+      value ? (this.consultaBackend.borrarImagen(e).subscribe(res=>{
+        swal({title: 'Imagen borrada', text: res.mensaje + 'proceso exitoso', icon: 'success', timer: 1200}) , this.producto.imagen = ''
+      })) : swal({text: 'No se ha borrado la imagen', icon: 'info', timer: 1200})
+    })    
   }
 
   cancela() {

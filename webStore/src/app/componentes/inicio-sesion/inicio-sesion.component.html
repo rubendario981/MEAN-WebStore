@@ -1,19 +1,27 @@
 <div class="inicioSesion" style="background-image: url(../../../assets/img/undraw_Lighthouse_frb8.svg);">
   <div class="card d-flex">
     <h4 class="card-header text-center bg-primary text-white">Modulo para inicio de sesion</h4>
-    <form class="card-body" #login="ngForm" (ngSubmit)="ingresar()">
+    <form class="card-body" [formGroup]="login" (ngSubmit)="ingresar()">
       <div class="form-group input-group-sm">
-        <label for="lbl1" class="mt-1 mb-0">Correo electronico </label>
-        <input id="lbl1" class="form-control" type="text" name="correo" placeholder="Ingresa tu correo electronico " #correo="ngModel" [(ngModel)]="usuario.correo"/>        
+        <label for="correo" class="mt-1 mb-0">Correo electronico </label>
+        <input class="form-control" type="text" name="correo" placeholder="Ingresa tu correo electronico " formControlName="correo" [(ngModel)]="usuario.correo"/>  
+        <div class="text-danger" *ngIf="login.get('correo').errors && login.get('correo').touched">
+          <small *ngIf="login.get('correo').hasError('required')"> El campo de correo es requerido </small>      
+          <small *ngIf="login.get('correo').hasError('pattern')"> Formato de correo electronico no valido </small>      
+        </div>      
       </div>
       
       <div class="form-group input-group-sm">
         <label for="lbl2" class="mt-1 mb-0">Contraseña</label>
-        <input id="lbl2" class="form-control" type="password" name="password" placeholder="Ingresa tu contraseña" #password="ngModel" [(ngModel)]="usuario.password" />
+        <input id="lbl2" class="form-control" type="password" name="password" placeholder="Ingresa tu contraseña" formControlName="password" [(ngModel)]="usuario.password" />
+        <div class="text-danger" *ngIf="login.get('password').errors && login.get('password').touched">
+          <small *ngIf="login.get('correo').hasError('required')"> El campo de correo es requerido </small>      
+        </div>      
       </div>
-      <div class="grupoBotones">
-        <button class="btn btn-primary" type="submit">Ingresar</button>
-        <button class="btn btn-danger" (click)="cancela()">Cancelar</button> 
+      <div class="d-flex flex-column flex-sm-row justify-content-around">
+        <button class="btn btn-primary btn-sm mb-2" type="submit" [disabled]="login.invalid">Ingresar</button>
+        <button class="btn btn-warning btn-sm mb-2" type="reset">Limpiar formulario</button>
+        <button class="btn btn-danger btn-sm mb-2" (click)="cancela()">Cancelar</button> 
       </div>
     </form>
   </div>

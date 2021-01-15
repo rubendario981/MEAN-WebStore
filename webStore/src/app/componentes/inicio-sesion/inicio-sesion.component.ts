@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductoService } from '../../modelos-servicios/producto.service'
 import swal from 'sweetalert'
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-inicio-sesion',
@@ -10,7 +11,8 @@ import swal from 'sweetalert'
   providers: [ProductoService]
 })
 export class InicioSesionComponent implements OnInit {
-  public usuario : any
+  usuario: any
+  login: FormGroup;
 
   constructor(private _router: Router, private consultaBackend: ProductoService) {
     this.usuario = {
@@ -20,22 +22,28 @@ export class InicioSesionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.login = new FormGroup({
+      correo: new FormControl(null, [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]),
+      password: new FormControl(null, [Validators.required])
+    })
   }
 
   ingresar(){ 
+    this.usuario = this.login.value
     this.consultaBackend.inicioSesion(this.usuario).subscribe(res=>{
       if(res.mensaje == 'ok') {
         swal("Bienvenido", {
           text: `Bienvenido ${this.usuario.correo}`,
-          icon: "info",              
+          icon: "info",
+          timer: 2000          
           });
           localStorage.setItem('token', res.token)
           this._router.navigate(['listado'])
       }
     },
       error=>{
-        swal("Error al ingresar", 'Credenciales invalidad, intenta de nuevo ' + error.statusText, "warning");
-        this.usuario = {correo: '', password: ''}
+        swal("Error al ingresar", 'Credenciales invalidas, intenta de nuevo ' + error.statusText, "warning");
+        this.login.reset()
       }
     )
   }

@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit, DoCheck {
   ngDoCheck() {
     this.userLogged = this.auth.usuarioLogueado();
     this.cantFav = this.comComp.enviandoFavs()
-    this.numCarrito = this.comComp.enviandoCantCarrito()
+    this.numCarrito = this.comComp.enviandoCantCarrito();
   }
 
   buscar() {

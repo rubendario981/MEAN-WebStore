@@ -1,7 +1,6 @@
 <h2 class="text-center font-weight-bolder mt-2 tituloListado">Nuestro catalogo de productos variados</h2>
-<main class="listadoProductos">  
-  <!-- Esta es modelado con display grid -->
-  <div class="card producto" *ngFor='let modeloProducto of producto'>
+<main class="productos">  
+  <div class="card" *ngFor='let modeloProducto of producto'>
     <div *ngIf='modeloProducto.imagen; then imgProd else noImg'></div>
     <ng-template #imgProd>
       <img src="{{url + 'mostrarImagen/' + modeloProducto.imagen}}" class="card-img-top pt-1" alt={{modeloProducto.nombre}}>

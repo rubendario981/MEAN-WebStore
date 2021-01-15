@@ -1,16 +1,16 @@
 export class modeloProducto{
     constructor(
-        public _id: String,
-        public nombre: String,
-        public marca: String,
-        public descripcion: String,
-        public categoria: String,
-        public subCategoria: String,
-        public precio: Number,
-        public precioPromo: Number,
+        public _id: string,
+        public nombre: string,
+        public marca: string,
+        public descripcion: string,
+        public categoria: string,
+        public subCategoria: string,
+        public precio: number,
+        public precioPromo: number,
         public tiempoPromo: any,
         public fecha: Date,
-        public imagen: String,
+        public imagen: string,
         public updatedAt: any
     ){}
 }

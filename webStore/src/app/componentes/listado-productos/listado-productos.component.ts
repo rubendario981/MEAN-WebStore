@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloProducto } from  '../../modelos-servicios/modeloProducto';
 import { variable } from '../../modelos-servicios/constantes'
+import { AuthService } from 'src/app/modelos-servicios/auth.service';
 
 @Component({
   selector: 'app-listado-productos',
@@ -15,7 +16,7 @@ export class ListadoProductosComponent implements OnInit {
   public url: String;
   public fecha: Date;
 
-  constructor(private consultaBackend: ProductoService) { 
+  constructor(private consultaBackend: ProductoService, private auth: AuthService) { 
     this.url = variable.url;
     this.fecha = new Date()
   }
@@ -28,4 +29,5 @@ export class ListadoProductosComponent implements OnInit {
       console.log(err);
     })
   }
+
 }

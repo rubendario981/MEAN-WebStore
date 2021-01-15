@@ -22,6 +22,10 @@ export class ProductoService {
         return this._http.get(this.url + 'listarCategorias')
     }
 
+    restoreCategories(): Observable<any>{
+        return this._http.get(`${this.url}restoreCategories`)
+    }
+
     listarTags(): Observable<any> {
         return this._http.get(this.url + 'listarTags')
     }
@@ -56,6 +60,10 @@ export class ProductoService {
         return this._http.post(this.url + 'crearProducto', params, { headers: headers })
     }
 
+    borrarImagen(rutaArchivo): Observable<any> {
+        return this._http.delete(this.url + 'deleteImagen/'+ rutaArchivo)
+    }
+
     detalleProducto(idProducto): Observable<any> {
         return this._http.get(this.url + 'detalleProducto/' + idProducto)
     }
@@ -68,6 +76,10 @@ export class ProductoService {
 
     eliminarCategoria(categoria): Observable<any> {
         return this._http.delete(this.url + 'eliminarCategoria/' + categoria)
+    }
+
+    eliminarSubCategoria(id, cat): Observable<any> {
+        return this._http.delete(this.url + 'eliminarSubCategoria/' + id + '/'+ cat)
     }
 
     validarFav(idUsuario): Observable<any>{

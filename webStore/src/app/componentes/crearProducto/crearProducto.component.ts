@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/modelos-servicios/auth.service'
 import { variable } from '../../modelos-servicios/constantes'
 import swal from 'sweetalert'
 import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-crearProducto',
@@ -40,30 +41,32 @@ export class CrearProductoComponent implements OnInit, DoCheck {
   
   listaCategorias: []
   listaSubCategorias: []
+  idCategoria = ''
 
-  url: String
+  url = variable.url
+  
+  nowDate = new Date().toISOString().slice(0, 10);
+  formularioProducto: FormGroup;
 
   constructor (private _router: Router, private consultaBackend: ProductoService, 
     private auth: AuthService, private comComp: ComunicandoComponentesService) {
-      this.url = variable.url    
-      this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '')
+      
+      this.producto = new modeloProducto('', '', '', '', '', '', null, null, null, null, '', '') 
+
       this.nuevaSubCategoria = new modeloCategorias('', '')
   }
 
   afuConfig = {
     multiple: false,
-    formatsAllowed: ".jpg,.png",
-    maxSize: "1",
+    formatsAllowed: ".jpg, .png, .gif, .jpeg",
+    maxSize: "50",
     uploadAPI: {
-      url: 'http://localhost:3000/subirImagen/'
-    },headers: {
-      "Content-Type" : "text/plain;charset=UTF-8"
-       },
-    theme: "attachPin",
-    hideProgressBar: true,
+      url: this.url + 'subirImagen/'
+    },
+    theme: 'attachPin',
+    hideProgressBar: false,
     hideResetBtn: false,
     hideSelectBtn: false,
-    fileNameIndex: true,
     replaceTexts: {
       selectFileBtn: 'Select Files',
       resetBtn: 'Reset',
@@ -71,7 +74,7 @@ export class CrearProductoComponent implements OnInit, DoCheck {
       attachPinBtn: 'Selecciona la imagen...',
       afterUploadMsg_success: 'Successfully Uploaded !',
       afterUploadMsg_error: 'Upload Failed !',
-      sizeLimit: 'Tamaño limite: '
+      sizeLimit: 'Tamaño limite alcanzado'
     }
   };
 
@@ -81,13 +84,13 @@ export class CrearProductoComponent implements OnInit, DoCheck {
       this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
         if (res.findUser.rol != 'administrador') this._router.navigate(['listado'])
       }, 
-      error => swal({title: 'Usuario no identificado', text: error})   
+      error => swal({title: 'Usuario no autorizado', text: error, timer: 1500})   
       )
     }
-
     this.listarCategorias()
+    this.initFormProducto()
   }
-
+  
   ngDoCheck(){
     if(this.comComp.sendCategories()){
       this.comComp.sendCategories()
@@ -101,54 +104,131 @@ export class CrearProductoComponent implements OnInit, DoCheck {
     })
   }
 
+  deleteCat(cat){
+    swal({title: 'Proceso eliminacion categoria ', 
+      text: `Confirma que desea eleminar ${cat.categoria}`,
+      dangerMode: true,
+      buttons: [true, true]
+    }).then((value)=>{
+      value ? (
+        this.consultaBackend.eliminarCategoria(cat._id).subscribe(res=>{
+          swal({title: 'Proceso exitoso', text: res.mensaje + 'Categoria eliminada', timer: 1500}) 
+          this.listarCategorias()
+        }, error => swal({title: 'Fallo en el proceso', text: error.mensaje + ' ' + error, timer: 1500}))
+      ) : (swal({title:'Eliminacion categoria cancelada', text: 'Todo esta bien', timer: 1000}))
+    })
+  }
+
+  deleteSubCat(subCat){
+    this.consultaBackend.eliminarSubCategoria(this.idCategoria, subCat).subscribe(res=>{
+      console.log(res)
+    })
+  }
+
+  restoreCategories(){
+    this.consultaBackend.restoreCategories().subscribe(res=> console.log(res), error => console.warn(error))
+  }
+
   listarSubCats(cat){
     this.listaSubCategorias = []
-    this.consultaBackend.listarSubCategorias(cat).subscribe(res=>{
-      this.listaSubCategorias = res.listaSubCat.subCategoria
-    })
+    if(cat != 0){
+      this.consultaBackend.listarSubCategorias(cat).subscribe(res=>{
+        this.idCategoria = res.listaSubCat._id
+        this.listaSubCategorias = res.listaSubCat.subCategoria
+      })
+    }
     return this.listaSubCategorias
+  }
+
+  soloNumeros(e){
+    return e.charCode >= 48 && e.charCode <= 57
   }
 
   crearCategoria(categoria) {
     this.nuevaCategoria.categoria = categoria
     this.consultaBackend.crearCategoria(this.nuevaCategoria).subscribe(res => {
-      swal('Exito en operacion ', `Categoria ${categoria} creada satisfactoriamente`)
+      swal({title:'Exito en operacion ', text:`Categoria ${categoria} creada satisfactoriamente`, timer: 1500})
+      this.listarCategorias() 
     },
-    err => swal({ text: 'Ya existe la categoria ' + categoria, title: 'Error al crear categoria ' + err}))
+    err => swal({ title: 'Error al crear categoria ' + err, text: 'Ya existe la categoria ' + categoria, timer: 3000}))
     this.nuevaCategoria = {categoria: '', subCategoria: ''}
-    this.listarCategorias()
   }
 
   crearSubCategoria(subCat) {
     this.nuevaSubCategoria = subCat
     this.consultaBackend.crearSubCategoria(this.nuevaSubCategoria).subscribe(res => {
-      swal('Sub categoria ' + subCat.subCategoria + ' creada en ' + subCat.categoria)
+      swal({title: 'Proceso exitoso', text: 'Sub categoria ' + subCat.subCategoria + ' creada en ' + subCat.categoria, timer: 2000})
+      this.listarSubCats(subCat.categoria)
     },
     err => {
-      err.headers = 402 ? swal({ text: 'Ya existe la sub-categoria' + this.nuevaSubCategoria.subCategoria, title: 'Error al crear la subcategoria' }) :
+      err.headers = 402 ? swal({title: 'Error al crear la subcategoria', text: err.message}) :
       console.log('Manage errors: ' + err)
     })
-    this.nuevaSubCategoria = { categoria: 0, subCategoria: '' }
+    this.nuevaSubCategoria.subCategoria = '' // = { categoria: 0, subCategoria: '' }
+  }
+
+  initFormProducto(){
+    this.formularioProducto = new FormGroup({
+      nombre: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]),
+      marca: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(26)]),
+      precio: new FormControl(null,[Validators.required]),
+      precioPromo: new FormControl(null),
+      tiempoPromo: new FormControl(null),
+      descripcion: new FormControl('', [Validators.required, Validators.minLength(8)]),
+      categoria: new FormControl(null, [Validators.required]),
+      subCategoria: new FormControl(null, [Validators.required])
+    })
   }
 
   crearProducto() {
-    this.consultaBackend.crearProducto(this.producto).subscribe(res => {
-      swal("Producto creado", 'Se ha creado producto de manera exitosa', "info");
+    if (this.formularioProducto.valid) {
+      this.producto = this.formularioProducto.value
+      this.consultaBackend.crearProducto(this.producto).subscribe(res => {
+        swal({ title: "Producto creado", text: 'Se ha creado producto de manera exitosa', icon: "info", timer: 3000 });
       },
-      err => {
-        swal("No se pudo crear producto", 'Error creando producto ' + err, "warning");
-      }
-    )    
-    document.getElementsByTagName('form')[1].reset()
+        err => {
+          swal("No se pudo crear producto", 'Error creando producto ' + err, "warning");
+        }
+      )
+      this.formularioProducto.reset()
+      this.producto.imagen = ''
+    }      
   }
 
-  DocUpload(event){
-    this.producto.imagen = event.body.imagen
+  validarPrecioPromocion(precio, precioPromo){
+    if(precioPromo > precio){
+      this.formularioProducto.controls.precioPromo.setErrors(Validators.max(this.formularioProducto.controls.precio.value)) 
+      return true
+    } else{
+      this.formularioProducto.controls.precioPromo.clearValidators()
+      return false
+    }
+  }
+
+  validarTiempoPromo(){
+    if((this.formularioProducto.controls.precioPromo.value > 0) && !this.formularioProducto.controls.tiempoPromo.value){
+      this.formularioProducto.controls.tiempoPromo.setErrors(Validators.required)
+      return true
+    }else{
+      this.formularioProducto.controls.tiempoPromo.clearValidators()
+      return false
+    }
+  }
+
+  subirImagen(e){
+    this.producto.imagen = e.body.imagen
+  }
+
+  borrarImagen(){
+    if(this.producto.imagen){
+      this.consultaBackend.borrarImagen(this.producto.imagen).subscribe(res=>{
+        swal({title: 'Imagen borrada', text: res.mensaje, timer: 1000})
+      }), err=>{swal({title: 'Imagen no borrada', text: err.mensaje, timer: 1000})}
+      this.producto.imagen = ''
+    }
   }
 
   cancela() {    
     this.nuevaCategoria = {categoria: '', subCategoria: []}
   }
-
-
 }

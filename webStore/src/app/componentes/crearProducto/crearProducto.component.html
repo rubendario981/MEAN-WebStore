@@ -1,17 +1,29 @@
 <div class="modAdmin">
   <div class="card crearCategoria my-3">
-    <h4 class="card-header bg-primary text-center text-white">Crear Categoria</h4>
+    <h4 class="card-header bg-primary text-center text-white">Crear / administrar categorias</h4>
     <div class="card-body">
-      <div class="form-group">
-        <label for="lbl">Nombre categoria nueva </label>
-        <input id="lbl" class="form-control" type="text" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaCategoria.categoria"
-        placeholder="Ingresa nueva categoria" />
-      </div>
-      
-      <div class="grupoBotones mt-1">
-        <button class="btn btn-primary" (click)="crearCategoria(nuevaCategoria.categoria)"
-          [disabled]="!nuevaCategoria.categoria">Crear categoria</button>
-        <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
+      <form>
+        <div class="form-group">
+          <label for="categoria">Nombre categoria nueva </label>
+          <input class="form-control" type="text" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaCategoria.categoria"
+          placeholder="Ingresa nueva categoria" />
+        </div>
+        
+        <div class="grupoBotones mt-1">
+          <button class="btn btn-primary btn-sm" (click)="crearCategoria(nuevaCategoria.categoria)"
+            [disabled]="!nuevaCategoria.categoria">Crear categoria</button>
+            <button class="btn btn-success btn-sm" type="button" (click)='restoreCategories()'>Restaurar</button>
+            <button class="btn btn-danger btn-sm" type="reset">Cancelar</button>
+          </div>
+      </form>
+
+      <div class="card pb-2">
+        <h5 class="card-header py-1 text-white bg-primary mb-2">Eliminar categorias</h5>
+        <div class="d-flex justify-content-between flex-wrap px-2">
+          <div *ngFor="let cat of listaCategorias">
+            <div class="badge badge-secondary badge-pill d-inline-flex">{{cat.categoria}} <button type="button" class="close text-white ml-2" (click)="deleteCat(cat)" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div>
+          </div>          
+        </div>
       </div>
     </div>
   </div>
@@ -20,111 +32,142 @@
     <h4 class="card-header bg-primary text-center text-white">Crear SubCategoria</h4>
     <div class="card-body">
       <div class="form-group">
-        <label for="lbl1" >Selecciona la Categoria principal</label>
-        <select id="lbl1" class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaSubCategoria.categoria">
+        <label for="categoria" >Selecciona la Categoria principal</label>
+        <select class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="nuevaSubCategoria.categoria" (change)="listarSubCats(nuevaSubCategoria.categoria)">
           <option value="0">Elige una opcion </option>
           <option *ngFor="let cat of listaCategorias">{{cat.categoria}}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="lb2" class="mt-2">Nombre SubCategoria nueva</label>
-        <input id="lbl2" class="form-control" type="text" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="nuevaSubCategoria.subCategoria"
+        <label for="nombreSubCategoria" class="mt-2">Nombre SubCategoria nueva</label>
+        <input id="nombreSubCategoria" class="form-control" type="text" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="nuevaSubCategoria.subCategoria"
         placeholder="Nueva subCategoria"/>
       </div>
 
-      <div class="grupoBotones mt-4">
+      <div class="grupoBotones mt-2">
         <button class="btn btn-primary" type="submit" (click)="crearSubCategoria(nuevaSubCategoria)"
           [disabled]="!nuevaSubCategoria.categoria || !nuevaSubCategoria.subCategoria">Crear Subcategoria</button>
         <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
+      </div>
+
+      <div *ngIf="listaSubCategorias" class="card pb-2">
+        <h5 class="card-header py-1 text-white bg-primary mb-2">Eliminar sub-categorias</h5>
+        <div class="d-flex justify-content-between flex-wrap px-2">
+          <div *ngFor="let subCat of listaSubCategorias">
+            <div class="badge badge-info badge-pill d-inline-flex">{{subCat}}<button type="button" class="close text-white ml-2" (click)="deleteSubCat(subCat)" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div>
+          </div>          
+        </div>
       </div>
     </div>
   </div>
 
   <div class="card creaProducto mb-3">
     <h4 class="card-header bg-primary text-center text-white">Ingresa los datos del producto nuevo</h4>
-    <form #formularioProducto="ngForm" (ngSubmit)="crearProducto()">
+    <form [formGroup]='formularioProducto' (ngSubmit)="crearProducto()">
       <div class="card-body">
         <div class="row d-flex">
           <div class="col-12 col-sm-6 d-flex flex-column">
             <div class="form-group">
-              <label for="lbl3" >Nombre producto</label>
-              <input id="lbl3" class="form-control" type="text" name="nombre" #nombre='ngModel' [(ngModel)]="producto.nombre"
-                placeholder="Ingresa nombre del producto" required />
-              <small *ngIf="!nombre.valid && nombre.touched" class="text-danger">El campo es requerido</small>
+              <label for="nombreProducto">Nombre producto</label>
+              <input id="nombreProducto" class="form-control" type="text" name="nombre" formControlName='nombre'
+                placeholder="Ingresa nombre del producto"/>
+                <div *ngIf="formularioProducto.get('nombre').errors && formularioProducto.get('nombre').touched">
+                  <small *ngIf="formularioProducto.get('nombre').hasError('required')" class="text-danger">Ingresa nombre producto</small>
+                </div>
             </div>
 
             <div class="form-group">
-              <label for="lbl4" class="mt-2">Marca del producto</label>
-              <input id="lbl4" class="form-control" type="text" name="marca" #marca='ngModel' [(ngModel)]="producto.marca"
-                placeholder="Ingresa nombre del producto" required />
-              <small *ngIf="!marca.valid && marca.touched" class="text-danger">El campo es requerido</small>
+              <label for="marcaProducto" class="mt-2">Marca del producto</label>
+              <input id="marcaProducto" class="form-control" type="text" name="marca" formControlName='marca'
+                placeholder="Ingresa la marca del producto"/>
+                <div *ngIf="formularioProducto.get('marca').errors && formularioProducto.get('marca').touched">
+                  <small *ngIf="formularioProducto.get('marca').hasError('required')" class="text-danger">Ingresa la marca del producto</small>
+                </div>  
             </div>
 
             <div class="form-group">
-              <label for="lb5" class="mt-2">Precio producto</label>
-              <input id="lbl5" class="form-control" type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
-                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                placeholder="Ingresa precio del producto" required />
-              <small *ngIf="!precio.valid && precio.touched" class="text-danger">El campo es requerido</small>
+              <label for="precio" class="mt-2">Precio producto</label>
+              <input id="precio" class="form-control" type="text" name="precio" formControlName='precio' (keypress)='soloNumeros($event)' 
+              placeholder="Ingresa precio del producto" required />
+                <div *ngIf="formularioProducto.get('precio').errors && formularioProducto.get('precio').touched">
+                  <small *ngIf="formularioProducto.get('precio').hasError('required')" class="text-danger">Ingresa el precio del producto</small>
+                </div>
             </div>
 
             <div class="form-group">
-              <label for="lbl6" class="mt-2">Precio promocion <small class="text-muted">(No requerido)</small></label>
-              <input id="lbl6" class="form-control" type="text" name="precioPromo" #precioPromo='ngModel' [(ngModel)]="producto.precioPromo"
-                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                placeholder="Debe ser menor al precio original" required />
+              <label for="precioPromocion" class="mt-2">Precio promocion <small class="text-muted">(No requerido)</small></label>
+              <input id="precioPromocion" class="form-control" type="text" name="precioPromo" formControlName='precioPromo' (keypress)='soloNumeros($event)' 
+              placeholder="Debe ser menor al precio original"/>
+              <div *ngIf="validarPrecioPromocion(formularioProducto.get('precio').value, formularioProducto.get('precioPromo').value)">
+                <small class="text-danger">El precio del producto debe ser menor que el original</small>
+              </div>
+              {{validarPrecioPromocion(formularioProducto.get('precio').value, formularioProducto.get('precioPromo').value)}}
             </div>
 
             <div class="form-group">
-              <label for="lbl7" class="mt-2">Tiempo promocion <small class="text-muted">(No requerido)</small></label>
-              <input id="lbl7" class="form-control" type="text" name="tiempoPromo" #tiempoPromo='ngModel' [(ngModel)]="producto.tiempoPromo"
-                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                placeholder="Ingresa tiempo promocion valida" required />
+              <label for="tiempoPromo" class="mt-2">Tiempo promocion <small class="text-muted">(No requerido)</small></label>
+              <input id="tiempoPromo" class="form-control" type="date" name="tiempoPromo" formControlName='tiempoPromo' min="{{nowDate}}"/>
+              <div *ngIf="validarTiempoPromo()">
+                <small class="text-danger">Se debe establecer una fecha para la promocion</small>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="lbl8" class="mt-2">Descripcion producto</label>
-              <textarea id="lbl8" class="form-control" name="descripcion" #descripcion='ngModel' rows="4" [(ngModel)]="producto.descripcion"
+              <label for="descripcion" class="mt-2">Descripcion producto</label>
+              <textarea id="descripcion" class="form-control" name="descripcion" rows="4" formControlName='descripcion'
                 placeholder="Ingresa la descripcion del producto"></textarea>
-              <small *ngIf="!descripcion.valid && descripcion.touched" class="text-danger">El campo es requerido</small>
+                <div *ngIf="formularioProducto.get('descripcion').errors && formularioProducto.get('descripcion').touched">
+                  <small *ngIf="formularioProducto.get('descripcion').hasError('required')" class="text-danger">Ingresa la descripcion del producto</small>
+                </div>
             </div>
           </div>
 
           <div class="col-12 col-sm-6 d-flex flex-column">
             <div class="form-group">
-              <label for="lbl9" >Selecciona la Categoria</label>
-              <select id="lbl9" class="form-control" name="categoria" #categoria='ngModel' [(ngModel)]="producto.categoria"
-                (change)="listarSubCats(producto.categoria)" required>
+              <label for="categoria">Selecciona la Categoria</label>
+              <select id="categoria" class="form-control" name="categoria" formControlName='categoria' 
+              (change)="listarSubCats(formularioProducto.get('categoria').value)">
                 <option value="0">Elige una opcion </option>
                 <option *ngFor="let cat of listaCategorias"> {{cat.categoria}} </option>
               </select>
-              <small *ngIf="!categoria.valid && categoria.touched" class="text-danger">El campo es requerido</small>
+              <div *ngIf="formularioProducto.get('categoria').errors && formularioProducto.get('categoria').touched">
+                <small *ngIf="formularioProducto.get('categoria').hasError('required')" class="text-danger">Elige una categoria</small>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="lbl10" class="mt-2">Selecciona la SubCategoria</label>
-              <select id="lbl10" class="form-control" name="subCategoria" #subCategoria='ngModel' [(ngModel)]="producto.subCategoria" required>
+              <label for="subcategoria" class="mt-2">Selecciona la SubCategoria</label>
+              <select id="subcategoria" class="form-control" name="subCategoria" formControlName='subCategoria'>
                 <option value="0">Elige una opcion </option>
                 <option *ngFor="let subCat of listaSubCategorias">{{subCat}}</option>
               </select>
-              <small *ngIf="!subCategoria.valid && subCategoria.touched" class="text-danger">El campo es requerido</small>
+              <div *ngIf="formularioProducto.get('subCategoria').errors && formularioProducto.get('subCategoria').touched">
+                <small *ngIf="formularioProducto.get('subCategoria').hasError('required')" class="text-danger">Elige una subcategoria</small>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="lbl11" class="mt-2">Sube la imagen del producto</label>
-              <angular-file-uploader id="lbl11" [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
+              <label for="imagen" class="mt-2">Sube la imagen del producto</label>
+              <angular-file-uploader [config]="afuConfig" 
+              (ApiResponse)="subirImagen($event)">
               </angular-file-uploader>
-              <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg" class="img-thumbnail w-75 mt-2 mx-auto d-block"
-                alt={{producto?.nombre}} />
-              <img *ngIf="producto?.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}"
-                class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto?.nombre}}/>
+              
+              <div *ngIf="!producto.imagen; else mostrarImagen">
+                <img src="../../../assets/img/no-imagen.jpg" class="img-thumbnail w-75 my-3 mx-auto d-block" alt={{producto?.nombre}} />
+              </div>
+              <ng-template #mostrarImagen>
+                <button type="button" class="close text-dark mr-2" (click)='borrarImagen()' aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+                <img src="{{url + 'mostrarImagen/' + producto?.imagen}}"
+                  class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto?.nombre}}/>
+              </ng-template>
             </div>
           </div>
         </div>
         
         <div class="grupoBotones mt-4">
           <button class="btn btn-primary" type="submit" [disabled]="formularioProducto.invalid">Crear producto</button>
+          <button class="btn btn-warning" type="reset" (click)='borrarImagen()'>Limpiar formulario</button>
           <button class="btn btn-danger" (click)="cancela()">Cancelar</button>
         </div>
       </div>

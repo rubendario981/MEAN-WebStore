@@ -1,7 +1,11 @@
 <div class="detalleProducto">
-  <img *ngIf="producto.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="img-thumbnail"
-    alt={{producto.nombre}}>
-  <div class="card">
+  <div *ngIf='producto.imagen; else mostrarImagen' class="imagenProducto">
+    <img src="{{url + 'mostrarImagen/' + producto.imagen}}" class="img-thumbnail border-0" alt={{producto.nombre}}> 
+  </div>
+  <ng-template #mostrarImagen>
+    <img src="../../../assets/img/no-imagen.jpg" class="img-thumbnail mt-2 mx-auto" alt={{producto?.nombre}} />
+  </ng-template>
+  <div class="card border-0">
     <div class="card-body">
       <h3 class="nombreProducto mb-4 font-weight-bolder">{{producto.nombre}}</h3>
       <h4 class="card-text mb-2"> Marca: <small> {{producto.marca}} </small> </h4>
@@ -55,7 +59,6 @@
           <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
             data-target="#editarProducto">Editar</button>
           <button type="button" class="btn btn-danger btn-sm" (click)='eliminarProducto()'>Eliminar</button>
-
         </div>
       </div>
 
@@ -75,19 +78,21 @@
         </button>
       </div>
       <div class="modal-body">
-        <form class="actualizaProd">
+        <form class="actualizaProd" (ngSubmit)='editarProducto()'>
           <div class="row d-flex">
             <div class="col-6 d-flex flex-column mb-3">
               <div class="form-group input-sm">
                 <label>Nombre producto</label>
                 <input class="form-control" type="text" name="nombre" #nombre='ngModel' [(ngModel)]="producto.nombre"
                   placeholder="Ingresa nombre del producto" required />
+                  <small *ngIf='!producto.nombre' class="text-danger">El nombre no puede ir vacio</small>
               </div>
 
               <div class="form-group">
                 <label class="mt-2">Marca del producto</label>
                 <input class="form-control" type="text" name="marca" #marca='ngModel' [(ngModel)]="producto.marca"
                   placeholder="Ingresa nombre del producto" required />
+                  <small *ngIf='!producto.marca' class="text-danger">La marca del producto no puede estar vacio</small>
               </div>
 
               <div class="form-group">
@@ -95,6 +100,7 @@
                 <input class="form-control" type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
                   onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                   placeholder="Ingresa precio del producto" required />
+                  <small *ngIf='!producto.precio' class="text-danger">El precio no puede estar vacio</small>
               </div>
 
               <div class="form-group">
@@ -102,19 +108,22 @@
                 <input class="form-control" type="text" name="precioPromo" #precioPromo='ngModel'
                   [(ngModel)]="producto.precioPromo" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                   placeholder="Debe ser menor al precio original" />
+                  <small *ngIf='producto.precioPromo > producto.precio' class="text-danger">El precio promocional debe ser menor al precio original</small>
               </div>
 
               <div class="form-group">
                 <label class="mt-2">Tiempo promocion <small class="text-muted">(No requerido)</small></label>
-                <input class="form-control" type="text" name="tiempoPromo" #tiempoPromo='ngModel'
+                <input class="form-control" type="date" min="{{fecha}}" name="tiempoPromo" #tiempoPromo='ngModel'
                   [(ngModel)]="producto.tiempoPromo" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                  placeholder="Ingresa tiempo promocion valida" />
+                  placeholder="Ingresa tiempo promocion valida"/>
+                  <small *ngIf='!producto.precioPromo && !producto.tiempoPromo' class="text-danger">Se debe establecer una fecha limite de promocion</small>
               </div>
 
               <div class="form-group">
                 <label class="">Descripcion producto</label>
                 <textarea class="form-control" name="descripcion" #descripcion='ngModel' rows="4"
                   [(ngModel)]="producto.descripcion" placeholder="Ingresa la descripcion del producto"></textarea>
+                  <small *ngIf='!producto.descripcion' class="text-danger">Ingresa la descripcion del producto</small>
               </div>
             </div>
 
@@ -126,6 +135,7 @@
                   <option value="0" disabled>Elige una opcion </option>
                   <option *ngFor="let cat of listaCategorias"> {{cat.categoria}} </option>
                 </select>
+                <small *ngIf='!producto.categoria' class="text-danger">Elige una categoria principal</small>
               </div>
 
               <div class="form-group">
@@ -135,26 +145,37 @@
                   <option value="0" disabled>Elige una opcion </option>
                   <option *ngFor="let subCat of listaSubCategorias">{{subCat}}</option>
                 </select>
+                <small *ngIf='!producto.subCategoria' class="text-danger">El producto debe tener una subcategoria</small>
               </div>
 
               <div class="form-group">
                 <label class="mt-2">Sube la imagen del producto</label>
                 <angular-file-uploader [config]="afuConfig" (ApiResponse)="DocUpload($event)" class="mb-4">
                 </angular-file-uploader>
-                <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg"
+                <div *ngIf="producto?.imagen; else mostrarImagen">
+                  <button type="button" class="close" aria-label="Close mr-3"
+                  data-toggle="tooltip" (click)="deleteImage(producto.imagen)" data-placement="top" 
+                  title="Eliminar imagen"><span aria-hidden="true">&times;</span></button>
+                  <img src="{{url + 'mostrarImagen/' + producto?.imagen}}" class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto.nombre}} />
+                </div>
+                <ng-template #mostrarImagen>
+                  {{producto.imagen}}
+                  <img src="../../../assets/img/no-imagen.jpg" class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto?.nombre}} />
+                </ng-template>
+                <!-- <img *ngIf="!producto?.imagen" src="../../../assets/img/no-imagen.jpg"
                   class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto?.nombre}} />
                 <img *ngIf="producto?.imagen" src="{{url + 'mostrarImagen/' + producto?.imagen}}"
-                  class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto.nombre}} />
+                  class="img-thumbnail w-75 mt-2 mx-auto d-block" alt={{producto.nombre}} /> -->
               </div>
             </div>
+          </div>
+          <div class="modal-footer d-flex justify-content-around">
+            <button class="btn btn-primary" type="submit">Actualizar producto</button>
+            <button type="button" class="btn btn-secondary" (click)="ngOnInit()" data-dismiss="modal">Close</button>
           </div>
         </form>
       </div>
 
-      <div class="modal-footer d-flex justify-content-around">
-        <button class="btn btn-primary" type="submit" (click)='editarProducto()'>Actualizar producto</button>
-        <button type="button" class="btn btn-secondary" (click)="ngOnInit()" data-dismiss="modal">Close</button>
-      </div>
 
     </div>
   </div>

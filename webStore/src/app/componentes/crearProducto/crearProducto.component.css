@@ -1,0 +1,7 @@
+.close{
+    font-size: small;
+}
+.close:hover{
+    font-size: 1rem;
+    font-weight: 600;
+}

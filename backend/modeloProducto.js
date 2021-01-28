@@ -13,6 +13,6 @@ var EsquemaProducto = Schema({
     tiempoPromo: Date,
     fecha: {type: Date, default: Date.now},
     imagen: String
-}, {versionKey: false});
+}, {versionKey: false, timestamps: true});
 
 module.exports = mongoose.model('Producto', EsquemaProducto);

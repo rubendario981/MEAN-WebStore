@@ -11,10 +11,12 @@
     <div class="card-body">
       <h4 class="card-title text-center font-weight-bolder">{{modeloProducto.nombre}}</h4>
 
-      <div *ngIf="(modeloProducto.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate'); else sinPromo">
+      <div *ngIf="(modeloProducto.tiempoPromo); else sinPromo">
         <h4 class="card-text mb-sm-2 font-weight-bolder"> Precio: <small> <del> {{modeloProducto.precio | currency}} </del> </small> </h4>
         <h4 class="card-text mb-sm-1 font-weight-bolder"> Promocion: <small> {{modeloProducto.precioPromo | currency}} </small> </h4>
+        <h5 class="card-text mb-sm-1 font-weight-bolder"> Valido hasta: <small> {{modeloProducto.timerPromo }} </small> </h5>
       </div>
+
       <ng-template #sinPromo>
         <h4 class="card-text mb-sm-1 font-weight-bolder"> Precio: <small> {{modeloProducto.precio | currency}} </small> </h4>        
       </ng-template>      

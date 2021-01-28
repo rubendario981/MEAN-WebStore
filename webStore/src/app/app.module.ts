@@ -4,6 +4,7 @@ import { appRoutingProviders, routing } from './app.routing';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFileUploaderModule } from 'angular-file-uploader'
+import { MomentModule } from 'angular2-moment';
 import { ProductoService } from './modelos-servicios/producto.service'
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './componentes/header/header.component';
@@ -48,7 +49,8 @@ import { CarritoComprasComponent } from './componentes/carrito-compras/carrito-c
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularFileUploaderModule
+    AngularFileUploaderModule,
+    MomentModule
   ],
   providers: [
     appRoutingProviders, 

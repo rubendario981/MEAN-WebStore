@@ -109,6 +109,16 @@ main>.card:hover{
 .detalleProducto .card-body> h4{
   font-weight: bold;
 }
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance:textfield; 
+}
 .detalleProducto> app-nube-tags{
   margin: .8rem .5rem;
   grid-column: 7/-1;
@@ -143,6 +153,9 @@ main>.card:hover{
 }
 .nubeSubCats ul:nth-child(5n) li{
   background-color: lightgreen;
+}
+.nubeSubCats ul:nth-child(6n) li{
+  background-color: gold;
 }
 .nubeSubCats ul:nth-child(7n) li{
   background-color: lightpink;
@@ -273,7 +286,7 @@ main>.card:hover{
     margin: 1rem auto;
     display: grid;
   }
-  .detalleProducto img{
+  .detalleProducto .imagenProducto{
     width: 65%;
     margin: 0 auto;
     grid-column: 1/-1;
@@ -386,7 +399,7 @@ main>.card:hover{
     display: grid;
     grid-template-columns: repeat(8, 1fr);
   }
-  .detalleProducto img{
+  .detalleProducto .imagenProducto{
     width: 80%;
     margin: 0 auto 1rem;
     grid-column: 1/-1;
@@ -511,6 +524,10 @@ main>.card:hover{
   }
   main .card>button{
     font-size: 13px;
+  }
+  .container{
+    max-width: 92%;
+    padding-right: 0;
   }
 
 }

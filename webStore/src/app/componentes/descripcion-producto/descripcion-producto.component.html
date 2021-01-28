@@ -1,10 +1,12 @@
 <div class="detalleProducto">
-  <div *ngIf='producto.imagen; else mostrarImagen' class="imagenProducto">
-    <img src="{{url + 'mostrarImagen/' + producto.imagen}}" class="img-thumbnail border-0" alt={{producto.nombre}}> 
+  <div class="imagenProducto">
+    <div *ngIf='producto.imagen; else mostrarImagen'>
+      <img src="{{url + 'mostrarImagen/' + producto.imagen}}" class="img-fluid w-100 border-0" alt={{producto.nombre}}> 
+    </div>
+    <ng-template #mostrarImagen>
+      <img src="../../../assets/img/no-imagen.jpg" class="img-thumbnail mt-4" alt={{producto?.nombre}} />
+    </ng-template>
   </div>
-  <ng-template #mostrarImagen>
-    <img src="../../../assets/img/no-imagen.jpg" class="img-thumbnail mt-2 mx-auto" alt={{producto?.nombre}} />
-  </ng-template>
   <div class="card border-0">
     <div class="card-body">
       <h3 class="nombreProducto mb-4 font-weight-bolder">{{producto.nombre}}</h3>
@@ -15,8 +17,10 @@
           </small> </h4>
         <h4 class="card-text mb-2 font-weight-bolder"> Promocion: <small> {{producto.precioPromo | currency}} </small>
         </h4>
+        <h4 class="card-text mb-2 font-weight-bolder"> Valido hasta: <small> {{timerPromo}} </small>
+        </h4>
       </div>
-
+      
       <ng-template #sinPromo>
         <h4 class="card-text mb-2"> Precio: <small> {{producto.precio | currency}} </small> </h4>
       </ng-template>
@@ -97,7 +101,7 @@
 
               <div class="form-group">
                 <label class="mt-2">Precio producto</label>
-                <input class="form-control" type="text" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
+                <input class="form-control" type="number" aria-controls="false" name="precio" #precio='ngModel' [(ngModel)]="producto.precio"
                   onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                   placeholder="Ingresa precio del producto" required />
                   <small *ngIf='!producto.precio' class="text-danger">El precio no puede estar vacio</small>
@@ -105,9 +109,9 @@
 
               <div class="form-group">
                 <label class="mt-2">Precio promocion <small class="text-muted">(No requerido)</small></label>
-                <input class="form-control" type="text" name="precioPromo" #precioPromo='ngModel'
+                <input class="form-control" type="number" aria-controls="false" name="precioPromo" #precioPromo='ngModel'
                   [(ngModel)]="producto.precioPromo" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                  placeholder="Debe ser menor al precio original" />
+                  placeholder="Debe ser menor al precio original" /> 
                   <small *ngIf='producto.precioPromo > producto.precio' class="text-danger">El precio promocional debe ser menor al precio original</small>
               </div>
 
@@ -116,7 +120,7 @@
                 <input class="form-control" type="date" min="{{fecha}}" name="tiempoPromo" #tiempoPromo='ngModel'
                   [(ngModel)]="producto.tiempoPromo" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                   placeholder="Ingresa tiempo promocion valida"/>
-                  <small *ngIf='!producto.precioPromo && !producto.tiempoPromo' class="text-danger">Se debe establecer una fecha limite de promocion</small>
+                  <small *ngIf='(this.producto.precioPromo) && !producto.tiempoPromo' class="text-danger">Se debe establecer una fecha limite de promocion</small>
               </div>
 
               <div class="form-group">

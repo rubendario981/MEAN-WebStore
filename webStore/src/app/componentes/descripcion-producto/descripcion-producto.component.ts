@@ -1,12 +1,18 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { variable } from '../../modelos-servicios/constantes'
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { modeloProducto } from '../../modelos-servicios/modeloProducto';
 import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
+import { Timer } from '../../modelos-servicios/Timer';
 import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
 import swal from 'sweetalert';
+import * as countdown from 'countdown'
+
+countdown.setLabels(' milisegundo| segundo| minuto| hora| dia| semana| mes| año| decada| siglo| milenio',
+' milissegundos| segundos| minutos| horas| dias| semanas| meses| años| decadas| siglos| milenios',
+' y ', ', ', 'ahora')
 
 @Component({
   selector: 'app-descripcion-producto',
@@ -40,7 +46,13 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   public tituloFavorito  = 'Agregar a mis favoritos'
   public tituloCarrito = 'Agregar al carrito de compras'
   public fecha = new Date().toISOString().slice(0, 10)
-  public fechaPromo: any
+  public fechaPromo: Date
+  public timerPromo: Timer = null
+  yy: number
+  mm: number
+  dd: number
+  hh: number
+  min: number
 
   constructor(private consultaBackend: ProductoService, 
     private paramRuta: ActivatedRoute, 
@@ -90,19 +102,23 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
         }
       )
     }
-
+    
     this.consultaBackend.listarCategorias().subscribe(res => {
       this.listaCategorias = res.listCategories
     },
-      err => console.log(err)
+    err => console.log(err)
     )
-
+    
     this.paramRuta.params.subscribe(params => {
       this.producto._id = params['id'];      
     })
-
+    
     this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
       this.producto = res.prod
+      if(this.producto.tiempoPromo){  
+        countdown(this.fechaPromo = new Date(this.producto.tiempoPromo.toString().replace('T00', 'T05')), 
+        (ts)=> this.timerPromo = ts, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS )
+      }
     },
     error => {
       console.log(error)
@@ -113,10 +129,20 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     this.favButton ? this.tituloFavorito = "Eliminar de mis favoritos" : this.tituloFavorito = "Añadir a mis favoritos"
     
   }
-
-  ngDoCheck(){    
+  
+  ngDoCheck(){
+    if(this.producto.tiempoPromo){
+      if(new Date() > this.fechaPromo){
+        this.producto.tiempoPromo = null
+        this.producto.precioPromo = null
+        this.timerPromo = null
+        if(this.admin){
+          this.consultaBackend.editarProducto(this.producto).subscribe(res=>console.log(res), err=>console.log(err))
+        }
+      }
+    }
   }
-
+  
   listarCategoria(categoria){
     this.listaSubCategorias = []
     this.consultaBackend.listarSubCategorias(categoria).subscribe(res=>{
@@ -129,6 +155,9 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     //funcion de proceso administracion pagina
     if(this.producto.precioPromo > this.producto.precio){
       return swal({title: 'Error para establecer promocion', text:'El precio de la promocion debe ser menor al precio original', timer: 2500, icon: 'warning'})
+    }
+    if(this.producto.precioPromo && !this.producto.tiempoPromo){
+      return swal({title: 'Error para establecer promocion', text:'Si se establece una promocion, esta debe tener una fecha limite', timer: 2500, icon: 'warning'})      
     }
     if(!this.producto.nombre || !this.producto.marca || !this.producto.categoria|| !this.producto.precio|| !this.producto.categoria|| !this.producto.descripcion){
       return swal({title: 'No se puede editar el producto', text:'Validar campos requeridos', timer: 5000, icon: 'info'})

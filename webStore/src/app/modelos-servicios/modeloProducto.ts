@@ -8,7 +8,7 @@ export class modeloProducto{
         public subCategoria: string,
         public precio: number,
         public precioPromo: number,
-        public tiempoPromo: any,
+        public tiempoPromo: Date,
         public fecha: Date,
         public imagen: string,
         public updatedAt: any

@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, DoCheck, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { ProductoService } from '../../modelos-servicios/producto.service';
 import { modeloProducto } from '../../modelos-servicios/modeloProducto';
@@ -6,6 +6,12 @@ import { modeloUsuario } from '../../modelos-servicios/modeloUsuario';
 import { AuthService } from '../../modelos-servicios/auth.service';
 import swal from 'sweetalert'
 import { ComunicandoComponentesService } from 'src/app/modelos-servicios/ComunicandoComponentes.service';
+import * as countdown from 'countdown'
+import { Timer } from 'src/app/modelos-servicios/Timer';
+
+countdown.setLabels(' milisegundo| segundo| minuto| hora| dia| semana| mes| año| decada| siglo| milenio',
+' milissegundos| segundos| minutos| horas| dias| semanas| meses| años| decadas| siglos| milenios',
+' y ', ', ', 'ahora')
 
 @Component({
   selector: 'app-carrito-compras',
@@ -13,7 +19,7 @@ import { ComunicandoComponentesService } from 'src/app/modelos-servicios/Comunic
   styleUrls: ['./carrito-compras.component.css'],
   providers: [ProductoService, AuthService]
 })
-export class CarritoComprasComponent implements OnInit, DoCheck {
+export class CarritoComprasComponent implements OnInit, DoCheck, AfterContentChecked {
 
   public producto: modeloProducto[]
 
@@ -31,6 +37,7 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
 
   public carritoCompras: any
   public fecha: Date
+  total: number = 0
 
   constructor(private consultaBackEnd: ProductoService, private comComp: ComunicandoComponentesService,
     private auth: AuthService, private ruta: Router) {
@@ -39,7 +46,7 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado'])
+    if (!this.auth.identificaUsuario()) return this.ruta.navigate(['listado']) 
     this.usuario._id = this.auth.identificaUsuario().split('"')[3];
 
     this.loadProductsCart()
@@ -59,22 +66,49 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
       }
       this.usuario.listaCompras.forEach(idProd => {
         this.consultaBackEnd.detalleProducto(idProd).subscribe(res => {
-          Object.defineProperty(res.prod, 'cantidad', { value: 0, writable: true })
+          Object.defineProperty(res.prod, 'cantidad', { value: 0, writable: true })          
           this.carritoCompras.push(res.prod)
           this.comComp.mensajeroCarrito(this.carritoCompras.length)
+          if(res.prod.tiempoPromo){
+            res.prod.tiempoPromo = new Date(res.prod.tiempoPromo.toString().replace('T00', 'T05'))
+            if(new Date() > res.prod.tiempoPromo){
+              res.prod.tiempoPromo = null
+              res.prod.precioPromo = null
+            }
+          }
         })
       });
     })
   }
+
+  ngAfterContentChecked(){
+    this.carritoCompras.forEach(el => {
+      if(el.tiempoPromo){
+        el.tiempoPromo = new Date(el.tiempoPromo.toString().replace('T00', 'T05'))
+        let timer: Timer
+        countdown(el.tiempoPromo, (ts)=>{ timer = ts}, countdown.DAYS|countdown.HOURS|countdown.MINUTES|countdown.SECONDS, 2)
+        Object.defineProperty(el, 'timerPromo', {value: timer, writable: true})
+      }
+    });
+  }
   
   ngDoCheck() {
     this.comComp.mensajeroCarrito(this.carritoCompras.length)
+    this.carritoCompras.forEach(el => {
+      if(el.tiempoPromo){
+        if(new Date() > el.tiempoPromo){
+          el.tiempoPromo = null
+          el.precioPromo = null
+          el.timerPromo = null
+        }
+      }
+    });
   }
 
   calTotal() {
     let total = 0
     this.carritoCompras.forEach(prod => {
-      if (prod.tiempoPromo >= this.fecha.toISOString()) {
+      if (prod.tiempoPromo >= this.fecha) {
         total += prod.precioPromo * prod.cantidad
       }
       else {
@@ -84,6 +118,10 @@ export class CarritoComprasComponent implements OnInit, DoCheck {
     return total
   }
 
+  soloNumeros(e){
+    return (e.target.value.length <= 2) && e.charCode >= 48 && e.charCode <= 57
+  }
+  
   eliminaCart(idProd) {
     this.usuario.listaCompras = idProd
     swal({

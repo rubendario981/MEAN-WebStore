@@ -24,6 +24,7 @@ import { ComunicandoComponentesService } from './modelos-servicios/ComunicandoCo
 import { PerfilComponent } from './componentes/perfil/perfil.component';
 import { ListaFavoritosComponent } from './componentes/lista-favoritos/lista-favoritos.component';
 import { CarritoComprasComponent } from './componentes/carrito-compras/carrito-compras.component';
+import { CarrouselProductsComponent } from './componentes/carrousel-products/carrousel-products.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { CarritoComprasComponent } from './componentes/carrito-compras/carrito-c
     InicioComponent,
     PerfilComponent,
     ListaFavoritosComponent,
-    CarritoComprasComponent
+    CarritoComprasComponent,
+    CarrouselProductsComponent
   ],
   imports: [
     BrowserModule,

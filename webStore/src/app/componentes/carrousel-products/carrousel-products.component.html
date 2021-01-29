@@ -1,0 +1,57 @@
+<div class="card">
+  <div class="card-header bg-primary text-center">
+      <h6 class="text-white font-weight-bold">Mas productos de {{mainCategory}}</h6>
+  </div>
+  <div class="card-body">
+    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators mb-n3">
+        <li data-target="#carouselExampleCaptions" *ngFor="let item of productos;let index = index"
+          [attr.data-slide-to]="index"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item" *ngFor="let prod of productos;let index = index;let isFirst = first"
+          [ngClass]="{active:isFirst}">
+          <div class="card">
+            <div *ngIf='prod.imagen; then imgProd else noImg'></div>
+            <ng-template #imgProd>
+              <img src="{{url + 'mostrarImagen/' + prod.imagen}}" class="card-img-top pt-1" alt={{prod.nombre}}>
+            </ng-template>
+            <ng-template #noImg>
+              <img src="../../../assets/img/no-imagen.jpg" class="card-img-top" alt={{prod.nombre}}>
+            </ng-template>
+            <div class="card-body">
+              <h4 class="card-title text-center font-weight-bolder">{{prod.nombre}}</h4>
+
+              <div *ngIf="(prod.tiempoPromo); else sinPromo">
+                <h4 class="card-text mb-sm-2 font-weight-bolder"> Precio: <small> <del> {{prod.precio | currency}}
+                    </del>
+                  </small> </h4>
+                <h4 class="card-text mb-sm-1 font-weight-bolder"> Promocion: <small> {{prod.precioPromo | currency}}
+                  </small> </h4>
+                <h5 class="card-text mb-sm-1 font-weight-bolder"> Valido hasta: <small>
+                    {{prod.tiempoPromo | amDifference: today: 'days'}} dias</small> </h5>
+              </div>
+
+              <ng-template #sinPromo>
+                <h4 class="card-text mb-sm-1 font-weight-bolder"> Precio: <small> {{prod.precio | currency}} </small>
+                </h4>
+              </ng-template>
+            </div>
+            
+          </div>
+          <div class="card-footer d-flex justify-content-center bg-transparent">
+            <button class="btn btn-primary btn-sm w-75" (click)='reloadProd(prod._id)'>Ver mas...</button>            
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Anterior</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Siguiente</span>
+      </a>
+    </div>
+  </div>
+</div>

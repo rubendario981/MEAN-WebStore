@@ -69,6 +69,7 @@
     </div>
   </div>
   <app-nube-tags [parametros]="parametro"></app-nube-tags>
+  <app-carrousel-products [mainCategory]="producto.categoria" (idProd)='changeId($event)'></app-carrousel-products>
 </div>
 
 <!-- Ventana emergente para actualizar producto -->

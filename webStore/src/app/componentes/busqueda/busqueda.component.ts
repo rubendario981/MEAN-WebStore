@@ -27,15 +27,13 @@ export class BusquedaComponent implements OnInit {
   ngOnInit() {    
     this.paramRuta.params.subscribe((params: Params) =>{ 
       let varBusqueda = params['params'];
-      this.consultaBackend.busqueda(varBusqueda).subscribe(
-        res =>{  
-          this.arrayProductos = res.encontrados
-        },
-        error => {
-          swal("Informacion!!", "No se han encontrado productos con el criterio " + varBusqueda + "info" + error)
-          this.arrayProductos = []
-        }
-      )
+      this.consultaBackend.busqueda(varBusqueda).subscribe(res =>{  
+        this.arrayProductos = res.encontrados
+      },
+      error => {
+        swal("Informacion!!", "No se han encontrado productos con el criterio " + varBusqueda + "info" + error)
+        this.arrayProductos = []
+      })
     })   
   }
 }

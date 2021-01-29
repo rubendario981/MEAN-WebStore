@@ -48,11 +48,7 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
   public fecha = new Date().toISOString().slice(0, 10)
   public fechaPromo: Date
   public timerPromo: Timer = null
-  yy: number
-  mm: number
-  dd: number
-  hh: number
-  min: number
+  categoria: string = null
 
   constructor(private consultaBackend: ProductoService, 
     private paramRuta: ActivatedRoute, 
@@ -88,6 +84,8 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     if (this.auth.identificaUsuario()) {
+      this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
+      this.favButton ? this.tituloFavorito = "Eliminar de mis favoritos" : this.tituloFavorito = "Añadir a mis favoritos"
       this.usuario._id = this.auth.identificaUsuario().split('"')[3];
       this.consultaBackend.identificaUsuario(this.usuario._id).subscribe(res => {
         this.usuario = res.findUser
@@ -96,23 +94,16 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
         this.favButton = res.findUser.listaFavoritos.includes(this.producto._id)
         this.cartButton = res.findUser.listaCompras.includes(this.producto._id)
         if (res.findUser.rol == 'administrador') this.admin = true
-      },
-        error => {
-          console.log(error)
-        }
-      )
+      }, error => console.log(error))
     }
     
     this.consultaBackend.listarCategorias().subscribe(res => {
       this.listaCategorias = res.listCategories
-    },
-    err => console.log(err)
-    )
-    
+    }, err => console.log(err))
+     
     this.paramRuta.params.subscribe(params => {
       this.producto._id = params['id'];      
     })
-    
     this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
       this.producto = res.prod
       if(this.producto.tiempoPromo){  
@@ -124,10 +115,6 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
       console.log(error)
       this.ruta.navigate['/listado']
     })
-    
-    this.cartButton ? this.tituloCarrito = "Eliminar del carrito de compras" : this.tituloCarrito = "Añadir al carrito de compras"
-    this.favButton ? this.tituloFavorito = "Eliminar de mis favoritos" : this.tituloFavorito = "Añadir a mis favoritos"
-    
   }
   
   ngDoCheck(){
@@ -140,7 +127,18 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
           this.consultaBackend.editarProducto(this.producto).subscribe(res=>console.log(res), err=>console.log(err))
         }
       }
-    }
+    }   
+  }
+
+  changeId(msj){
+    this.consultaBackend.detalleProducto(msj).subscribe(res => {
+      this.producto = res.prod
+      if(this.producto.tiempoPromo){  
+        countdown(this.fechaPromo = new Date(this.producto.tiempoPromo.toString().replace('T00', 'T05')), 
+        (ts)=> this.timerPromo = ts, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS )
+      }
+    }, error => console.log(error))
+    this.ruta.initialNavigation()
   }
   
   listarCategoria(categoria){

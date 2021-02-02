@@ -106,9 +106,10 @@ export class DescripcionProductoComponent implements OnInit, DoCheck {
     })
     this.consultaBackend.detalleProducto(this.producto._id).subscribe(res => {
       this.producto = res.prod
+      console.log(this.producto)
       if(this.producto.tiempoPromo){  
         countdown(this.fechaPromo = new Date(this.producto.tiempoPromo.toString().replace('T00', 'T05')), 
-        (ts)=> this.timerPromo = ts, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS )
+        (ts)=> this.timerPromo = ts, countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS, 2 )
       }
     },
     error => {

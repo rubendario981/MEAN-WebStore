@@ -10,9 +10,9 @@
   <div class="card border-0">
     <div class="card-body">
       <h3 class="nombreProducto mb-4 font-weight-bolder">{{producto.nombre}}</h3>
-      <h4 class="card-text mb-2"> Marca: <small> {{producto.marca}} </small> </h4>
+      <h4 class="card-text mb-2 font-weight-bolder"> Marca: <small> {{producto.marca}} </small> </h4>
 
-      <div *ngIf="(producto.tiempoPromo | date: 'shortDate') >= (fecha | date: 'shortDate'); else sinPromo">
+      <div *ngIf="producto.tiempoPromo; else sinPromo">
         <h4 class="card-text mb-2 font-weight-bolder"> Precio: <small> <del> {{producto.precio | currency}} </del>
           </small> </h4>
         <h4 class="card-text mb-2 font-weight-bolder"> Promocion: <small> {{producto.precioPromo | currency}} </small>
@@ -22,10 +22,10 @@
       </div>
       
       <ng-template #sinPromo>
-        <h4 class="card-text mb-2"> Precio: <small> {{producto.precio | currency}} </small> </h4>
+        <h4 class="card-text mb-2 font-weight-bolder"> Precio: <small> {{producto.precio | currency}} </small> </h4>
       </ng-template>
 
-      <h4 class="card-text mb-2"> Descripcion: <small> {{producto.descripcion}} </small> </h4>
+      <h4 class="card-text mb-2 font-weight-bolder"> Descripcion: <small> {{producto.descripcion}} </small> </h4>
       <div class="d-flex flex-column flex-sm-row justify-content-between mt-1 mt-md-2">
         <div>
           <button type="button" class="btn btn-transparent btn-block" data-toggle="tooltip" (click)="adminCarrito()"

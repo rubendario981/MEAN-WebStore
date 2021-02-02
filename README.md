@@ -32,7 +32,7 @@
 > Formulario reactivo que brindan realimentacion al usuario de posibles errores al ingresar de informacion
 
 ## Listado de productos favoritos por cada usuario
-![favoriteList](img/screenshotFavoriteProds.png)
+![favoriteList](img/screenshotFavoritesProds.png)
 > Se puede establecer una lista de productos favoritos que pueden enviarse al carrito de compras
 
 ## Listado de productos favoritos por cada usuario

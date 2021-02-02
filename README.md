@@ -11,28 +11,30 @@
 ![NodeJs](img/nodejs-logo.png)
 > Framesworks y librerias para la construccion del sitio
 
+## Complements front-end
+![bootstrap](img/Bootstrap-logo.png)
+![sweetAlert](img/sweetalert.png)
+![fontsAwesome](img/font-awesome-logo.png)
+> Librerias para estilos de pagina y alertas
+
 ## Capturas de pantalla en celulares, ipad & desktop
-![mobile](img/screenshot-movil.png)
-![iPad](img/screenshot-iPad.png)
-![desktop](img/screenshot-desktop.png)
+![mobile](img/screenshotMovil.png)
+![iPad](img/screenshot--iPad.png)
+![desktop](img/screenshotDesktop.png)
 > Aplicativo web responsive
 
-## Complements front-end
-![bootstrap](img/Bootstrap.png)
-![sweetAlert](img/sweetalert.png)
-
 ## Temporizador para estabecer promocion
-![timerProducts](img/screenshot-timerProducto.png)
+![timerProducts](img/screenshotTimerProducto.png)
 > Establecer una promocion con un temporizador que indica su tiempo restante
 
 ## Formulario reactivo
-![reactiveForm](img/screenshot-adviceErrors.png)
+![reactiveForm](img/screenshotAdviceErrors.png)
 > Formulario reactivo que brindan realimentacion al usuario de posibles errores al ingresar de informacion
 
 ## Listado de productos favoritos por cada usuario
-![favoriteList](img/screenshot-adviceErrors.png)
+![favoriteList](img/screenshotFavoriteProds.png)
 > Se puede establecer una lista de productos favoritos que pueden enviarse al carrito de compras
 
 ## Listado de productos favoritos por cada usuario
-![favoriteList](img/screenshot-cartShopping.png)
+![favoriteList](img/screenshotCartShopping.png)
 > Carrito de compras donde se puede elegir la cantidad de productos a comprar que al final calcula el total 
